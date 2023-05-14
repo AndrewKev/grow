@@ -1,46 +1,79 @@
 @extends('layouts.master')
+@section('head')
+    <script type="text/javascript">
+        window.onload = function() {
+            getLocation();
+        };
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+            }
+        }
+
+        function showPosition(position) {
+            var latitude = position.coords.latitude;
+            var longitude = position.coords.longitude;
+            document.getElementById("latitudeInput").value = latitude;
+            document.getElementById("longitudeInput").value = longitude;
+            document.getElementById("latitudeOutput").innerText = "Latitude: " + latitude;
+            document.getElementById("longitudeOutput").innerText = "Longitude: " + longitude;
+        }
+
+        function showError(error) {
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                    alert("Anda Harus Mengijinkan Geo Location untuk mengisi form");
+                    break;
+                default:
+                    alert("Gagal mengambil lokasi: " + error.message);
+                    break;
+            }
+        }
+    </script>
+@endsection
 @section('body')
-	<div id="layoutSidenav_nav">
-		<nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-			<div class="sb-sidenav-menu">
-				<div class="nav">
-					<div class="sb-sidenav-menu-heading">Core</div>
-					<a class="nav-link" href="/user/dashboard">
-						<div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-						Dashboard
-					</a>
-					<div class="sb-sidenav-menu-heading">Menu</div>
-					<nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-						<a class="nav-link" href="/user/absensi">Absensi</a>
-						<a class="nav-link" href="stok_jalan.php">Stok Jalan</a>
-						<a class="nav-link" href="stok_gudang_besar.php">Stok Gudang Besar</a>
-						<a class="nav-link" href="stok_gudang_kecil.php">Stok Gudang Kecil</a>
-						<a class="nav-link" href="pengajuanProduk.php">Pengajuan Produk</a>
-						<a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages"
-							aria-expanded="false" aria-controls="collapsePages">
-							<!-- <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div> -->
-							Penjualan
-							<div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-						</a>
-						<div class="collapse" id="collapsePages" aria-labelledby="headingTwo"
-							data-bs-parent="#sidenavAccordion">
-							<div class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-								<a class="nav-link" href="#">Penjualan non-SPO</a>
-								<a class="nav-link" href="#">Penjualan SPO</a>
-							</div>
-						</div>
-					</nav>
-				</div>
-			</div>
-			<div class="sb-sidenav-footer">
-				<div class="small">Masuk sebagai:</div>
-				<h3>{{ auth()->user()->nama }}</h3>
-			</div>
-		</nav>
-	</div>
-	<div id="layoutSidenav_content">
-		<div class="container-fluid px-4">
-			@yield('karyawan.body')
-		</div>
-	</div>
+    <div id="layoutSidenav_nav">
+        <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+            <div class="sb-sidenav-menu">
+                <div class="nav">
+                    <div class="sb-sidenav-menu-heading">Core</div>
+                    <a class="nav-link" href="/user/dashboard">
+                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        Dashboard
+                    </a>
+                    <div class="sb-sidenav-menu-heading">Menu</div>
+                    <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                        <a class="nav-link" href="/user/absensi">Absensi</a>
+                        <a class="nav-link" href="stok_jalan.php">Stok Jalan</a>
+                        <a class="nav-link" href="stok_gudang_besar.php">Stok Gudang Besar</a>
+                        <a class="nav-link" href="stok_gudang_kecil.php">Stok Gudang Kecil</a>
+                        <a class="nav-link" href="pengajuanProduk.php">Pengajuan Produk</a>
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
+                            data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
+                            <!-- <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div> -->
+                            Penjualan
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapsePages" aria-labelledby="headingTwo"
+                            data-bs-parent="#sidenavAccordion">
+                            <div class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                                <a class="nav-link" href="#">Penjualan non-SPO</a>
+                                <a class="nav-link" href="#">Penjualan SPO</a>
+                            </div>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+            <div class="sb-sidenav-footer">
+                <div class="small">Masuk sebagai:</div>
+                <h3>{{ auth()->user()->nama }}</h3>
+            </div>
+        </nav>
+    </div>
+    <div id="layoutSidenav_content">
+        <div class="container-fluid px-4">
+            @yield('karyawan.body')
+        </div>
+    </div>
 @endsection

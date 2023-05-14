@@ -14,6 +14,8 @@ class Absensi extends Model
         'keterangan',
         'waktu_masuk',
         'waktu_keluar',
-        'foto'
+        'foto',
+        'latitude',
+        'longitude'
     ];
 }

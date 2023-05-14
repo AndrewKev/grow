@@ -10,7 +10,7 @@
     <link href="{{ asset('css/styles.css') }}" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     {{-- @vite('resource/css/style.css') --}}
-    {{-- @yield('head') --}}
+    @yield('head')
 </head>
 
 <body class="sb-nav-fixed">

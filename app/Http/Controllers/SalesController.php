@@ -37,6 +37,8 @@ class SalesController extends Controller
                 'id_user' => auth()->user()->id,
                 'keterangan' => $request->keterangan,
                 'waktu_masuk' => Carbon::now(),
+                'latitude' => $request->latitude,
+                'longitude' => $request->longitude,
             ]
         );
 

@@ -72,7 +72,6 @@
                                                 class="form-control" /><br>
                                             <input type="hidden" id="longitudeInput" name="longitude"
                                                 placeholder="longitude" class="form-control" /><br>
-                                            <!-- <input type="hidden" name="nama_karyawan" /> -->
                                             <button type="submit" class="btn btn-primary"
                                                 name="addAbsenMasuk">Submit</button>
                                             <button type="button" class="btn btn-secondary"
