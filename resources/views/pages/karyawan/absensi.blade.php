@@ -10,43 +10,47 @@
                 {{-- <a type="button" href="absen_keluar.php?id_absensi=" class="btn btn-danger">
                         Absen Keluar
                     </a> --}}
-                <button type="button" class="btn btn-success focus-ring" data-bs-toggle="modal" data-bs-target="#absenMasuk">
-                    <i class="fa-solid fa-right-to-bracket" style="color: #ffffff;"></i>
-                    Absen Masuk
-                </button>
-                <button type="button" class="btn btn-danger focus-ring" data-bs-toggle="modal" data-bs-target="#absenMasuk"
-                    style="margin-left: 1rem">
-                    <i class="fa-solid fa-right-from-bracket" style="color: #ffffff;"></i>
-                    Absen Keluar
-                </button>
+                @if ($listAbsenUser[0]->waktu_keluar == null)
+                <form onsubmit="return confirm('Konfirmasi Absen Keluar')" action="/user/absensi_keluar" method="post">
+                    @csrf
+                    <button type="submit" class="btn btn-danger focus-ring">
+                        <i class="fa-solid fa-right-from-bracket" style="color: #ffffff;"></i>
+                        Absen Keluar
+                    </button>
+                </form>
+                @else
+                    <button type="button" class="btn btn-success focus-ring" data-bs-toggle="modal"
+                        data-bs-target="#absenMasuk">
+                        <i class="fa-solid fa-right-to-bracket" style="color: #ffffff;"></i>
+                        Absen Masuk
+                    </button>
+                @endif
             </div>
             <div class="mt-4">
                 <table id="datatablesSimple">
                     <thead>
                         <tr>
-                            <th>Id Pengguna</th>
                             <th>Nama</th>
-                            <th>Jabatan</th>
+                            {{-- <th>Jabatan</th> --}}
                             <th>No Telepon</th>
                             <th>Waktu Masuk</th>
                             <th>Waktu Keluar</th>
                             <th>Keterangan</th>
-                            <th>Foto</th>
+                            {{-- <th>Foto</th> --}}
                             <th>Lokasi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
+                        @foreach ($listAbsenUser as $list)
+                            <tr>
+                                <td>{{ $list->nama }}</td>
+                                <td>{{ $list->no_telp }}</td>
+                                <td>{{ $list->waktu_masuk }}</td>
+                                <td>{{ $list->waktu_keluar == null ? '-' : $list->waktu_keluar }}</td>
+                                <td>{{ $list->keterangan }}</td>
+                                <td>{{ $list->latitude }}, {{ $list->longitude }}</td>
+                            </tr>
+                        @endforeach
                         <!-- Modal -->
                         <div class="modal fade" id="absenMasuk" tabindex="-1" aria-labelledby="exampleModalLabel"
                             aria-hidden="true">
@@ -57,7 +61,9 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                             aria-label="Close"></button>
                                     </div>
-                                    <form method="POST" class="myForm" enctype="multipart/form-data" action="">
+                                    <form method="POST" action="/user/absensi" class="myForm" enctype="multipart/form-data"
+                                        action="">
+                                        @csrf
                                         <div class="modal-body">
                                             <input type="file" name="foto" class="form-control" capture><br>
                                             <input type="text" name="keterangan" placeholder="keterangan"
@@ -77,7 +83,7 @@
                             </div>
                         </div>
                         <!-- Modal -->
-                        <div class="modal fade" id="absenKeluar" tabindex="-1" aria-labelledby="exampleModalLabel"
+                        {{-- <div class="modal fade" id="absenKeluar" tabindex="-1" aria-labelledby="exampleModalLabel"
                             aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
@@ -103,7 +109,7 @@
                                     </form>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     </tbody>
                 </table>
             </div>

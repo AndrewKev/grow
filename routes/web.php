@@ -50,6 +50,8 @@ Route::group(
     function() {
         Route::get('/dashboard', 'index');
         Route::get('/absensi', 'absensiPage');
+        Route::post('/absensi', 'postAbsensi');
+        Route::post('/absensi_keluar', 'absensiKeluar');
     }
 );
 

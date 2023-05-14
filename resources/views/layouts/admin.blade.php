@@ -17,8 +17,8 @@
 				</div>
 			</div>
 			<div class="sb-sidenav-footer">
-				<div class="small">Logged in as:</div>
-				{{-- <h3>{{ auth()->user()->nama }}</h3> --}}
+				<div class="small">Masuk sebagai:</div>
+				<h3>{{ auth()->user()->nama }}</h3>
 			</div>
 		</nav>
 	</div>

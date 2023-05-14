@@ -16,10 +16,10 @@ return new class extends Migration
             $table->foreignId('id_user');
             $table->string('keterangan');
             $table->dateTime('waktu_masuk');
-            $table->dateTime('waktu_keluar');
-            $table->string('foto');
-            $table->string('latitude', 50);
-            $table->string('longitude', 50);
+            $table->dateTime('waktu_keluar')->nullable();
+            $table->string('foto')->nullable();
+            $table->string('latitude', 50)->nullable();
+            $table->string('longitude', 50)->nullable();
             $table->timestamps();
 
             $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');
