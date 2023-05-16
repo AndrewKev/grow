@@ -31,9 +31,21 @@ class UserSeeder extends Seeder
 
         DB::table('users')->insert(
             [
-                'nama' => 'sales',
-                'username' => 'sales',
+                'nama' => 'sales1',
+                'username' => 'sales1',
                 'password' => Hash::make('sls001'),
+                'level' => 2, // sales
+                'no_telp' => '123',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ]
+        );
+
+        DB::table('users')->insert(
+            [
+                'nama' => 'sales2',
+                'username' => 'sales2',
+                'password' => Hash::make('sls002'),
                 'level' => 2, // sales
                 'no_telp' => '123',
                 'created_at' => Carbon::now(),

@@ -11,9 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('penjualan_laku_cash', function (Blueprint $table) {
-            $table->id();
+        Schema::create('distrik', function (Blueprint $table) {
+            $table->char('id_distrik')->primary();
+            $table->string('nama_distrik');
+            $table->foreignId('id_user');
             $table->timestamps();
+
+            $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -22,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('penjualan_laku_cash');
+        Schema::dropIfExists('distrik');
     }
 };
