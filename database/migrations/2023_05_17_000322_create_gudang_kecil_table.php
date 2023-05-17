@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Schema::create('jenis_kunjungan', function (Blueprint $table) {
-        //     $table->char('id_kunjungan')->primary();
-        //     $table->char('nama_kunjungan');
-        //     $table->timestamps();
-        // });
+        Schema::create('gudang_kecil', function (Blueprint $table) {
+            $table->char('id_produk');
+            $table->integer('stok');
+            $table->timestamps();
+
+            $table->foreign('id_produk')->references('id_produk')->on('products')->onDelete('cascade');
+        });
     }
 
     /**
@@ -23,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('jenis_kunjungan');
+        Schema::dropIfExists('gudang_kecil');
     }
 };

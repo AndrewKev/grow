@@ -52,6 +52,8 @@ Route::group(
         Route::get('/absensi', 'absensiPage');
         Route::post('/absensi', 'postAbsensi');
         Route::post('/absensi_keluar', 'absensiKeluar');
+        Route::get('/stok_jalan', 'stokJalanPage');
+        Route::post('/stok_jalan', 'ambilBarangStokJalan');
     }
 );
 

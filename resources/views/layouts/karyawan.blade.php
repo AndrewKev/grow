@@ -45,10 +45,7 @@
                     <div class="sb-sidenav-menu-heading">Menu</div>
                     <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
                         <a class="nav-link" href="/user/absensi">Absensi</a>
-                        <a class="nav-link" href="stok_jalan.php">Stok Jalan</a>
-                        <a class="nav-link" href="stok_gudang_besar.php">Stok Gudang Besar</a>
-                        <a class="nav-link" href="stok_gudang_kecil.php">Stok Gudang Kecil</a>
-                        <a class="nav-link" href="pengajuanProduk.php">Pengajuan Produk</a>
+                        <a class="nav-link" href="/user/stok_jalan">Stok Jalan</a>
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
                             data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
                             <!-- <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div> -->
@@ -58,8 +55,7 @@
                         <div class="collapse" id="collapsePages" aria-labelledby="headingTwo"
                             data-bs-parent="#sidenavAccordion">
                             <div class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-                                <a class="nav-link" href="#">Penjualan non-SPO</a>
-                                <a class="nav-link" href="#">Penjualan SPO</a>
+                                <a class="nav-link" href="#">Penjualan Laku Cash</a>
                             </div>
                         </div>
                     </nav>

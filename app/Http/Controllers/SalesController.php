@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Absensi;
+use App\Models\CarryProduk;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -17,6 +18,9 @@ class SalesController extends Controller
         return view('pages.karyawan.dashboard');
     }
 
+    /**
+     * Halaman Absensi
+     */
     public function absensiPage() {
         // dd(auth()->user()->id);
         // dd(Absensi::where('id_user', auth()->user()->id)->get());
@@ -27,7 +31,7 @@ class SalesController extends Controller
                                      JOIN users as u ON a.id_user = u.id
                                      WHERE u.username = '$username'
                                      ORDER BY a.waktu_masuk DESC");
-        // dd($this->getLastAbsen());
+        // dd(sizeof($listAbsenUser));
         return view('pages.karyawan.absensi', compact('listAbsenUser'));
     }
 
@@ -65,6 +69,74 @@ class SalesController extends Controller
         $last = $listAbsen[sizeof($listAbsen)-1];                   
         return $last->id_absensi;
     }
+
+
+    /**
+     * Halaman Stok Jalan
+     */
+    public function stokJalanPage() {
+        $barang = $this->getStokUser();
+        return view('pages.karyawan.stokjalan', compact('barang'));
+    }
+
+    public function ambilBarangStokJalan(Request $request) {
+        // dd($request->all());
+
+        for($i = 0; $i < 10; $i++) {
+            if($this->cekBarangDibawa($request->id_produk[$i], Carbon::now()->format('Y-m-d')) == 0) {
+                // dd($request->all());
+                if($request->produk[$i] != '0') {
+                    $this->insertBarang($request->id_produk[$i], (int)$request->produk[$i]);
+                }
+            } else {
+                if($request->produk[$i] != '0') {
+                    $this->updateBarang($request->id_produk[$i], (int)$request->produk[$i] + $this->getStokUser()[$i]->stok_dibawa);
+                }
+            }
+        }
+
+        return redirect('/user/stok_jalan');
+    }
+
+    public function insertBarang($id_produk, $jumlahBarang) {
+        CarryProduk::create(
+            [
+                'id_user' => auth()->user()->id,
+                'id_produk' => $id_produk,
+                'tanggal_carry' => Carbon::now()->format('Y-m-d'),
+                'stok_dibawa'=> $jumlahBarang
+            ]
+        );
+    }
+
+    public function updateBarang($id_produk, $jumlahBarang) {
+        $id_user = auth()->user()->id;
+        DB::update("UPDATE carry_produk SET stok_dibawa = $jumlahBarang 
+                    WHERE id_produk = '$id_produk' AND id_user = '$id_user';");
+    }
+
+    public function cekBarangDibawa($id_produk, $tanggal) {
+        $id_user = auth()->user()->id;
+        $barang = DB::select("SELECT * FROM `carry_produk` 
+        WHERE id_user = '$id_user' 
+        AND id_produk = '$id_produk'
+        AND tanggal_carry = '$tanggal';");
+
+        return sizeof($barang);
+    }
+
+    public function getStokUser() {
+        $id_user = auth()->user()->id;
+        $tanggal = Carbon::now()->format('Y-m-d');
+        $barang = DB::select("SELECT users.nama, c.*, products.nama_produk
+        FROM carry_produk AS c
+        JOIN products ON products.id_produk = c.id_produk
+        JOIN users ON c.id_user = users.id
+        WHERE c.id_user = '$id_user' AND c.tanggal_carry = '$tanggal';");
+
+        return $barang;
+    }
+
 
     /**
      * Show the form for creating a new resource.

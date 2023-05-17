@@ -10,14 +10,14 @@
                 {{-- <a type="button" href="absen_keluar.php?id_absensi=" class="btn btn-danger">
                         Absen Keluar
                     </a> --}}
-                @if ($listAbsenUser[0]->waktu_keluar == null)
-                <form onsubmit="return confirm('Konfirmasi Absen Keluar')" action="/user/absensi_keluar" method="post">
-                    @csrf
-                    <button type="submit" class="btn btn-danger focus-ring">
-                        <i class="fa-solid fa-right-from-bracket" style="color: #ffffff;"></i>
-                        Absen Keluar
-                    </button>
-                </form>
+                @if (sizeof($listAbsenUser) != 0 && $listAbsenUser[0]->waktu_keluar == null)
+                    <form onsubmit="return confirm('Konfirmasi Absen Keluar')" action="/user/absensi_keluar" method="post">
+                        @csrf
+                        <button type="submit" class="btn btn-danger focus-ring">
+                            <i class="fa-solid fa-right-from-bracket" style="color: #ffffff;"></i>
+                            Absen Keluar
+                        </button>
+                    </form>
                 @else
                     <button type="button" class="btn btn-success focus-ring" data-bs-toggle="modal"
                         data-bs-target="#absenMasuk">
