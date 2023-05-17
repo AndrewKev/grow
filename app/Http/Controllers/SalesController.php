@@ -8,6 +8,8 @@ use App\Models\CarryProduk;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
+// use App\Http\Controllers\AdminController;
+
 class SalesController extends Controller
 {
     /**
@@ -15,6 +17,8 @@ class SalesController extends Controller
      */
     public function index()
     {
+        // $classSebelah = app('App\Http\Controllers\GudangKecilController');
+        // dd($classSebelah->getStok('B12'));
         return view('pages.karyawan.dashboard');
     }
 
@@ -87,10 +91,14 @@ class SalesController extends Controller
                 // dd($request->all());
                 if($request->produk[$i] != '0') {
                     $this->insertBarang($request->id_produk[$i], (int)$request->produk[$i]);
+                    $stokSaatIni = app('App\Http\Controllers\GudangKecilController')->getStok($request->id_produk[$i]);
+                    app('App\Http\Controllers\GudangKecilController')->update($request->id_produk[$i], $stokSaatIni - (int)$request->produk[$i]);
                 }
             } else {
                 if($request->produk[$i] != '0') {
                     $this->updateBarang($request->id_produk[$i], (int)$request->produk[$i] + $this->getStokUser()[$i]->stok_dibawa);
+                    $stokSaatIni = app('App\Http\Controllers\GudangKecilController')->getStok($request->id_produk[$i]);
+                    app('App\Http\Controllers\GudangKecilController')->update($request->id_produk[$i], $stokSaatIni - (int)$request->produk[$i]);
                 }
             }
         }
