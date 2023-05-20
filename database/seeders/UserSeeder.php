@@ -53,8 +53,8 @@ class UserSeeder extends Seeder
 
         DB::table('users')->insert(
             [
-                'nama' => 'sales1',
-                'username' => 'sales1',
+                'nama' => 'Alan',
+                'username' => 'Alan',
                 'password' => Hash::make('sls001'),
                 'level' => 0, // sales
                 'no_telp' => '123',
@@ -65,9 +65,21 @@ class UserSeeder extends Seeder
 
         DB::table('users')->insert(
             [
-                'nama' => 'sales2',
-                'username' => 'sales2',
+                'nama' => 'Fajar',
+                'username' => 'Fajar',
                 'password' => Hash::make('sls002'),
+                'level' => 0, // sales
+                'no_telp' => '123',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ]
+        );
+
+        DB::table('users')->insert(
+            [
+                'nama' => 'Zanu',
+                'username' => 'Zanu',
+                'password' => Hash::make('sls003'),
                 'level' => 0, // sales
                 'no_telp' => '123',
                 'created_at' => Carbon::now(),
