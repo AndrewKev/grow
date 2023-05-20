@@ -11,8 +11,8 @@
 					</a>
 					<div class="sb-sidenav-menu-heading">Menu</div>
 					<nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-						<a class="nav-link active" href="#">Menu 1</a>
-						<a class="nav-link active" href="#">Menu 2</a>
+						<a class="nav-link" href="/admin/request_sales">Request Sales</a>
+						<a class="nav-link" href="#">Menu 2</a>
 					</nav>
 				</div>
 			</div>
@@ -23,7 +23,7 @@
 		</nav>
 	</div>
 	<div id="layoutSidenav_content">
-		<div class="container-fluid px-4">
+		<div class="container-fluid px-4 mt-4">
 			@yield('admin.body')
 		</div>
 	</div>

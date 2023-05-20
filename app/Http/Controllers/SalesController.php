@@ -86,22 +86,22 @@ class SalesController extends Controller
     public function ambilBarangStokJalan(Request $request) {
         // dd($request->all());
 
-        for($i = 0; $i < 10; $i++) {
-            if($this->cekBarangDibawa($request->id_produk[$i], Carbon::now()->format('Y-m-d')) == 0) {
-                // dd($request->all());
-                if($request->produk[$i] != '0') {
-                    $this->insertBarang($request->id_produk[$i], (int)$request->produk[$i]);
-                    $stokSaatIni = app('App\Http\Controllers\GudangKecilController')->getStok($request->id_produk[$i]);
-                    app('App\Http\Controllers\GudangKecilController')->update($request->id_produk[$i], $stokSaatIni - (int)$request->produk[$i]);
-                }
-            } else {
-                if($request->produk[$i] != '0') {
-                    $this->updateBarang($request->id_produk[$i], (int)$request->produk[$i] + $this->getStokUser()[$i]->stok_dibawa);
-                    $stokSaatIni = app('App\Http\Controllers\GudangKecilController')->getStok($request->id_produk[$i]);
-                    app('App\Http\Controllers\GudangKecilController')->update($request->id_produk[$i], $stokSaatIni - (int)$request->produk[$i]);
-                }
-            }
-        }
+        // for($i = 0; $i < 10; $i++) {
+        //     if($this->cekBarangDibawa($request->id_produk[$i], Carbon::now()->format('Y-m-d')) == 0) {
+        //         // dd($request->all());
+        //         if($request->produk[$i] != '0') {
+        //             $this->insertBarang($request->id_produk[$i], (int)$request->produk[$i]);
+        //             $stokSaatIni = app('App\Http\Controllers\GudangKecilController')->getStok($request->id_produk[$i]);
+        //             app('App\Http\Controllers\GudangKecilController')->update($request->id_produk[$i], $stokSaatIni - (int)$request->produk[$i]);
+        //         }
+        //     } else {
+        //         if($request->produk[$i] != '0') {
+        //             $this->updateBarang($request->id_produk[$i], (int)$request->produk[$i] + $this->getStokUser()[$i]->stok_dibawa);
+        //             $stokSaatIni = app('App\Http\Controllers\GudangKecilController')->getStok($request->id_produk[$i]);
+        //             app('App\Http\Controllers\GudangKecilController')->update($request->id_produk[$i], $stokSaatIni - (int)$request->produk[$i]);
+        //         }
+        //     }
+        // }
 
         return redirect('/user/stok_jalan');
     }

@@ -28,6 +28,7 @@ Route::get('/', function () {
 Auth::routes();
 
 // URL : .com/admin/
+// admin1
 Route::group(
     [
         'controller' => AdminController::class,
@@ -39,13 +40,28 @@ Route::group(
     }
 );
 
+// URL : .com/admin/
+// admin2
+Route::group(
+    [
+        'controller' => AdminController::class,
+        'prefix' => 'admin',
+        'middleware' => ['auth', 'level:2']
+    ],
+    function() {
+        Route::get('/dashboard', 'admin2Page');
+        Route::get('/request_sales', 'reqSalesPage');
+        Route::post('/konfirmasi', 'konfirmasiReq');
+    }
+);
+
 
 // URL : .com/user/
 Route::group(
     [
         'controller' => SalesController::class,
         'prefix' => 'user',
-        'middleware' => ['auth', 'level:2']
+        'middleware' => ['auth', 'level:0']
     ],
     function() {
         Route::get('/dashboard', 'index');

@@ -19,10 +19,32 @@ class UserSeeder extends Seeder
 
         DB::table('users')->insert(
             [
-                'nama' => 'admin',
-                'username' => 'admin',
+                'nama' => 'admin1',
+                'username' => 'admin1',
                 'password' => Hash::make('adm001'),
                 'level' => 1, // admin
+                'no_telp' => '123',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ]
+        );
+        DB::table('users')->insert(
+            [
+                'nama' => 'admin2',
+                'username' => 'admin2',
+                'password' => Hash::make('adm002'),
+                'level' => 2, // admin
+                'no_telp' => '123',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ]
+        );
+        DB::table('users')->insert(
+            [
+                'nama' => 'admin3',
+                'username' => 'admin3',
+                'password' => Hash::make('adm003'),
+                'level' => 3, // admin
                 'no_telp' => '123',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
@@ -34,7 +56,7 @@ class UserSeeder extends Seeder
                 'nama' => 'sales1',
                 'username' => 'sales1',
                 'password' => Hash::make('sls001'),
-                'level' => 2, // sales
+                'level' => 0, // sales
                 'no_telp' => '123',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
@@ -46,7 +68,7 @@ class UserSeeder extends Seeder
                 'nama' => 'sales2',
                 'username' => 'sales2',
                 'password' => Hash::make('sls002'),
-                'level' => 2, // sales
+                'level' => 0, // sales
                 'no_telp' => '123',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()

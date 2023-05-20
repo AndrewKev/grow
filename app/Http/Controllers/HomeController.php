@@ -24,9 +24,9 @@ class HomeController extends Controller
     public function index()
     {
         // dd(auth()->user()->level);
-        if(auth()->user()->level == 1) {
+        if(auth()->user()->level == 1 || auth()->user()->level == 2) {
             return redirect('/admin/dashboard');
-        } else if(auth()->user()->level == 2) {
+        } else if(auth()->user()->level == 0) {
             return redirect('/user/dashboard');
         } else {
             return view('home');

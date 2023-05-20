@@ -1,24 +1,14 @@
-@extends('layouts.karyawan')
-@section('karyawan.body')
-    <div class="card mb-4">
-        <div class="card-header">
-            <h2>STOK JALAN</h2>
-        </div>
-        <div class="card-body">
-            {{-- <a href="#">History</a> --}}
-            <div class="my-2">
-                <bnutton class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAmbilBarang">
-                    Request Barang
-                </bnutton>
-            </div>
+@extends('layouts.admin')
+@section('admin.body')
+    <main>
+        <h2>Daftar Request Sales</h2>
+        <div>
             <table id="datatablesSimple">
                 <thead>
                     <tr>
                         <th>No</th>
                         <th>Tanggal</th>
-                        <th>Nama Produk</th>
-                        <th>Stok dibawa</th>
-                        <th>Stok kembali</th>
+                        <th>Nama Sales</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -26,39 +16,34 @@
                     @php
                         $no = 1;
                     @endphp
-                    @foreach ($barang as $brg)
-                        <tr>
-                            <td>{{ $no }}</td>
-                            <td>{{ $brg->tanggal_carry }}</td>
-                            <td>{{ $brg->nama_produk }}</td>
-                            <td>{{ $brg->stok_dibawa }}</td>
-                            <td></td>
-                            <td>
-                                <button type="button" class="btn btn-warning" data-bs-toggle="modal"
-                                    data-bs-target="#editkm">
-                                    Edit
-                                </button>
-                            </td>
-                        </tr>
-                        @php
-                            $no++;
-                        @endphp
-                    @endforeach
+                    <tr>
+                        <td>{{ $no }}</td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#exampleModal">
+                                Detail
+                            </button>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
-    </div>
-    <!-- Modal -->
-    <div class="modal fade" id="modalAmbilBarang" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Update Stok</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form action="/user/stok_jalan" method="post" class="myForm" enctype="multipart/form-data" id="formToko">
-                    @csrf
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <form class="modal-content" action="/admin/konfirmasi" method="post">
+					@csrf
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
                     <div class="modal-body">
+                        {{-- <form action="/admin/konfirmasi" method="post" class="myForm" enctype="multipart/form-data"
+                            id="formToko">
+                            @csrf --}}
                         <div>
                             <label for="b20" class="form-label">GROW BOLD 20</label>
                             <input type="number" id="B20" name="produk[]" placeholder="B20" class="form-control"
@@ -113,12 +98,13 @@
                                 value="0"><br>
                             <input type="hidden" name="id_produk[]" value="BICE16">
                         </div>
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                    <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Konfirmasi</button>
                     </div>
                 </form>
             </div>
         </div>
-    </div>
-    <!-- End Modal -->
+    </main>
 @endsection
