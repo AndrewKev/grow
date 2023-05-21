@@ -16,8 +16,10 @@ class DatabaseSeeder extends Seeder
         $this->call(ProductSeeder::class);
         $this->call(DistrikSeeder::class);
         $this->call(RoutingSeeder::class);
+        $this->call(JenisKunjunganSeeder::class);
         $this->call(TokoSeeder::class);
         $this->call(GudangKecilSeeder::class);
+        
         // \App\Models\User::factory(10)->create();
 
         // \App\Models\User::factory()->create([

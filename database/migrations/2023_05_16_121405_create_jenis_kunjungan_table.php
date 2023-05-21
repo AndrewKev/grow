@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Schema::create('jenis_kunjungan', function (Blueprint $table) {
-        //     $table->char('id_kunjungan')->primary();
-        //     $table->char('nama_kunjungan');
-        //     $table->timestamps();
-        // });
+        Schema::create('jenis_kunjungan', function (Blueprint $table) {
+            $table->char('id_kunjungan')->primary();
+            $table->timestamps();
+        });
     }
 
     /**
