@@ -4,7 +4,9 @@ use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\SalesController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PenjualanLakuCashController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -70,6 +72,7 @@ Route::group(
         Route::post('/absensi_keluar', 'absensiKeluar');
         Route::get('/stok_jalan', 'stokJalanPage');
         Route::post('/stok_jalan', 'ambilBarangStokJalan');
+        Route::resource('penjualanLakuCash', PenjualanLakuCashController::class);
     }
 );
 
