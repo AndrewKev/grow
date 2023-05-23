@@ -55,7 +55,7 @@
                         <div class="collapse" id="collapsePages" aria-labelledby="headingTwo"
                             data-bs-parent="#sidenavAccordion">
                             <div class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-                                <a class="nav-link" href="penjualanLakuCash">Penjualan Laku Cash</a>
+                                <a class="nav-link" href="penjualan_laku_cash">Penjualan Laku Cash</a>
                             </div>
                         </div>
                     </nav>

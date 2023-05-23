@@ -53,7 +53,10 @@ Route::group(
     function() {
         Route::get('/dashboard', 'admin2Page');
         Route::get('/request_sales', 'reqSalesPage');
-        Route::post('/konfirmasi', 'konfirmasiReq');
+        Route::get('/request_sales/{id}', 'detailReqSales');
+        Route::post('/request_sales/{id_user}/ubah_stok/{id_produk}', 'ubahRequestStok');
+        Route::post('/request_sales/{id_user}/konfirmasi', 'konfirmasiRequest');
+        // Route::post('/konfirmasi', 'konfirmasiReq');
     }
 );
 
@@ -71,8 +74,9 @@ Route::group(
         Route::post('/absensi', 'postAbsensi');
         Route::post('/absensi_keluar', 'absensiKeluar');
         Route::get('/stok_jalan', 'stokJalanPage');
-        Route::post('/stok_jalan', 'ambilBarangStokJalan');
-        Route::resource('penjualanLakuCash', PenjualanLakuCashController::class);
+        Route::post('/request_barang', 'requestBarangStokJalan');
+        Route::post('/terima_barang', 'terimaBarang');
+        Route::resource('/penjualan_laku_cash', PenjualanLakuCashController::class);
     }
 );
 

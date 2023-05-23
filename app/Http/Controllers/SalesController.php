@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+
 use App\Models\Absensi;
 use App\Models\CarryProduk;
+use App\Models\RequestBarang;
+
 use Illuminate\Support\Facades\DB;
+
 use Carbon\Carbon;
 
 // use App\Http\Controllers\AdminController;
@@ -80,58 +84,119 @@ class SalesController extends Controller
      */
     public function stokJalanPage() {
         $barang = $this->getStokUser();
-        return view('pages.karyawan.stokjalan', compact('barang'));
+        $req = $this->isRequest(auth()->user()->id, Carbon::now()->format('Y-m-d'));
+        $konfirmasi = $this->isKonfirmasi(auth()->user()->id, Carbon::now()->format('Y-m-d'));
+        $barangKonfirmasi = $this->getBarangKonfirmasi();
+        $isCarry = $this->isCarry();
+
+        // dd($barangKonfirmasi);
+        return view('pages.karyawan.stokjalan', compact('barang', 'req', 'konfirmasi', 'barangKonfirmasi', 'isCarry'));
     }
 
-    public function ambilBarangStokJalan(Request $request) {
+    public function requestBarangStokJalan(Request $request) {
         // dd($request->all());
 
-        // for($i = 0; $i < 10; $i++) {
-        //     if($this->cekBarangDibawa($request->id_produk[$i], Carbon::now()->format('Y-m-d')) == 0) {
-        //         // dd($request->all());
-        //         if($request->produk[$i] != '0') {
-        //             $this->insertBarang($request->id_produk[$i], (int)$request->produk[$i]);
-        //             $stokSaatIni = app('App\Http\Controllers\GudangKecilController')->getStok($request->id_produk[$i]);
-        //             app('App\Http\Controllers\GudangKecilController')->update($request->id_produk[$i], $stokSaatIni - (int)$request->produk[$i]);
-        //         }
-        //     } else {
-        //         if($request->produk[$i] != '0') {
-        //             $this->updateBarang($request->id_produk[$i], (int)$request->produk[$i] + $this->getStokUser()[$i]->stok_dibawa);
-        //             $stokSaatIni = app('App\Http\Controllers\GudangKecilController')->getStok($request->id_produk[$i]);
-        //             app('App\Http\Controllers\GudangKecilController')->update($request->id_produk[$i], $stokSaatIni - (int)$request->produk[$i]);
-        //         }
-        //     }
-        // }
+        for($i = 0; $i < 10; $i++) {
+            if($request->produk[$i] != '0') {
+                RequestBarang::create(
+                    [
+                        'id_user' => auth()->user()->id,
+                        'id_produk' => $request->id_produk[$i],
+                        'jumlah' => (int) $request->produk[$i],
+                        'tanggal_request' => Carbon::now()->format('Y-m-d'),
+                        'konfirmasi' => 0
+                    ]
+                );
+            }
+        }
 
         return redirect('/user/stok_jalan');
     }
 
-    public function insertBarang($id_produk, $jumlahBarang) {
-        CarryProduk::create(
-            [
-                'id_user' => auth()->user()->id,
-                'id_produk' => $id_produk,
-                'tanggal_carry' => Carbon::now()->format('Y-m-d'),
-                'stok_dibawa'=> $jumlahBarang
-            ]
-        );
+    public function getBarangKonfirmasi() {
+        $user = auth()->user()->id;
+        $barangKonfirmasi = DB::select("SELECT p.id_produk, p.nama_produk, r.jumlah FROM request_sales r
+                    JOIN products p ON r.id_produk = p.id_produk
+                    WHERE id_user = $user
+                    AND konfirmasi =  1");
+
+        return $barangKonfirmasi;
     }
 
-    public function updateBarang($id_produk, $jumlahBarang) {
-        $id_user = auth()->user()->id;
-        DB::update("UPDATE carry_produk SET stok_dibawa = $jumlahBarang 
-                    WHERE id_produk = '$id_produk' AND id_user = '$id_user';");
+    public function terimaBarang(Request $request) {
+        // dd($request->all());
+        $user = auth()->user()->id;
+        if($request->has('setuju')) {
+            CarryProduk::create(
+                [
+                    'id_user' => auth()->user()->id,
+                    'id_produk' => $request->id_produk,
+                    'tanggal_carry' => Carbon::now()->format('Y-m-d'),
+                    'stok_dibawa' => (int) $request->jumlah,
+                ]
+            );
+        }
+        DB::delete("DELETE FROM request_sales WHERE id_user = $user");
+
+        return redirect('/user/stok_jalan');
     }
 
-    public function cekBarangDibawa($id_produk, $tanggal) {
-        $id_user = auth()->user()->id;
-        $barang = DB::select("SELECT * FROM `carry_produk` 
-        WHERE id_user = '$id_user' 
-        AND id_produk = '$id_produk'
-        AND tanggal_carry = '$tanggal';");
-
-        return sizeof($barang);
+    public function isRequest($id_user, $tanggal) { // cek apakah user sudah melakukan request ke admin
+        $cek = DB::select("SELECT * FROM `request_sales` 
+                           WHERE id_user = '$id_user' 
+                           AND tanggal_request = '$tanggal';");
+        // dd($cek);
+        if(sizeof($cek) > 0) {
+            return true;
+        }
+        return false;
     }
+
+    public function isKonfirmasi($id_user, $tanggal) {
+        $cek = DB::select("SELECT * FROM `request_sales` 
+                           WHERE id_user = '$id_user' 
+                           AND tanggal_request = '$tanggal'
+                           AND konfirmasi = 1;");
+        // dd($cek);
+        if(sizeof($cek) > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public function isCarry() { // cek apakah sales sudah bawa barang
+        if(sizeof($this->getStokUser()) > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    // public function insertBarang($id_produk, $jumlahBarang) {
+    //     CarryProduk::create(
+    //         [
+    //             'id_user' => auth()->user()->id,
+    //             'id_produk' => $id_produk,
+    //             'tanggal_carry' => Carbon::now()->format('Y-m-d'),
+    //             'stok_dibawa'=> $jumlahBarang
+    //         ]
+    //     );
+    // }
+
+    // public function updateBarang($id_produk, $jumlahBarang) {
+    //     $id_user = auth()->user()->id;
+    //     DB::update("UPDATE carry_produk SET stok_dibawa = $jumlahBarang 
+    //                 WHERE id_produk = '$id_produk' AND id_user = '$id_user';");
+    // }
+
+    // public function cekBarangDibawa($id_produk, $tanggal) {
+    //     $id_user = auth()->user()->id;
+    //     $barang = DB::select("SELECT * FROM `carry_produk` 
+    //     WHERE id_user = '$id_user' 
+    //     AND id_produk = '$id_produk'
+    //     AND tanggal_carry = '$tanggal';");
+
+    //     return sizeof($barang);
+    // }
 
     public function getStokUser() {
         $id_user = auth()->user()->id;

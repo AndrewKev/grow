@@ -26,38 +26,56 @@ class AdminController extends Controller
     }
 
     public function reqSalesPage() {
-        return view('pages.admin2.request');
+        $daftarReq = $this->daftaReqSales();
+        return view('pages.admin2.request', compact('daftarReq'));
     }
 
-    public function konfirmasiReq() {
-        dd($this->cekBarang(5, 'B20'));
-        for($i = 0; $i < 10; $i++) {
-            if($this->cekBarangDibawa($request->id_produk[$i], Carbon::now()->format('Y-m-d')) == 0) {
-                // dd($request->all());
-                if($request->produk[$i] != '0') {
-                    $this->insertBarang($request->id_produk[$i], (int)$request->produk[$i]);
-                    $stokSaatIni = app('App\Http\Controllers\GudangKecilController')->getStok($request->id_produk[$i]);
-                    app('App\Http\Controllers\GudangKecilController')->update($request->id_produk[$i], $stokSaatIni - (int)$request->produk[$i]);
-                }
-            } else {
-                if($request->produk[$i] != '0') {
-                    $this->updateBarang($request->id_produk[$i], (int)$request->produk[$i] + $this->getStokUser()[$i]->stok_dibawa);
-                    $stokSaatIni = app('App\Http\Controllers\GudangKecilController')->getStok($request->id_produk[$i]);
-                    app('App\Http\Controllers\GudangKecilController')->update($request->id_produk[$i], $stokSaatIni - (int)$request->produk[$i]);
-                }
-            }
-        }
+    public function detailReqSales($id) {
+        $data = DB::select("SELECT r.id_user, r.id_produk, p.nama_produk, r.jumlah, r.tanggal_request 
+                            FROM request_sales r
+                            JOIN products p ON p.id_produk = r.id_produk
+                            WHERE id_user = $id");
+        $sales = DB::select("SELECT id, nama
+                            FROM users
+                            WHERE id = $id");
+        // dd($data);
+        return view('pages.admin2.detailRequest', compact('data', 'sales'));
     }
 
-    public function cekBarang($id_user, $id_produk) {
-        $tanggal = Carbon::now()->format('Y-m-d');
-        $barang = DB::select("SELECT * FROM `request_sales` 
-        WHERE id_user = '$id_user' 
-        AND id_produk = '$id_produk'
-        AND tanggal_request = '$tanggal';");
+    public function ubahRequestStok(Request $request, $id_user, $id_produk) {
+        // dd($request);
+        DB::update("UPDATE request_sales SET jumlah = $request->jumlah
+        WHERE id_user = $id_user
+        AND id_produk = '$id_produk'");
 
-        return sizeof($barang);
+        return redirect('/admin/request_sales/'.$id_user);
     }
+
+    public function daftaReqSales() {
+        $daftarSales = DB::select("SELECT DISTINCT u.id, u.nama, r.tanggal_request 
+                                   FROM request_sales AS r
+                                   JOIN users AS u ON u.id = r.id_user
+                                   WHERE konfirmasi = 0;");
+        return $daftarSales;
+    }
+
+    public function konfirmasiRequest($id_user) {
+        // dd("hello");
+        DB::update("UPDATE request_sales SET konfirmasi = 1
+                    WHERE id_user = $id_user");
+
+        return redirect('/admin/request_sales');
+    }
+
+    // public function cekBarang($id_user, $id_produk) {
+    //     $tanggal = Carbon::now()->format('Y-m-d');
+    //     $barang = DB::select("SELECT * FROM `request_sales` 
+    //     WHERE id_user = '$id_user' 
+    //     AND id_produk = '$id_produk'
+    //     AND tanggal_request = '$tanggal';");
+
+    //     return sizeof($barang);
+    // }
 
     /**
      * Show the form for creating a new resource.

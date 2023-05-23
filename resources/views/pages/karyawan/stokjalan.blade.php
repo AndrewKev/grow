@@ -7,9 +7,24 @@
         <div class="card-body">
             {{-- <a href="#">History</a> --}}
             <div class="my-2">
-                <bnutton class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAmbilBarang">
-                    Request Barang
-                </bnutton>
+                @if (!$isCarry)
+                    @if ($konfirmasi)
+                        <div class="alert alert-info" style="width: fit-content;" role="alert">
+                            Barang anda sudah dikonfirmasi admin!
+                        </div>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCekBarang">
+                            Cek Barang
+                        </button>
+                    @elseif ($req)
+                        <div class="alert alert-info" style="width: fit-content;" role="alert">
+                            Anda sudah request barang, silahkan ditunggu proses dari admin!
+                        </div>
+                    @else
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAmbilBarang">
+                            Request Barang
+                        </button>
+                    @endif
+                @endif
             </div>
             <table id="datatablesSimple">
                 <thead>
@@ -56,7 +71,7 @@
                     <h5 class="modal-title" id="exampleModalLabel">Update Stok</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="/user/stok_jalan" method="post" class="myForm" enctype="multipart/form-data" id="formToko">
+                <form action="/user/request_barang" method="post" class="myForm" enctype="multipart/form-data" id="formToko">
                     @csrf
                     <div class="modal-body">
                         <div>
@@ -92,7 +107,8 @@
                         </div>
                         <div>
                             <label for="kc" class="form-label">GROW KRETEK COKLAT 12</label>
-                            <input type="number" name="produk[]" placeholder="KC" class="form-control" value="0"><br>
+                            <input type="number" name="produk[]" placeholder="KC" class="form-control"
+                                value="0"><br>
                             <input type="hidden" name="id_produk[]" value="KC">
                         </div>
                         <div>
@@ -121,4 +137,32 @@
         </div>
     </div>
     <!-- End Modal -->
+
+    <!-- Modal Cek Barang -->
+    <div class="modal fade" id="modalCekBarang" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <form class="modal-content" action="/user/terima_barang" method="post">
+                @csrf
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    @foreach ($barangKonfirmasi as $brg)
+                        <div>
+                            <label class="form-label">{{ $brg->nama_produk }}</label>
+                            <input min="0" type="number" placeholder=""
+                                class="form-control" value="{{ $brg->jumlah }}" disabled><br>
+                            <input type="hidden" name="id_produk" value="{{ $brg->id_produk }}">
+                            <input type="hidden" name="jumlah" value="{{ $brg->jumlah }}">
+                        </div>
+                    @endforeach
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" name="batal" class="btn btn-danger" onclick="return confirm('Yakin tidak ingin menerima barang?')">Batal</button>
+                    <button type="submit" name="setuju" class="btn btn-success" onclick="return confirm('Terima barang?')">Setuju</button>
+                </div>
+            </form>
+        </div>
+    </div>
 @endsection

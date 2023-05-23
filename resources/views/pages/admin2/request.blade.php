@@ -16,17 +16,21 @@
                     @php
                         $no = 1;
                     @endphp
-                    <tr>
-                        <td>{{ $no }}</td>
-                        <td></td>
-                        <td></td>
-                        <td>
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                data-bs-target="#exampleModal">
-                                Detail
-                            </button>
-                        </td>
-                    </tr>
+                    @foreach ($daftarReq as $req)
+                        <tr>
+                            <td>{{ $no }}</td>
+                            <td>{{ $req->tanggal_request }}</td>
+                            <td>{{ $req->nama }}</td>
+                            <td>
+                                <a href="request_sales/{{ $req->id }}" class="btn btn-primary">
+                                    Detail
+                                </a>
+                            </td>
+                        </tr>
+                        @php
+                            $no++;
+                        @endphp
+                    @endforeach
                 </tbody>
             </table>
         </div>
@@ -35,15 +39,12 @@
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                 <form class="modal-content" action="/admin/konfirmasi" method="post">
-					@csrf
+                    @csrf
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        {{-- <form action="/admin/konfirmasi" method="post" class="myForm" enctype="multipart/form-data"
-                            id="formToko">
-                            @csrf --}}
                         <div>
                             <label for="b20" class="form-label">GROW BOLD 20</label>
                             <input type="number" id="B20" name="produk[]" placeholder="B20" class="form-control"
