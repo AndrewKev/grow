@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Distrik;
+use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -12,7 +14,8 @@ class PenjualanLakuCashController extends Controller
      */
     public function index()
     {
-        return view('pages.karyawan.penjualanLakuCash');
+        $distrik = Distrik::where('id_user', Auth::id())->first();
+        return view('pages.karyawan.penjualanLakuCash', compact('distrik'));
     }
 
     /**

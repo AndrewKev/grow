@@ -8,6 +8,42 @@
                 Penjualan
             </button>
         </div>
+        <div class="card-body">
+            <table id="datatablesSimple">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Tanggal</th>
+                        <th>Nama Sales</th>
+                        <th>Distrik</th>
+                        <th>Jenis Kunjungan</th>
+                        <th>Nama Produk</th>
+                        <th>Jumlah Beli</th>
+                        <th>Harga</th>
+                        <th>EMP</th>
+                        <th>Keterangan</th>
+                        <th>Foto</th>
+                        <th>GeoLocation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                </tbody>
+            </table>
+        </div>
 
     </div>
     <!-- Modal -->
@@ -27,7 +63,7 @@
                         </div>
                         <div>
                             <label for="distrik" class="form-label">Distrik</label><br>
-                            <input type="text" name="distrik" value="{{ optional(auth()->user()->distrik)->nama_distrik }}" class="form-control" readonly><br>
+                            <input type="text" name="distrik" value="{{ $distrik->nama_distrik }}" class="form-control" readonly><br>
                         </div>
                         <div>
                             <label for="jKunjungan" class="form-label">Jenis Kunjungan</label><br>
