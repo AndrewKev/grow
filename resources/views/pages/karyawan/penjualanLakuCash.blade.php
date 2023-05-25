@@ -27,20 +27,31 @@
                     </tr>
                 </thead>
                 <tbody>
+                    {{-- @php
+                        dd($penjualanLk);
+                    @endphp --}}
+                    @php
+                        $no = 1;
+                    @endphp
+                    @foreach ($penjualanLk as $plk)
                         <tr>
+                            <td>{{ $no }}</td>
+                            <td>{{ $plk->created_at }}</td>
+                            <td>{{ $plk->id_user }}</td>
+                            <td>{{ $plk->id_distrik }}</td>
+                            <td>{{ $plk->jenis_kunjungan }}</td>
+                            <td>{{ $plk->id_produk }}</td>
+                            <td>{{ $plk->jumlah_produk }}</td>
                             <td></td>
                             <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td>{{ $plk->id_keterangan }}</td>
+                            <td>{{ $plk->id_foto }}</td>
                             <td></td>
                         </tr>
+                        @php
+                            $no++;
+                        @endphp
+                    @endforeach
                 </tbody>
             </table>
         </div>
@@ -63,7 +74,11 @@
                         </div>
                         <div>
                             <label for="distrik" class="form-label">Distrik</label><br>
-                            <input type="text" name="distrik" value="{{ $distrik->nama_distrik }}" class="form-control" readonly><br>
+                            {{-- <input type="text" name="distrik" class="form-control" readonly><br> --}}
+                            {{-- @php
+                                dd($distrik);
+                            @endphp --}}
+                            <input type="text" name="distrik" value="{{ $distrik[0]->nama_distrik }}" class="form-control" readonly>
                         </div>
                         <div>
                             <label for="jKunjungan" class="form-label">Jenis Kunjungan</label><br>
@@ -95,28 +110,25 @@
                             <label for="nama_Toko" class="form-label">Nama Toko</label>
                             <input id="inputNamaToko" type="text" name="inputNamaToko" placeholder="Masukkan Nama Toko" class="form-control"><br>
                         </div>
+                        {{-- @php
+                                dd($routing);
+                            @endphp --}}
                         <div class="pilih-nama-routing-div" style="display: none;">
                             <br><label for="routing" class="form-label">Routing</label><br>
                             <select name="routing" id="routing" placeholder="routing" class="form-control" required>
                                 <option value="">Pilih</option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
-                                <option value="6">6</option>
-                                <option value="7">7</option>
-                                <option value="8">8</option>
-                                <option value="9">9</option>
-                                <option value="10">10</option>
-                                <option value="11">11</option>
-                                <option value="12">12</option>
+                                    @foreach($routing as $data)
+                                        <option value="{{ $data->id_routing }}">{{ $data->nama_routing }}</option>
+                                    @endforeach
                             </select> <br>
                         </div> 
                         <div class="pilih-nama-toko-div" style="display: none;">
                             <label for="pilih_nama_Toko" class="form-label">Nama Toko</label>
                             <select name="pilihNamaToko" id="pilihNamaToko" class="form-control">
                                 <option value="">Pilih</option>
+                                @foreach($nama_toko as $data)
+                                        <option value="{{ $data->id_toko }}">{{ $data->nama_toko }}</option>
+                                    @endforeach
                             </select><br> 
                         </div>
                         <div>
