@@ -153,8 +153,8 @@
                             <label class="form-label">{{ $brg->nama_produk }}</label>
                             <input min="0" type="number" placeholder=""
                                 class="form-control" value="{{ $brg->jumlah }}" disabled><br>
-                            <input type="hidden" name="id_produk" value="{{ $brg->id_produk }}">
-                            <input type="hidden" name="jumlah" value="{{ $brg->jumlah }}">
+                            <input type="hidden" name="id_produk[]" value="{{ $brg->id_produk }}">
+                            <input type="hidden" name="jumlah[]" value="{{ $brg->jumlah }}">
                         </div>
                     @endforeach
                 </div>
