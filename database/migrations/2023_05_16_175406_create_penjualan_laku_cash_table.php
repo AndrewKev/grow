@@ -21,6 +21,7 @@ return new class extends Migration
             $table->char('id_produk');
             $table->integer('jumlah_produk');
             $table->foreignId('id_keterangan');
+            $table->string('emp');
             $table->foreignId('id_foto');
             $table->timestamps();
 
