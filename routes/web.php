@@ -76,7 +76,7 @@ Route::group(
         Route::get('/stok_jalan', 'stokJalanPage');
         Route::post('/request_barang', 'requestBarangStokJalan');
         Route::post('/terima_barang', 'terimaBarang');
-        Route::get('/penjualan_laku_cash', 'jualLakuCash');
+        Route::get('/penjualan_laku_cash', 'pageJualLakuCash');
         Route::post('/penjualan_laku_cash', 'postJualLakuCash');
     }
 );

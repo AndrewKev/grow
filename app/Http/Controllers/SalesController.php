@@ -175,7 +175,7 @@ class SalesController extends Controller
     /**
      * Penjualan Laku Cash
      */
-    public function jualLakuCash() {
+    public function pageJualLakuCash() {
         return app('App\Http\Controllers\PenjualanLakuCashController')->index();
         // dd($classSebelah->getStok('B12'));
         // dd("tess");

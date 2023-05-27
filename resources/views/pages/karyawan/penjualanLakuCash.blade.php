@@ -58,11 +58,6 @@
                     id="formToko">
                     @csrf
                     <div class="modal-body">
-                        {{-- <div>
-                            <label for="nama" class="form-label">Nama</label><br>
-                            <input type="text" name="nama" value="{{ auth()->user()->nama }}" class="form-control"
-                                readonly><br>
-                        </div> --}}
                         <div class="mb-3">
                             <label for="distrik" class="form-label">Distrik</label>
                             <input type="text" name="distrik" value="{{ $distrik[0]->nama_distrik }}"
@@ -96,50 +91,57 @@
                                 <label class="form-check-label" for="STA">STA</label>
                             </div>
                         </div>
-                        {{-- <div class="nama-routing-div">
-                            <label for="inputRouting" class="form-label">Routing</label><br>
-                            <select name="inputRouting" id="inputRouting" placeholder="routing" class="form-control"
-                                required>
-                                <option value="">Pilih</option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
-                                <option value="6">6</option>
-                                <option value="7">7</option>
-                                <option value="8">8</option>
-                                <option value="9">9</option>
-                                <option value="10">10</option>
-                                <option value="11">11</option>
-                                <option value="12">12</option>
-                            </select>
-                        </div> --}}
-                        {{-- <div class="nama-toko-div">
-                            <label for="nama_Toko" class="form-label">Nama Toko</label>
-                            <input id="inputNamaToko" type="text" name="inputNamaToko" placeholder="Masukkan Nama Toko"
-                                class="form-control">
-                        </div> --}}
-                        {{-- @php
-                                dd($routing);
-                            @endphp --}}
-                        {{-- <div class="pilih-nama-routing-div">
-                            <label for="routing" class="form-label">Routing</label><br>
-                            <select name="routing" id="routing" placeholder="routing" class="form-control" required>
-                                <option value="">Pilih</option>
-                                @foreach ($routing as $data)
-                                    <option value="{{ $data->id_routing }}">{{ $data->nama_routing }}</option>
-                                @endforeach
-                            </select>
+                        <div class="mb-3 d-none" id="formIO">
+                            <div class="mb-3">
+                                <label class="form-label">Routing</label>
+                                <select class="form-select" aria-label="Default select example" required name="routing">
+                                    <option selected disabled>Pilih Routing</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                    <option value="11">11</option>
+                                    <option value="12">12</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="namaToko" class="form-label">Nama Toko</label>
+                                <input type="text" class="form-control" id="namaToko" placeholder="Masukan Nama Toko" name="namaToko">
+                            </div>
                         </div>
-                        <div class="pilih-nama-toko-div">
-                            <label for="pilih_nama_Toko" class="form-label">Nama Toko</label>
-                            <select name="pilihNamaToko" id="pilihNamaToko" class="form-control">
-                                <option value="">Pilih</option>
-                                @foreach ($nama_toko as $data)
-                                    <option value="{{ $data->id_toko }}">{{ $data->nama_toko }}</option>
-                                @endforeach
-                        </div> --}}
+                        <div class="mb-3 d-none" id="notFormIO">
+                            <div class="mb-3">
+                                <label class="form-label">Routing</label>
+                                <select class="form-select" aria-label="Default select example" required name="routing">
+                                    <option selected disabled>Pilih Routing</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                    <option value="11">11</option>
+                                    <option value="12">12</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="namaToko" class="form-label">Nama Toko</label>
+                                <select class="form-select" aria-label="Default select example" required name="routing">
+                                    <option selected disabled>Pilih Routing</option>
+                                    <option value="namaToko">namaToko</option>
+                                </select>
+                            </div>
+                        </div>
                         <div>
                             <label for="b20" class="form-label">GROW BOLD 20</label>
                             <input type="number" id="B20" name="produk[]" placeholder="B20" class="form-control"
@@ -148,7 +150,8 @@
                         </div>
                         <div>
                             <label for="b16" class="form-label">GROW BOLD 16</label>
-                            <input type="number" name="produk[]" placeholder="B16" class="form-control" value="0"><br>
+                            <input type="number" name="produk[]" placeholder="B16" class="form-control"
+                                value="0"><br>
                             <input type="hidden" name="id_produk[]" value="B16">
                         </div>
                         <div>
@@ -224,9 +227,6 @@
                                     Sunscreen
                                 </label>
                             </div>
-                            {{-- <input id="sticker" type="checkbox" name="sticker" class="form-check-input">Sticker
-                            <input id="plano" type="checkbox" name="plano" class="form-check-input">Plano
-                            <input id="sunscreen" type="checkbox" name="sunscreen" class="form-check-input">Sunscreen --}}
                         </div>
                         <div>
                             <br><label for="foto" class="form-label">Foto Toko</label>
