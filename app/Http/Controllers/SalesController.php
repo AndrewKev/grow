@@ -171,6 +171,20 @@ class SalesController extends Controller
         return false;
     }
 
+
+    /**
+     * Penjualan Laku Cash
+     */
+    public function jualLakuCash() {
+        return app('App\Http\Controllers\PenjualanLakuCashController')->index();
+        // dd($classSebelah->getStok('B12'));
+        // dd("tess");
+    }
+
+    public function postJualLakuCash(Request $request) {
+        return app('App\Http\Controllers\PenjualanLakuCashController')->store($request);
+    }
+
     // public function insertBarang($id_produk, $jumlahBarang) {
     //     CarryProduk::create(
     //         [

@@ -14,13 +14,7 @@
                     <tr>
                         <th>No</th>
                         <th>Tanggal</th>
-                        <th>Nama Sales</th>
-                        <th>Distrik</th>
-                        <th>Jenis Kunjungan</th>
-                        <th>Nama Produk</th>
-                        <th>Jumlah Beli</th>
-                        <th>Harga</th>
-                        <th>EMP</th>
+                        <th>Nama Toko</th>
                         <th>Keterangan</th>
                         <th>Foto</th>
                         <th>GeoLocation</th>
@@ -36,16 +30,10 @@
                     @foreach ($penjualanLk as $plk)
                         <tr>
                             <td>{{ $no }}</td>
-                            <td>{{ $plk->created_at }}</td>
-                            <td>{{ $plk->id_user }}</td>
-                            <td>{{ $plk->id_distrik }}</td>
-                            <td>{{ $plk->jenis_kunjungan }}</td>
-                            <td>{{ $plk->id_produk }}</td>
-                            <td>{{ $plk->jumlah_produk }}</td>
                             <td></td>
                             <td></td>
-                            <td>{{ $plk->id_keterangan }}</td>
-                            <td>{{ $plk->id_foto }}</td>
+                            <td></td>
+                            <td></td>
                             <td></td>
                         </tr>
                         @php
@@ -58,39 +46,60 @@
 
     </div>
     <!-- Modal -->
-    <div class="modal fade" id="modalPenjualanLakuCash" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="modalPenjualanLakuCash" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Penjualan</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="/user/penjualanLakuCash" method="post" class="myForm" enctype="multipart/form-data" id="formToko">
+                <form action="/user/penjualan_laku_cash" method="post" class="myForm" enctype="multipart/form-data"
+                    id="formToko">
                     @csrf
                     <div class="modal-body">
-                        <div>
+                        {{-- <div>
                             <label for="nama" class="form-label">Nama</label><br>
-                            <input type="text" name="nama" value="{{ auth()->user()->nama }}" class="form-control" readonly><br>
+                            <input type="text" name="nama" value="{{ auth()->user()->nama }}" class="form-control"
+                                readonly><br>
+                        </div> --}}
+                        <div class="mb-3">
+                            <label for="distrik" class="form-label">Distrik</label>
+                            <input type="text" name="distrik" value="{{ $distrik[0]->nama_distrik }}"
+                                class="form-control" readonly>
                         </div>
-                        <div>
-                            <label for="distrik" class="form-label">Distrik</label><br>
-                            {{-- <input type="text" name="distrik" class="form-control" readonly><br> --}}
-                            {{-- @php
-                                dd($distrik);
-                            @endphp --}}
-                            <input type="text" name="distrik" value="{{ $distrik[0]->nama_distrik }}" class="form-control" readonly>
-                        </div>
-                        <div>
+                        <div class="mb-3">
                             <label for="jKunjungan" class="form-label">Jenis Kunjungan</label><br>
-                            <input id="IO" type="radio" name="jenis_kunjungan" value="IO" >IO
-                            <input id="RO" type="radio" name="jenis_kunjungan" value="RO">RO
-                            <input id="ROC" type="radio" name="jenis_kunjungan" value="ROC">ROC
-                            <input id="R" type="radio" name="jenis_kunjungan" value="R">R
-                            <input id="STA" type="radio" name="jenis_kunjungan" value="STA">STA <br>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="jenis_kunjungan" id="IO"
+                                    value="IO">
+                                <label class="form-check-label" for="IO">IO</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="jenis_kunjungan" id="RO"
+                                    value="RO">
+                                <label class="form-check-label" for="RO">RO</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="jenis_kunjungan" id="ROC"
+                                    value="ROC">
+                                <label class="form-check-label" for="ROC">ROC</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="jenis_kunjungan" id="R"
+                                    value="R">
+                                <label class="form-check-label" for="R">R</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="jenis_kunjungan" id="STA"
+                                    value="STA">
+                                <label class="form-check-label" for="STA">STA</label>
+                            </div>
                         </div>
-                        <div class="nama-routing-div" style="display: none;">
-                            <br><label for="inputRouting" class="form-label">Routing</label><br>
-                            <select name="inputRouting" id="inputRouting" placeholder="routing" class="form-control" required>
+                        {{-- <div class="nama-routing-div">
+                            <label for="inputRouting" class="form-label">Routing</label><br>
+                            <select name="inputRouting" id="inputRouting" placeholder="routing" class="form-control"
+                                required>
                                 <option value="">Pilih</option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
@@ -104,35 +113,35 @@
                                 <option value="10">10</option>
                                 <option value="11">11</option>
                                 <option value="12">12</option>
-                            </select> <br>
-                        </div>
-                        <div class="nama-toko-div" style="display: none;">
+                            </select>
+                        </div> --}}
+                        {{-- <div class="nama-toko-div">
                             <label for="nama_Toko" class="form-label">Nama Toko</label>
-                            <input id="inputNamaToko" type="text" name="inputNamaToko" placeholder="Masukkan Nama Toko" class="form-control"><br>
-                        </div>
+                            <input id="inputNamaToko" type="text" name="inputNamaToko" placeholder="Masukkan Nama Toko"
+                                class="form-control">
+                        </div> --}}
                         {{-- @php
                                 dd($routing);
                             @endphp --}}
-                        <div class="pilih-nama-routing-div" style="display: none;">
-                            <br><label for="routing" class="form-label">Routing</label><br>
+                        {{-- <div class="pilih-nama-routing-div">
+                            <label for="routing" class="form-label">Routing</label><br>
                             <select name="routing" id="routing" placeholder="routing" class="form-control" required>
                                 <option value="">Pilih</option>
-                                    @foreach($routing as $data)
-                                        <option value="{{ $data->id_routing }}">{{ $data->nama_routing }}</option>
-                                    @endforeach
-                            </select> <br>
-                        </div> 
-                        <div class="pilih-nama-toko-div" style="display: none;">
+                                @foreach ($routing as $data)
+                                    <option value="{{ $data->id_routing }}">{{ $data->nama_routing }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="pilih-nama-toko-div">
                             <label for="pilih_nama_Toko" class="form-label">Nama Toko</label>
                             <select name="pilihNamaToko" id="pilihNamaToko" class="form-control">
                                 <option value="">Pilih</option>
-                                @foreach($nama_toko as $data)
-                                        <option value="{{ $data->id_toko }}">{{ $data->nama_toko }}</option>
-                                    @endforeach
-                            </select><br> 
-                        </div>
+                                @foreach ($nama_toko as $data)
+                                    <option value="{{ $data->id_toko }}">{{ $data->nama_toko }}</option>
+                                @endforeach
+                        </div> --}}
                         <div>
-                            <br><label for="b20" class="form-label">GROW BOLD 20</label>
+                            <label for="b20" class="form-label">GROW BOLD 20</label>
                             <input type="number" id="B20" name="produk[]" placeholder="B20" class="form-control"
                                 value="0"><br>
                             <input type="hidden" name="id_produk[]" value="B20">
@@ -144,27 +153,32 @@
                         </div>
                         <div>
                             <label for="b12" class="form-label">GROW BOLD 12</label>
-                            <input type="number" name="produk[]" placeholder="B12" class="form-control" value="0"><br>
+                            <input type="number" name="produk[]" placeholder="B12" class="form-control"
+                                value="0"><br>
                             <input type="hidden" name="id_produk[]" value="B12">
                         </div>
                         <div>
                             <label for="r16" class="form-label">GROW REG 16</label>
-                            <input type="number" name="produk[]" placeholder="R16" class="form-control" value="0"><br>
+                            <input type="number" name="produk[]" placeholder="R16" class="form-control"
+                                value="0"><br>
                             <input type="hidden" name="id_produk[]" value="R16">
                         </div>
                         <div>
                             <label for="r12" class="form-label">GROW REG 12</label>
-                            <input type="number" name="produk[]" placeholder="R12" class="form-control" value="0"><br>
+                            <input type="number" name="produk[]" placeholder="R12" class="form-control"
+                                value="0"><br>
                             <input type="hidden" name="id_produk[]" value="R12">
                         </div>
                         <div>
                             <label for="kk" class="form-label">GROW KRETEK KUNING 12</label>
-                            <input type="number" name="produk[]" placeholder="KK" class="form-control" value="0"><br>
+                            <input type="number" name="produk[]" placeholder="KK" class="form-control"
+                                value="0"><br>
                             <input type="hidden" name="id_produk[]" value="KK">
                         </div>
                         <div>
                             <label for="kc" class="form-label">GROW KRETEK COKLAT 12</label>
-                            <input type="number" name="produk[]" placeholder="KC" class="form-control" value="0"><br>
+                            <input type="number" name="produk[]" placeholder="KC" class="form-control"
+                                value="0"><br>
                             <input type="hidden" name="id_produk[]" value="KC">
                         </div>
                         <div>
@@ -184,23 +198,44 @@
                             <input type="number" name="produk[]" placeholder="BICE16" class="form-control"
                                 value="0"><br>
                             <input type="hidden" name="id_produk[]" value="BICE16">
-                        </div>                    
-                        <div>
-                            <label for="keterangan" class="form-label">Keterangan</label>
-                            <input id="keterangan" type="text" name="keterangan" placeholder="keterangan" class="form-control"><br>
                         </div>
                         <div>
-                            <label for="EMP" class="form-label">EMP</label><br>
-                            <input id="sticker" type="checkbox" name="sticker" class="form-check-input">Sticker
+                            <label for="keterangan" class="form-label">Keterangan</label>
+                            <input id="keterangan" type="text" name="keterangan" placeholder="keterangan"
+                                class="form-control"><br>
+                        </div>
+                        <div>
+                            <label class="form-label">EMP</label><br>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="stiker">
+                                <label class="form-check-label" for="stiker">
+                                    Stiker
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="plano">
+                                <label class="form-check-label" for="plano">
+                                    Plane
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="sunscreen">
+                                <label class="form-check-label" for="sunscreen">
+                                    Sunscreen
+                                </label>
+                            </div>
+                            {{-- <input id="sticker" type="checkbox" name="sticker" class="form-check-input">Sticker
                             <input id="plano" type="checkbox" name="plano" class="form-check-input">Plano
-                            <input id="sunscreen" type="checkbox" name="sunscreen" class="form-check-input">Sunscreen
+                            <input id="sunscreen" type="checkbox" name="sunscreen" class="form-check-input">Sunscreen --}}
                         </div>
                         <div>
                             <br><label for="foto" class="form-label">Foto Toko</label>
                             <input type="file" name="foto" class="form-control"><br>
                         </div>
-                        <input type="hidden" id="latitudeInput" name="latitude" placeholder="latitude" class="form-control"><br>
-                        <input type="hidden" id="longitudeInput" name="longitude" placeholder="longitude" class="form-control"><br>
+                        <input type="hidden" id="latitudeInput" name="latitude" placeholder="latitude"
+                            class="form-control"><br>
+                        <input type="hidden" id="longitudeInput" name="longitude" placeholder="longitude"
+                            class="form-control"><br>
                         <button type="submit" class="btn btn-primary">Submit</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     </div>
