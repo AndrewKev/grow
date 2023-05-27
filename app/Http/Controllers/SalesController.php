@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Absensi;
 use App\Models\CarryProduk;
 use App\Models\RequestBarang;
+use App\Models\Penjualan;
+use App\Models\Keterangan;
 
 use Illuminate\Support\Facades\DB;
 
@@ -44,6 +46,7 @@ class SalesController extends Controller
     }
 
     public function postAbsensi(Request $request) {
+        dd($request -> all());
         Absensi::create(
             [
                 'id_user' => auth()->user()->id,
@@ -182,7 +185,44 @@ class SalesController extends Controller
     }
 
     public function postJualLakuCash(Request $request) {
+        // dd($request->all());
+        Keterangan::create(
+            [
+                'keterangan' =>$request->keterangan,
+                'id_user' => auth()->user()->id,
+                'tanggal' =>Carbon::now()->format('Y-m-d')
+            ]
+        );
+        $id_user = auth()->user()->id;
+        $tanggal = Carbon::now()->format('Y-m-d');
+        $keterangan = DB::select("SELECT * FROM `keterangan` 
+                       WHERE id_user = '$id_user' 
+                       AND tanggal = '$tanggal'
+                       ORDER BY created_at DESC");
+
+        dd($keterangan);
+        for($i = 0; $i < 10; $i++) {
+            if($request->produk[$i] != '0') {
+                Penjualan::create(
+                    [
+                        'id_user' => auth()->user()->id,
+                        'id_distrik' => $request->distrik,
+                        // 'id_routing' => $request->id_routing[$i],
+                        // 'id_toko' => $request->id_distrik[$i],
+                        'id_kunjungan' => $request->jenis_kunjungan,
+                        'id_produk' => $request->id_produk[$i],
+                        'jumlah_produk' => (int) $request->produk[$i],
+                        'id_keterangan' => $keterangan[0]->id_keterangan,
+                        // 'id_foto' => $request->id_foto[$i],
+                        'created_at' => Carbon::now()->format('Y-m-d')
+                    ]
+                );
+            }
+        }
+        
+
         return app('App\Http\Controllers\PenjualanLakuCashController')->store($request);
+
     }
 
     // public function insertBarang($id_produk, $jumlahBarang) {

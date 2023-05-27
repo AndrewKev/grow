@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id('id_keterangan');
             $table->string('keterangan');
             $table->foreignId('id_user');
+            $table->date('tanggal');
             $table->timestamps();
 
             $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');

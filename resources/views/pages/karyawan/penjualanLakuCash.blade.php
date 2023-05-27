@@ -210,19 +210,19 @@
                         <div>
                             <label class="form-label">EMP</label><br>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="stiker">
+                                <input class="form-check-input" type="checkbox" name="emp[]" value="stiker" id="stiker">
                                 <label class="form-check-label" for="stiker">
                                     Stiker
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="plano">
+                                <input class="form-check-input" type="checkbox" name="emp[]" value="plano" id="plano">
                                 <label class="form-check-label" for="plano">
                                     Plane
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="sunscreen">
+                                <input class="form-check-input" type="checkbox" name="emp[]" value="sunscreen" id="sunscreen">
                                 <label class="form-check-label" for="sunscreen">
                                     Sunscreen
                                 </label>
