@@ -13,12 +13,13 @@ class Penjualan extends Model
         'id_user',
         'id_produk',
         'id_distrik',
-        // 'id_routing',
-        // 'id_toko',
-        'jenis_kunjungan',
+        'id_routing',
+        'id_toko',
+        'id_kunjungan',
         'jumlah_produk',
+        'emp',
         'id_keterangan',
-        'id_foto',
+        // 'id_foto',
         'created_at',
     ];
 }

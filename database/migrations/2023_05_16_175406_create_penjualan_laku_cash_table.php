@@ -17,19 +17,19 @@ return new class extends Migration
             $table->char('id_distrik');
             $table->foreignId('id_routing');
             $table->foreignId('id_toko');
-            $table->char('jenis_kunjungan');
+            $table->char('id_kunjungan')->nullable();
             $table->char('id_produk');
             $table->integer('jumlah_produk');
             $table->foreignId('id_keterangan');
-            $table->string('emp');
-            $table->foreignId('id_foto');
+            $table->string('emp')->nullable();
+            $table->foreignId('id_foto')->nullable();
             $table->timestamps();
 
             $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('id_distrik')->references('id_distrik')->on('distrik')->onDelete('cascade');
             $table->foreign('id_routing')->references('id_routing')->on('routing')->onDelete('cascade');
             $table->foreign('id_toko')->references('id_toko')->on('toko')->onDelete('cascade');
-            // $table->foreign('id_kunjungan')->references('id_kunjungan')->on('jenis_kunjungan')->onDelete('cascade');
+            $table->foreign('id_kunjungan')->references('id_kunjungan')->on('jenis_kunjungan')->onDelete('cascade');
             $table->foreign('id_produk')->references('id_produk')->on('products')->onDelete('cascade');
             $table->foreign('id_keterangan')->references('id_keterangan')->on('keterangan')->onDelete('cascade');
             $table->foreign('id_foto')->references('id_foto')->on('foto')->onDelete('cascade');
