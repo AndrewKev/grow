@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('carry_produk', function (Blueprint $table) {
             $table->foreignId('id_user');
             $table->char('id_produk');
-            $table->date('tanggal_carry');
+            $table->datetime('tanggal_carry');
             $table->integer('stok_dibawa');
             // $table->int('stok_kembali');
             $table->timestamps();

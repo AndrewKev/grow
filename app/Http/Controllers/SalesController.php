@@ -106,12 +106,13 @@ class SalesController extends Controller
                         'id_user' => auth()->user()->id,
                         'id_produk' => $request->id_produk[$i],
                         'jumlah' => (int) $request->produk[$i],
-                        'tanggal_request' => Carbon::now()->format('Y-m-d'),
+                        'tanggal_request' => Carbon::now(),
                         'konfirmasi' => 0
                     ]
                 );
             }
         }
+        app('App\Http\Controllers\HistoryRequestSalesController')->store($request, 0, 0);
 
         return redirect('/user/stok_jalan');
     }
@@ -135,10 +136,11 @@ class SalesController extends Controller
                     [
                         'id_user' => auth()->user()->id,
                         'id_produk' => $request->id_produk[$i],
-                        'tanggal_carry' => Carbon::now()->format('Y-m-d'),
+                        'tanggal_carry' => Carbon::now(),
                         'stok_dibawa' => (int) $request->jumlah[$i],
                     ]
                 );
+                // app('App\Http\Controllers\HistoryRequestSalesController')->store($request);
             }
         }
         DB::delete("DELETE FROM request_sales WHERE id_user = $user");
@@ -147,9 +149,10 @@ class SalesController extends Controller
     }
 
     public function isRequest($id_user, $tanggal) { // cek apakah user sudah melakukan request ke admin
+        $tanggal = Carbon::now()->format('Y-m-d');
         $cek = DB::select("SELECT * FROM `request_sales` 
                            WHERE id_user = '$id_user' 
-                           AND tanggal_request = '$tanggal';");
+                           AND tanggal_request BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59'");
         // dd($cek);
         if(sizeof($cek) > 0) {
             return true;
@@ -157,10 +160,10 @@ class SalesController extends Controller
         return false;
     }
 
-    public function isKonfirmasi($id_user, $tanggal) {
+    public function isKonfirmasi($id_user, $tanggal) { // cek apakah admin sudah melakukan konfirmasi
         $cek = DB::select("SELECT * FROM `request_sales` 
                            WHERE id_user = '$id_user' 
-                           AND tanggal_request = '$tanggal'
+                           AND tanggal_request BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59'
                            AND konfirmasi = 1;");
         // dd($cek);
         if(sizeof($cek) > 0) {
@@ -261,7 +264,7 @@ class SalesController extends Controller
         FROM carry_produk AS c
         JOIN products ON products.id_produk = c.id_produk
         JOIN users ON c.id_user = users.id
-        WHERE c.id_user = '$id_user' AND c.tanggal_carry = '$tanggal';");
+        WHERE c.id_user = '$id_user' AND c.tanggal_carry BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59';");
 
         return $barang;
     }

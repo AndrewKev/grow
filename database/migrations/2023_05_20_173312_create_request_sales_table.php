@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('id_user');
             $table->char('id_produk');
             $table->integer('jumlah');
-            $table->date('tanggal_request');
+            $table->datetime('tanggal_request');
             $table->boolean('konfirmasi');
             $table->timestamps();
 
