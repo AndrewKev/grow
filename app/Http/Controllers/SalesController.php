@@ -129,17 +129,19 @@ class SalesController extends Controller
     }
 
     public function terimaBarang(Request $request) {
-        // dd($request->all());
         $user = auth()->user()->id;
         if($request->has('setuju')) {
-            CarryProduk::create(
-                [
-                    'id_user' => auth()->user()->id,
-                    'id_produk' => $request->id_produk,
-                    'tanggal_carry' => Carbon::now()->format('Y-m-d'),
-                    'stok_dibawa' => (int) $request->jumlah,
-                ]
-            );
+            // dd($request->all());
+            for($i = 0; $i < sizeof($request->id_produk); $i++) {
+                CarryProduk::create(
+                    [
+                        'id_user' => auth()->user()->id,
+                        'id_produk' => $request->id_produk[$i],
+                        'tanggal_carry' => Carbon::now()->format('Y-m-d'),
+                        'stok_dibawa' => (int) $request->jumlah[$i],
+                    ]
+                );
+            }
         }
         DB::delete("DELETE FROM request_sales WHERE id_user = $user");
 
