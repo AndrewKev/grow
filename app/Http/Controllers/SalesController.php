@@ -194,6 +194,12 @@ class SalesController extends Controller
         // return redirect()->back('App\Http\Controllers\PenjualanLakuCashController')->index();
 
     }
+    public function detailJualLakuCash($id_toko) {
+        return app('App\Http\Controllers\PenjualanLakuCashController')->detailPenjualan($id_toko);
+        // return redirect('/user/stok_jalan');
+        // return redirect()->back('App\Http\Controllers\PenjualanLakuCashController')->index();
+
+    }
 
     // public function insertBarang($id_produk, $jumlahBarang) {
     //     CarryProduk::create(

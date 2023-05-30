@@ -26,22 +26,31 @@ class PenjualanLakuCashController extends Controller
         // $distrik = Distrik::where('id_user', Auth::id())->first();
         $distrik = DB::select("SELECT * FROM distrik WHERE id_user = $id_user");
         // dd($distrik);
-        $penjualanLk = DB::select("SELECT * FROM penjualan_laku_cash WHERE id_user = $id_user");
+        
+        $penjualanLk = DB::select("SELECT DISTINCT toko.id_toko, toko.nama_toko, routing.nama_routing, keterangan, p.emp, p.latitude, p.longitude, p.created_at 
+                                    FROM penjualan_laku_cash AS p 
+                                    JOIN toko ON toko.id_toko = p.id_toko 
+                                    JOIN routing ON routing.id_routing = p.id_routing 
+                                    JOIN keterangan ON keterangan.id_keterangan = p.id_keterangan
+                                    WHERE p.id_user = '$id_user'");
+    
         // dd($penjualanLk);
-        $routing = DB::select("SELECT * FROM routing JOIN distrik ON distrik.id_distrik = routing.id_distrik WHERE id_user = $id_user");
-        // dd($routing);
-        // Memastikan $routing bukan array kosong
-        if (!empty($routing)) {
-            $id_routing = $routing[0]->id_routing;
-            $nama_toko = DB::select("SELECT * FROM toko JOIN routing ON routing.id_routing = toko.id_routing JOIN distrik ON distrik.id_distrik = routing.id_distrik WHERE toko.id_routing = $id_routing AND distrik.id_user = $id_user");
-        } else {
-            //jika $routing kosong
-            $nama_toko = [];
-        }
-        // dd($nama_toko);
-        return view('pages.karyawan.penjualanLakuCash', compact('distrik', 'penjualanLk', 'routing', 'nama_toko'));
+        return view('pages.karyawan.penjualanLakuCash', compact('distrik', 'penjualanLk'));
     }
 
+    public function detailPenjualan($id_toko){
+        // $id_user = auth()->user()->id;
+        // $data = DB::select("SELECT * FROM penjualan_laku_cash
+        //                     WHERE id_toko = $id_toko");
+        $data = DB::select("SELECT  p.*, products.harga_toko, products.nama_produk, toko.id_toko
+        FROM penjualan_laku_cash AS p
+        JOIN toko ON toko.id_toko = p.id_toko
+        JOIN products ON products.id_produk = p.id_produk
+        WHERE p.id_toko = $id_toko;");
+        // dd($data);
+
+        return view('pages.karyawan.tampilPenjualanLakuCash', compact('data'));
+    }
     /**
      * Show the form for creating a new resource.
      */
@@ -58,9 +67,9 @@ class PenjualanLakuCashController extends Controller
         // dd($request->all());
         $emp = "";
         foreach($request->emp as $e) {
-            $emp .= $e . '; ';
+                $emp .= $e . '; ';
         }
-        // dd($emp);
+                // dd($emp);
 
         Keterangan::create(
             [
@@ -101,6 +110,7 @@ class PenjualanLakuCashController extends Controller
         $id_toko = $toko[0]->id_toko;
         for($i = 0; $i < 10; $i++) {
             if($request->produk[$i] != '0') {
+                
                 Penjualan::create(
                     [
                         'id_user' => auth()->user()->id,
@@ -111,7 +121,9 @@ class PenjualanLakuCashController extends Controller
                         'id_produk' => $request->id_produk[$i],
                         'jumlah_produk' => (int) $request->produk[$i],
                         'id_keterangan' => $keterangan[0]->id_keterangan,
-                        'emp' => $request->$emp,
+                        'emp' => $emp,
+                        'latitude' => $request->latitude,
+                        'longitude' => $request->longitude
                         // 'id_foto' => $request->id_foto[$i],
                     ]
                 );

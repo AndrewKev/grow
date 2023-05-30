@@ -20,6 +20,8 @@ class Penjualan extends Model
         'emp',
         'id_keterangan',
         // 'id_foto',
+        'latitude',
+        'longitude',
         'created_at',
     ];
 }

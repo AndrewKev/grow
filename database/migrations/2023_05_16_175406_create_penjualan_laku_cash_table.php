@@ -23,6 +23,8 @@ return new class extends Migration
             $table->foreignId('id_keterangan');
             $table->string('emp')->nullable();
             $table->foreignId('id_foto')->nullable();
+            $table->string('latitude');
+            $table->string('longitude');
             $table->timestamps();
 
             $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');

@@ -14,8 +14,10 @@
                     <tr>
                         <th>No</th>
                         <th>Tanggal</th>
+                        <th>Routing</th>
                         <th>Nama Toko</th>
                         <th>Keterangan</th>
+                        <th>Emp</th>
                         <th>Foto</th>
                         <th>GeoLocation</th>
                     </tr>
@@ -30,11 +32,13 @@
                     @foreach ($penjualanLk as $plk)
                         <tr>
                             <td>{{ $no }}</td>
+                            <td>{{ $plk->created_at }}</td>
+                            <td>{{ $plk->nama_routing }}</td>
+                            <td><a href="penjualan_laku_cash/{{ $plk->id_toko }}">{{ $plk->nama_toko }}</a></td>
+                            <td>{{ $plk->keterangan }}</td>
+                            <td>{{ $plk->emp }}</td>
                             <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td>{{ $plk->latitude.','.$plk->longitude}}</td>
                         </tr>
                         @php
                             $no++;
