@@ -64,7 +64,12 @@ class AdminController extends Controller
         DB::update("UPDATE request_sales SET konfirmasi = 1
                     WHERE id_user = $id_user");
 
+        // app('App\Http\Controllers\HistoryRequestSalesController')->store($request, $i);
         return redirect('/admin/request_sales');
+    }
+
+    public function getReqKonfirmasi() {
+        
     }
 
     // public function cekBarang($id_user, $id_produk) {
