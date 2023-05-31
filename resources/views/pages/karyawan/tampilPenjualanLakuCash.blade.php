@@ -41,7 +41,10 @@
                         @endphp
                     @endforeach
                     <tr>
-                        <td colspan="3"><b>Total</b></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><b>Total</b></td>
                         <td><b>{{ $total }}</b></td>
                     </tr>                   
                 </tbody>

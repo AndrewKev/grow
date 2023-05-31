@@ -13,7 +13,7 @@ class CarryProduk extends Model
         'id_user',
         'id_produk',
         'tanggal_carry',
-        'stok_dibawa',
+        'stok_awal',
         'stok_sekarang',
     ];
 }

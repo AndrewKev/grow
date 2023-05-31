@@ -48,7 +48,7 @@ class SalesController extends Controller
     }
 
     public function postAbsensi(Request $request) {
-        dd($request -> all());
+        // dd($request -> all());
         Absensi::create(
             [
                 'id_user' => auth()->user()->id,

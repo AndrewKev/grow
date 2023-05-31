@@ -46,7 +46,7 @@
                             <td>{{ $no }}</td>
                             <td>{{ $brg->tanggal_carry }}</td>
                             <td>{{ $brg->nama_produk }}</td>
-                            <td>{{ $brg->stok_dibawa }}</td>
+                            <td>{{ $brg->stok_awal }}</td>
                             <td>{{ $brg->stok_sekarang }}</td>
                         </tr>
                         @php
