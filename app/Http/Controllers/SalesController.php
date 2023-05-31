@@ -114,7 +114,7 @@ class SalesController extends Controller
                 );
             }
         }
-        app('App\Http\Controllers\HistoryRequestSalesController')->store($request, 0, 0);
+        app('App\Http\Controllers\HistoryRequestSalesController')->salesRequest($request, 0, 0);
 
         return redirect('/user/stok_jalan');
     }
@@ -144,6 +144,11 @@ class SalesController extends Controller
                     ]
                 );
                 // app('App\Http\Controllers\HistoryRequestSalesController')->store($request);
+                app('App\Http\Controllers\HistoryRequestSalesController')->konfirmasiSales($request, 'sales terima', $i);
+            }
+        } else {
+            for($i = 0; $i < sizeof($request->id_produk); $i++) {
+                app('App\Http\Controllers\HistoryRequestSalesController')->konfirmasiSales($request, 'sales tolak', $i);
             }
         }
         DB::delete("DELETE FROM request_sales WHERE id_user = $user");

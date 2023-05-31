@@ -64,13 +64,14 @@ class AdminController extends Controller
         DB::update("UPDATE request_sales SET konfirmasi = 1
                     WHERE id_user = $id_user");
 
-        // app('App\Http\Controllers\HistoryRequestSalesController')->store($request, $i);
+        app('App\Http\Controllers\HistoryRequestSalesController')->konfirmasiAdmin($id_user);
         return redirect('/admin/request_sales');
     }
 
-    public function getReqKonfirmasi() {
-        
+    public function test() {
+        dd(app('App\Http\Controllers\HistoryRequestSalesController')->getReqKonfirmasiByIdSales(4));
     }
+
 
     // public function cekBarang($id_user, $id_produk) {
     //     $tanggal = Carbon::now()->format('Y-m-d');
