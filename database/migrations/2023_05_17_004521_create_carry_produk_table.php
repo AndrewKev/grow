@@ -15,7 +15,8 @@ return new class extends Migration
             $table->foreignId('id_user');
             $table->char('id_produk');
             $table->datetime('tanggal_carry');
-            $table->integer('stok_dibawa');
+            $table->integer('stok_awal');
+            $table->integer('stok_sekarang');
             // $table->int('stok_kembali');
             $table->timestamps();
 

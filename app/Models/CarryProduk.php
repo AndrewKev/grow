@@ -14,5 +14,6 @@ class CarryProduk extends Model
         'id_produk',
         'tanggal_carry',
         'stok_dibawa',
+        'stok_sekarang',
     ];
 }
