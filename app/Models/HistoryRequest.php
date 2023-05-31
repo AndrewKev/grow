@@ -10,11 +10,12 @@ class HistoryRequest extends Model
     use HasFactory;
     protected $table = 'history_request_stok_sales';
     protected $fillable = [
-        'tanggal_request',
+        'tanggal',
         'nama_sales',
         'nama_produk',
         'jumlah',
         'konfirmasi_admin',
         'konfirmasi_sales',
+        'keterangan',
     ];
 }

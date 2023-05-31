@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('history_request_stok_sales', function (Blueprint $table) {
             $table->id();
-            $table->datetime('tanggal_request');
+            $table->datetime('tanggal');
             $table->string('nama_sales');
             $table->string('nama_produk');
             $table->integer('jumlah');
             $table->boolean('konfirmasi_admin');  // => 0
             $table->boolean('konfirmasi_sales');  // => 0
+            $table->string('keterangan'); 
             $table->timestamps();
         });
     }

@@ -57,6 +57,10 @@ Route::group(
         Route::post('/request_sales/{id_user}/ubah_stok/{id_produk}', 'ubahRequestStok');
         Route::post('/request_sales/{id_user}/konfirmasi', 'konfirmasiRequest');
         // Route::post('/konfirmasi', 'konfirmasiReq');
+        
+        // testing aja
+        Route::get('/test', 'test');
+        
     }
 );
 
