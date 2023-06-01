@@ -29,7 +29,7 @@
                         <div class="col-lg-5">
                             <div class="card shadow-lg border-0 rounded-lg mt-5">
                                 <div class="card-header">
-                                    <h3 class="text-center font-weight-light my-4"><img src="assets/img/Grow.jpeg"
+                                    <h3 class="text-center font-weight-light my-4"><img src="{{ asset('img/logo.jpg') }}"
                                             width="180" height="120" alt="logotoko"></h3>
                                 </div>
                                 <div class="card-body">
