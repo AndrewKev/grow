@@ -1,5 +1,6 @@
 @extends('layouts.karyawan')
 @section('karyawan.body')
+<div class="mt-5">
     <div class="card mb-4">
         <div class="card-header">
             <h2>STOK JALAN</h2>
@@ -32,9 +33,8 @@
                         <th>No</th>
                         <th>Tanggal</th>
                         <th>Nama Produk</th>
-                        <th>Stok dibawa</th>
-                        <th>Stok kembali</th>
-                        <th></th>
+                        <th>Stok Awal</th>
+                        <th>Sisa Stok</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -46,14 +46,8 @@
                             <td>{{ $no }}</td>
                             <td>{{ $brg->tanggal_carry }}</td>
                             <td>{{ $brg->nama_produk }}</td>
-                            <td>{{ $brg->stok_dibawa }}</td>
-                            <td></td>
-                            <td>
-                                <button type="button" class="btn btn-warning" data-bs-toggle="modal"
-                                    data-bs-target="#editkm">
-                                    Edit
-                                </button>
-                            </td>
+                            <td>{{ $brg->stok_awal }}</td>
+                            <td>{{ $brg->stok_sekarang }}</td>
                         </tr>
                         @php
                             $no++;
@@ -146,6 +140,7 @@
             </div>
         </div>
     </div>
+</div>
     <!-- End Modal -->
 
     <!-- Modal Cek Barang -->

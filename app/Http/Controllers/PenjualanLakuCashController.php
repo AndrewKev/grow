@@ -6,6 +6,7 @@ use App\Models\RequestBarang;
 use App\Models\Penjualan;
 use App\Models\Keterangan;
 use App\Models\Toko;
+use App\Models\CarryProduk;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
@@ -48,8 +49,38 @@ class PenjualanLakuCashController extends Controller
         JOIN products ON products.id_produk = p.id_produk
         WHERE p.id_toko = $id_toko;");
         // dd($data);
+        
 
         return view('pages.karyawan.tampilPenjualanLakuCash', compact('data'));
+    }
+
+    public function getStokUser() {
+        $id_user = auth()->user()->id;
+        $tanggal = Carbon::now()->format('Y-m-d');
+        $barang = DB::select("SELECT id_produk, stok_sekarang
+        FROM carry_produk
+        WHERE id_user = '$id_user' AND tanggal_carry BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59';");
+
+        return $barang;
+    }
+
+    // public function updateCarry() { // cek apakah sales sudah bawa barang
+        
+    //     if(sizeof($this->getStokUser()) > 0) {
+            
+    //     }
+    //     return false;
+    // }
+
+    public function stokJalanPage() {
+        $barang = $this->getStokUser();
+        $req = $this->isRequest(auth()->user()->id, Carbon::now()->format('Y-m-d'));
+        $konfirmasi = $this->isKonfirmasi(auth()->user()->id, Carbon::now()->format('Y-m-d'));
+        $barangKonfirmasi = $this->getBarangKonfirmasi();
+        $isCarry = $this->isCarry();
+
+        // dd($barangKonfirmasi);
+        return view('pages.karyawan.stokjalan', compact('barang', 'req', 'konfirmasi', 'barangKonfirmasi', 'isCarry'));
     }
     /**
      * Show the form for creating a new resource.
@@ -65,12 +96,48 @@ class PenjualanLakuCashController extends Controller
     public function store(Request $request)
     {
         // dd($request->all());
+        // $emp = "";
+        // foreach($request->emp as $e) {
+        //         $emp .= $e . '; ';
+        // }
         $emp = "";
-        foreach($request->emp as $e) {
+        if (!empty($request->emp)) {
+            foreach ($request->emp as $e) {
                 $emp .= $e . '; ';
+            }
         }
                 // dd($emp);
+        // UPDATE STOK
+        $barang = $this->getStokUser();
+        $data = [];
+        for ($i = 0; $i < 10; $i++) {
+            if ($request->produk[$i] != '0') {
+                $productId = $request->id_produk[$i];
+                $carryValue = (int) $request->produk[$i];
 
+                $data[$productId] = [
+                    'produk' => $productId,
+                    'carry' => $carryValue
+                ];
+            }
+        }
+        // dd($data);
+        // Mengurangi stok berdasarkan carry yang diinputkan
+        foreach ($data as $productId => $item) {
+            $carryValue = $item['carry'];
+
+            foreach ($barang as $produk) {
+                if ($produk->id_produk === $productId) {
+                    $produk->stok_sekarang -= $carryValue;
+                    break;
+                }
+            }
+            // Lakukan update pada tabel CarryProduk
+            CarryProduk::where('id_produk', $productId)->update(['stok_sekarang' => $produk->stok_sekarang]);
+        }
+        // dd($updateData);
+        
+        // KETERANGAN
         Keterangan::create(
             [
                 'keterangan' =>$request->keterangan,
@@ -95,12 +162,9 @@ class PenjualanLakuCashController extends Controller
             );
         }
         
-        // dd($coba);
+        
+        // dd($barang);
 
-        // $id_routing = DB::select("SELECT * FROM `routing` 
-        //                         WHERE id_routing = '$request->routing'");
-        // $id_kunjungan = DB::select("SELECT * FROM `jenis_kunjungan` 
-        //                         WHERE id_kunjungan = '$request->jenis_kunjungan'");
         $toko = DB::select("SELECT * FROM `toko` 
                             WHERE id_routing = $request->routing
                             AND id_kunjungan = '$request->jenis_kunjungan'
@@ -125,11 +189,15 @@ class PenjualanLakuCashController extends Controller
                         'latitude' => $request->latitude,
                         'longitude' => $request->longitude
                         // 'id_foto' => $request->id_foto[$i],
+
                     ]
                 );
+                
             }
+            // dd($barang);
+            
         }
-
+        // dd($request->id_produk);
         return redirect('/user/penjualan_laku_cash');
     }
 

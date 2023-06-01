@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('absensi', function (Blueprint $table) {
             $table->id('id_absensi');
             $table->foreignId('id_user');
-            $table->string('keterangan');
+            $table->string('keterangan')->nullable();
             $table->dateTime('waktu_masuk');
             $table->dateTime('waktu_keluar')->nullable();
             $table->string('foto')->nullable();

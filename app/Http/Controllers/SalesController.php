@@ -48,7 +48,7 @@ class SalesController extends Controller
     }
 
     public function postAbsensi(Request $request) {
-        dd($request -> all());
+        // dd($request -> all());
         Absensi::create(
             [
                 'id_user' => auth()->user()->id,
@@ -139,7 +139,8 @@ class SalesController extends Controller
                         'id_user' => auth()->user()->id,
                         'id_produk' => $request->id_produk[$i],
                         'tanggal_carry' => Carbon::now(),
-                        'stok_dibawa' => (int) $request->jumlah[$i],
+                        'stok_awal' => (int) $request->jumlah[$i],
+                        'stok_sekarang' =>(int) $request->jumlah[$i],
                     ]
                 );
                 // app('App\Http\Controllers\HistoryRequestSalesController')->store($request);
