@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Admin1Controller;
 use App\Http\Controllers\SalesController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PenjualanLakuCashController;
@@ -33,12 +34,18 @@ Auth::routes();
 // admin1
 Route::group(
     [
-        'controller' => AdminController::class,
+        'controller' => Admin1Controller::class,
         'prefix' => 'admin',
         'middleware' => ['auth', 'level:1']
     ],
     function() {
-        Route::get('/dashboard', 'index');
+        Route::get('/dashboard', 'admin1Page');
+
+        // REQUEST STOR KEUANGAN
+        Route::get('/request_stor_uang', 'reqSalesStorUang');
+        Route::get('/request_stor_uang/{id}', 'detailReqSalesStorUang');
+        Route::post('/request_stor_uang/{id_user}/konfirmasi', 'konfirmasiRequestStorUang');
+
     }
 );
 
@@ -47,7 +54,7 @@ Route::group(
 Route::group(
     [
         'controller' => AdminController::class,
-        'prefix' => 'admin',
+        'prefix' => 'admin2',
         'middleware' => ['auth', 'level:2']
     ],
     function() {
@@ -57,7 +64,11 @@ Route::group(
         Route::post('/request_sales/{id_user}/ubah_stok/{id_produk}', 'ubahRequestStok');
         Route::post('/request_sales/{id_user}/konfirmasi', 'konfirmasiRequest');
         // Route::post('/konfirmasi', 'konfirmasiReq');
-        
+
+        // REQUEST STOR BARANG
+        Route::get('/request_stor_barang', 'reqSalesStorBarang');
+        Route::get('/request_stor_barang/{id}', 'detailReqSalesStorBarang');
+        Route::post('/request_stor_barang/{id_user}/konfirmasi', 'konfirmasiRequestStorBarang');
         // testing aja
         Route::get('/test', 'test');
         
@@ -83,6 +94,16 @@ Route::group(
         Route::get('/penjualan_laku_cash', 'pageJualLakuCash');
         Route::post('/penjualan_laku_cash', 'postJualLakuCash');
         Route::get('/penjualan_laku_cash/{id_toko}', 'detailJualLakuCash');
+        // Stor Produk ke admin 2
+        Route::get('/stor_produk', 'tampilStorProduk');
+        Route::post('/request_stor_barang', 'requestStorBarang');
+        // Route::post('/input_stor_produk', 'inputStorProduk');
+        
+        // Stor Keuangan ke admin 1 
+        Route::post('/request_stor_uang', 'requestStorUang');
+
+        // Selesai stor produk
+        Route::post('/insert_produk', 'insertStorProduk');
     }
 );
 

@@ -9,7 +9,12 @@
             {{-- <a href="#">History</a> --}}
             <div class="my-2">
                 @if (!$isCarry)
-                    @if ($konfirmasi)
+                    @if (!$absenMasuk)
+                    <button class="btn btn-outline-secondary mb-2" data-bs-toggle="modal" data-bs-target="">
+                        Request Barang
+                    </button>
+                    Lakukan absesnsi terlebih dahulu!
+                    @elseif($konfirmasi)
                         <div class="alert alert-info" style="width: fit-content;" role="alert">
                             Barang anda sudah dikonfirmasi admin!
                         </div>

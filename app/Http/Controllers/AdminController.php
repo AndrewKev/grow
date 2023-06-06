@@ -13,11 +13,7 @@ class AdminController extends Controller
      */
     public function index()
     {
-        // return view('pages.admin2.dashboard');
     }
-    
-
-
     /**
      * Admin 2
      */
@@ -48,7 +44,7 @@ class AdminController extends Controller
         WHERE id_user = $id_user
         AND id_produk = '$id_produk'");
 
-        return redirect('/admin/request_sales/'.$id_user);
+        return redirect('/admin2/request_sales/'.$id_user);
     }
 
     public function daftaReqSales() {
@@ -65,11 +61,46 @@ class AdminController extends Controller
                     WHERE id_user = $id_user");
 
         app('App\Http\Controllers\HistoryRequestSalesController')->konfirmasiAdmin($id_user);
-        return redirect('/admin/request_sales');
+        return redirect('/admin2/request_sales');
     }
 
     public function test() {
         dd(app('App\Http\Controllers\HistoryRequestSalesController')->getReqKonfirmasiByIdSales(4));
+    }
+
+    // SALES REQ BARANG
+
+    public function daftaReqSalesStorBarang() {
+        $daftarSales = DB::select("SELECT DISTINCT u.id, u.nama, r.tanggal_stor 
+                                   FROM request_stor_barang AS r
+                                   JOIN users AS u ON u.id = r.id_user
+                                   WHERE konfirmasi = 0;");
+        return $daftarSales;
+    }
+
+    public function reqSalesStorBarang() {
+        $daftarReqStorBarang = $this->daftaReqSalesStorBarang();
+        // dd($daftarReqStorBarang);
+        return view('pages.admin2.requestStorBarang', compact('daftarReqStorBarang'));
+    }
+
+    public function detailReqSalesStorBarang($id) {
+        $data = DB::select("SELECT r.id_user, r.id_produk, p.nama_produk, r.stok_awal,r.terjual, r.sisa_stok, r.tanggal_stor, r.konfirmasi
+                            FROM request_stor_barang r
+                            JOIN products p ON p.id_produk = r.id_produk
+                            WHERE id_user = $id AND r.konfirmasi = 0");
+        $sales = DB::select("SELECT id, nama
+                            FROM users
+                            WHERE id = $id");
+        // dd($data);
+        return view('pages.admin2.detailRequestStorBarang', compact('data', 'sales'));
+    }
+
+    public function konfirmasiRequestStorBarang($id_user) {
+        // dd("hello");
+        DB::update("UPDATE request_stor_barang SET konfirmasi = 1
+                    WHERE id_user = $id_user");
+        return redirect('/admin2/request_stor_barang');
     }
 
 

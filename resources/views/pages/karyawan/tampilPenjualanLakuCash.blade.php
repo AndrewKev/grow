@@ -39,18 +39,27 @@
                             $no++;
                             $total += ($dt->jumlah_produk * $dt->harga_toko);
                         @endphp
-                    @endforeach
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td><b>Total</b></td>
-                        <td><b>{{ $total }}</b></td>
-                    </tr>                   
+                    @endforeach                  
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <th>Total</th>
+                        <th>{{ $total }}</th>
+                    </tr>  
+                </tfoot>
             </table>
         </div>
 
     </div>
     <script src="{{ asset('js/custom.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            let table = $('#datatablesSimple').DataTable( {
+                fixedHeader: {
+                    header: true,
+                    footer: true
+                }
+            } );
+        } );
+    <script>
 @endsection

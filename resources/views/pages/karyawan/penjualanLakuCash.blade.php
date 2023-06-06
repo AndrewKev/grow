@@ -3,10 +3,24 @@
     <h2 class="mb-4 mt-4">Penjualan</h2>
     <div class="card mb-4 mt-4">
         <div class="card-header">
+                    @if(!$carryToday)
+                    <button class="btn btn-outline-secondary mb-2" data-bs-toggle="modal" data-bs-target="">
+                        Penjualan
+                    </button>
+                    Ambil stok barang terlebih dahulu!
+                    @elseif($storToday)
+                    <div class="alert alert-info" style="width: fit-content;" role="alert">
+                        Anda sudah melakukan stor hari ini!
+                    </div>
+                    @else
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalPenjualanLakuCash">
+                        Penjualan
+                    </button>
+                    @endif
             <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalPenjualanLakuCash">
+            {{-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalPenjualanLakuCash">
                 Penjualan
-            </button>
+            </button> --}}
         </div>
         <div class="card-body">
             <table id="datatablesSimple">
