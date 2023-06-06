@@ -236,7 +236,7 @@ class SalesController extends Controller
     }
 
     public function postJualLakuCash(Request $request) {
-        dd($request->all());
+        // dd($request->all());
         // $collectReq = collect($request);
 
         // $distrik = $collectReq->get('id_distrik');
