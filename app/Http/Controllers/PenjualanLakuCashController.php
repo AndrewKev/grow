@@ -26,10 +26,16 @@ class PenjualanLakuCashController extends Controller
         // dd($this->getRoutingUser($id_user));
         // $distrik = Distrik::where('id_user', Auth::id())->first();
         $distrik = DB::select("SELECT * FROM distrik WHERE id_user = $id_user");
+<<<<<<< HEAD
         
         $routing = $this->getRoutingUser($id_user);
         // dd($routing);
         
+=======
+        // dd($distrik);
+        $storToday = $this->isTodayStorProduk(auth()->user()->id, Carbon::now()->format('Y-m-d'));
+        $carryToday = $this->isTodayCarryProduk(auth()->user()->id, Carbon::now()->format('Y-m-d'));
+>>>>>>> f95792563409b2fe4b1592948d4a71d9cf51503d
         $penjualanLk = DB::select("SELECT DISTINCT toko.id_toko, toko.nama_toko, routing.nama_routing, keterangan, p.emp, p.latitude, p.longitude, p.created_at 
                                     FROM penjualan_laku_cash AS p 
                                     JOIN toko ON toko.id_toko = p.id_toko 
@@ -38,7 +44,32 @@ class PenjualanLakuCashController extends Controller
                                     WHERE p.id_user = '$id_user'");
     
         // dd($penjualanLk);
+<<<<<<< HEAD
         return view('pages.karyawan.penjualanLakuCash', compact('distrik', 'penjualanLk', 'routing'));
+=======
+        return view('pages.karyawan.penjualanLakuCash', compact('distrik', 'penjualanLk', 'storToday', 'carryToday'));
+    }
+    public function isTodayStorProduk($id_user, $tanggal) { 
+        $cek = DB::select("SELECT * FROM `stor_produk` 
+                           WHERE id_user = '$id_user' 
+                           AND tanggal_stor BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59'");
+        // dd($cek);
+        if(sizeof($cek) > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public function isTodayCarryProduk($id_user, $tanggal) { 
+        $cek = DB::select("SELECT * FROM `carry_produk` 
+                           WHERE id_user = '$id_user' 
+                           AND tanggal_carry BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59'");
+        // dd($cek);
+        if(sizeof($cek) > 0) {
+            return true;
+        }
+        return false;
+>>>>>>> f95792563409b2fe4b1592948d4a71d9cf51503d
     }
 
     public function detailPenjualan($id_toko){
@@ -66,13 +97,18 @@ class PenjualanLakuCashController extends Controller
         return $barang;
     }
 
-    // public function updateCarry() { // cek apakah sales sudah bawa barang
-        
-    //     if(sizeof($this->getStokUser()) > 0) {
-            
-    //     }
-    //     return false;
-    // }
+    public function isAbsenMasuk($id_user, $tanggal) { // cek apakah user sudah melakukan request ke admin
+        $tanggal = Carbon::now()->format('Y-m-d');
+        $cek = DB::select("SELECT * FROM `absensi` 
+                           WHERE id_user = '$id_user' 
+                           AND waktu_masuk BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59'");
+        // dd($cek);
+        if(sizeof($cek) > 0) {
+            return true;
+        }
+        return false;
+    }
+    
 
     public function stokJalanPage() {
         $barang = $this->getStokUser();

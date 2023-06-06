@@ -58,6 +58,7 @@
                                 <a class="nav-link" href="penjualan_laku_cash">Penjualan Laku Cash</a>
                             </div>
                         </div>
+                        <a class="nav-link" href="/user/stor_produk">Stor Produk</a>
                     </nav>
                 </div>
             </div>

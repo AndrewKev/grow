@@ -1,7 +1,7 @@
-@extends('layouts.admin')
-@section('admin.body')
+@extends('layouts.admin2')
+@section('admin2.body')
     <main>
-        <a href="/admin/request_sales" class="btn btn-outline-secondary mb-2">
+        <a href="/admin2/request_sales" class="btn btn-outline-secondary mb-2">
             <i class="fa-solid fa-arrow-left"></i>
             Kembali
         </a>
@@ -79,6 +79,5 @@
                 </table>
             </div>
         </div>
-
     </main>
 @endsection

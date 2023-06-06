@@ -1,5 +1,5 @@
-@extends('layouts.admin')
-@section('admin.body')
+@extends('layouts.admin2')
+@section('admin2.body')
     <main>
         <h2>Daftar Request Sales</h2>
         <div>
@@ -38,7 +38,7 @@
         <!-- Modal -->
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                <form class="modal-content" action="/admin/konfirmasi" method="post">
+                <form class="modal-content" action="/admin2/konfirmasi" method="post">
                     @csrf
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>

@@ -11,19 +11,34 @@
                         Absen Keluar
                     </a> --}}
                 @if (sizeof($listAbsenUser) != 0 && $listAbsenUser[0]->waktu_keluar == null)
-                    <form onsubmit="return confirm('Konfirmasi Absen Keluar')" action="/user/absensi_keluar" method="post">
-                        @csrf
-                        <button type="submit" class="btn btn-danger focus-ring">
-                            <i class="fa-solid fa-right-from-bracket" style="color: #ffffff;"></i>
+                    @if (!$finishStor)
+                        <button class="btn btn-outline-secondary mb-2" data-bs-toggle="modal" data-bs-target="">
+                            <i class="fa-solid fa-right-from-bracket" style="color: #4f4f4f;"></i>
                             Absen Keluar
                         </button>
-                    </form>
+                    @else
+                        <form onsubmit="return confirm('Konfirmasi Absen Keluar')" action="/user/absensi_keluar" method="post">
+                            @csrf
+                            <button type="submit" class="btn btn-danger focus-ring">
+                                <i class="fa-solid fa-right-from-bracket" style="color: #ffffff;"></i>
+                                Absen Keluar
+                            </button>
+                        </form>
+                        @endif
                 @else
-                    <button type="button" class="btn btn-success focus-ring" data-bs-toggle="modal"
+                    @if ($finishAbsensi)
+                        <button class="btn btn-outline-secondary mb-2" data-bs-toggle="modal" data-bs-target="">
+                        <i class="fa-solid fa-right-to-bracket" style="color: #4f4f4f;"></i>
+                        Absen Masuk
+                        </button>
+                    @else
+                        <button type="button" class="btn btn-success focus-ring" data-bs-toggle="modal"
                         data-bs-target="#absenMasuk">
                         <i class="fa-solid fa-right-to-bracket" style="color: #ffffff;"></i>
                         Absen Masuk
-                    </button>
+                        </button>
+                @endif
+                    
                 @endif
             </div>
             <div class="mt-4">
