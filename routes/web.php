@@ -94,11 +94,9 @@ Route::group(
         Route::get('/penjualan_laku_cash', 'pageJualLakuCash');
         Route::post('/penjualan_laku_cash', 'postJualLakuCash');
         Route::get('/penjualan_laku_cash/{id_toko}', 'detailJualLakuCash');
-<<<<<<< HEAD
 
         // dropdown penjualan laku cash
         Route::get('/get_routing/{id_routing}', 'tokoDropdown');
-=======
         // Stor Produk ke admin 2
         Route::get('/stor_produk', 'tampilStorProduk');
         Route::post('/request_stor_barang', 'requestStorBarang');
@@ -109,7 +107,6 @@ Route::group(
 
         // Selesai stor produk
         Route::post('/insert_produk', 'insertStorProduk');
->>>>>>> f95792563409b2fe4b1592948d4a71d9cf51503d
     }
 );
 
