@@ -23,10 +23,12 @@ class PenjualanLakuCashController extends Controller
     {
         
         $id_user = auth()->user()->id;
-        // dd($id_user);
+        // dd($this->getRoutingUser($id_user));
         // $distrik = Distrik::where('id_user', Auth::id())->first();
         $distrik = DB::select("SELECT * FROM distrik WHERE id_user = $id_user");
-        // dd($distrik);
+        
+        $routing = $this->getRoutingUser($id_user);
+        // dd($routing);
         
         $penjualanLk = DB::select("SELECT DISTINCT toko.id_toko, toko.nama_toko, routing.nama_routing, keterangan, p.emp, p.latitude, p.longitude, p.created_at 
                                     FROM penjualan_laku_cash AS p 
@@ -36,7 +38,7 @@ class PenjualanLakuCashController extends Controller
                                     WHERE p.id_user = '$id_user'");
     
         // dd($penjualanLk);
-        return view('pages.karyawan.penjualanLakuCash', compact('distrik', 'penjualanLk'));
+        return view('pages.karyawan.penjualanLakuCash', compact('distrik', 'penjualanLk', 'routing'));
     }
 
     public function detailPenjualan($id_toko){
@@ -79,9 +81,31 @@ class PenjualanLakuCashController extends Controller
         $barangKonfirmasi = $this->getBarangKonfirmasi();
         $isCarry = $this->isCarry();
 
-        // dd($barangKonfirmasi);
         return view('pages.karyawan.stokjalan', compact('barang', 'req', 'konfirmasi', 'barangKonfirmasi', 'isCarry'));
     }
+
+    public function getRoutingUser($id_user) {
+        $query = DB::select("SELECT DISTINCT d.id_distrik, r.id_routing, r.nama_routing
+                            FROM distrik d 
+                            JOIN routing r ON r.id_distrik = d.id_distrik
+                            WHERE d.id_user = $id_user");
+                
+        // return response()->json($query);
+        return $query;
+    }
+
+    public function getTokoDariRouting($id_routing) {
+        $id_user = auth()->user()->id;
+        $query = DB::select("SELECT DISTINCT d.id_distrik, r.id_routing, r.nama_routing, t.id_toko, t.nama_toko
+                FROM distrik d 
+                JOIN routing r ON r.id_distrik = d.id_distrik 
+                JOIN toko t ON t.id_routing = r.id_routing 
+                WHERE d.id_user = $id_user AND r.id_routing = $id_routing");
+
+        return response()->json($query);
+        // return $query;
+    }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -93,20 +117,29 @@ class PenjualanLakuCashController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store($request)
     {
-        // dd($request->all());
-        // $emp = "";
-        // foreach($request->emp as $e) {
-        //         $emp .= $e . '; ';
+        /** TEST COLLECTION */
+        // $collection = collect($request);
+        // $att = collect();
+        // $jumlah = collect($collection->get('produk'));
+        // $idProduk = collect($collection->get('id_produk'));
+        
+        // for ($i=0; $i < $jumlah->count(); $i++) {
+        //     if($jumlah->get($i) != '0') {
+        //         $att->push(['id_produk' => $idProduk->get($i), 'jumlah'=> $jumlah->get($i)]);
+        //     } 
         // }
+        
+        // dd($request->all());
+    
         $emp = "";
         if (!empty($request->emp)) {
             foreach ($request->emp as $e) {
                 $emp .= $e . '; ';
             }
         }
-                // dd($emp);
+        
         // UPDATE STOK
         $barang = $this->getStokUser();
         $data = [];
@@ -121,7 +154,7 @@ class PenjualanLakuCashController extends Controller
                 ];
             }
         }
-        // dd($data);
+
         // Mengurangi stok berdasarkan carry yang diinputkan
         foreach ($data as $productId => $item) {
             $carryValue = $item['carry'];
@@ -135,16 +168,13 @@ class PenjualanLakuCashController extends Controller
             // Lakukan update pada tabel CarryProduk
             CarryProduk::where('id_produk', $productId)->update(['stok_sekarang' => $produk->stok_sekarang]);
         }
-        // dd($updateData);
+
         
         // KETERANGAN
-        Keterangan::create(
-            [
-                'keterangan' =>$request->keterangan,
-                'id_user' => auth()->user()->id,
-                'tanggal' =>Carbon::now()->format('Y-m-d')
-            ]
-        );
+        if($request->get('keterangan') != null) {
+            $this->createKeterangan($request->get('keterangan'));
+        }
+
         $id_user = auth()->user()->id;
         $tanggal = Carbon::now()->format('Y-m-d');
         $keterangan = DB::select("SELECT * FROM `keterangan` 
@@ -153,52 +183,78 @@ class PenjualanLakuCashController extends Controller
                        ORDER BY created_at DESC");
         
         if($request->jenis_kunjungan == 'IO') {
-            $coba = Toko::create(
-                [
-                    'id_routing' => $request->routing,
-                    'id_kunjungan' => $request->jenis_kunjungan,
-                    'nama_toko' => $request->namaToko
-                ]
-            );
+            $this->createToko($request);
+            
+            $toko = getTokoIO($requset);
+        } else {
+            $toko = $this->getToko($request);
         }
-        
-        
-        // dd($barang);
-
-        $toko = DB::select("SELECT * FROM `toko` 
-                            WHERE id_routing = $request->routing
-                            AND id_kunjungan = '$request->jenis_kunjungan'
-                            ORDER BY created_at DESC 
-                            LIMIT 1");
-        // dd($toko);
+                            
         $id_toko = $toko[0]->id_toko;
         for($i = 0; $i < 10; $i++) {
             if($request->produk[$i] != '0') {
-                
-                Penjualan::create(
-                    [
-                        'id_user' => auth()->user()->id,
-                        'id_distrik' => $request->id_distrik,
-                        'id_routing' => $request->routing,
-                        'id_toko' => $id_toko,
-                        'id_kunjungan' => $request->jenis_kunjungan,
-                        'id_produk' => $request->id_produk[$i],
-                        'jumlah_produk' => (int) $request->produk[$i],
-                        'id_keterangan' => $keterangan[0]->id_keterangan,
-                        'emp' => $emp,
-                        'latitude' => $request->latitude,
-                        'longitude' => $request->longitude
-                        // 'id_foto' => $request->id_foto[$i],
-
-                    ]
-                );
-                
-            }
-            // dd($barang);
-            
+                if($request->get('keterangan') != null) {
+                    Penjualan::create(
+                        [
+                            'id_user' => auth()->user()->id,
+                            'id_distrik' => $request->id_distrik,
+                            'id_routing' => $request->routing,
+                            'id_toko' => $id_toko,
+                            'id_kunjungan' => $request->jenis_kunjungan,
+                            'id_produk' => $request->id_produk[$i],
+                            'jumlah_produk' => (int) $request->produk[$i],
+                            'id_keterangan' => $keterangan[0]->id_keterangan,
+                            'emp' => $emp,
+                            'latitude' => $request->latitude,
+                            'longitude' => $request->longitude
+                            // 'id_foto' => $request->id_foto[$i],
+    
+                        ]
+                    );
+                }
+            }            
         }
         // dd($request->id_produk);
         return redirect('/user/penjualan_laku_cash');
+    }
+
+    public function createKeterangan($keterangan) {
+        Keterangan::create(
+            [
+                'keterangan' =>$keterangan,
+                'id_user' => auth()->user()->id,
+                'tanggal' =>Carbon::now()->format('Y-m-d')
+            ]
+        );
+    }
+
+    public function createToko($req) {
+        Toko::create(
+            [
+                'id_routing' => $req->routing,
+                'id_kunjungan' => $req->jenis_kunjungan,
+                'nama_toko' => $req->namaToko
+            ]
+        );
+    }
+
+    public function getToko($req) {
+        $toko = DB::select("SELECT * FROM `toko` 
+                            WHERE id_toko = $req->toko
+                            LIMIT 1");
+        // $toko = DB::select("SELECT * FROm toko WHERE id_toko = ", [1])
+        
+        return $toko;
+    }
+
+    public function getTokoIO($req) {
+        $toko = DB::select("SELECT * FROM `toko` 
+                            WHERE id_routing = $req->routing
+                            AND id_kunjungan = 'IO'
+                            ORDER BY created_at DESC 
+                            LIMIT 1");
+        
+        return $toko;
     }
 
     /**

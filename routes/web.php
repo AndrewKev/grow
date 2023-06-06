@@ -83,6 +83,9 @@ Route::group(
         Route::get('/penjualan_laku_cash', 'pageJualLakuCash');
         Route::post('/penjualan_laku_cash', 'postJualLakuCash');
         Route::get('/penjualan_laku_cash/{id_toko}', 'detailJualLakuCash');
+
+        // dropdown penjualan laku cash
+        Route::get('/get_routing/{id_routing}', 'tokoDropdown');
     }
 );
 

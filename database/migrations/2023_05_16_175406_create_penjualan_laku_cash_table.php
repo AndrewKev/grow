@@ -20,7 +20,7 @@ return new class extends Migration
             $table->char('id_kunjungan')->nullable();
             $table->char('id_produk');
             $table->integer('jumlah_produk');
-            $table->foreignId('id_keterangan');
+            $table->foreignId('id_keterangan')->nullable();
             $table->string('emp')->nullable();
             $table->foreignId('id_foto')->nullable();
             $table->string('latitude');

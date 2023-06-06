@@ -13,6 +13,7 @@ use App\Models\Toko;
 use App\Http\Controllers\PenjualanLakuCashController;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
 
 use Carbon\Carbon;
 
@@ -198,6 +199,27 @@ class SalesController extends Controller
     }
 
     public function postJualLakuCash(Request $request) {
+        dd($request->all());
+        // $collectReq = collect($request);
+
+        // $distrik = $collectReq->get('id_distrik');
+        // $jumlahProduk = collect($collectReq->get('produk'));
+        // $idProduk = collect($collectReq->get('id_produk'));
+
+        // $att = collect(['id_produk', 'jumlah']);
+        // $produk = $idProduk->combine($jumlahProduk->all());
+
+        // $products = collect([]);
+        // $products->push($att->all());
+        
+        // foreach($produk as $p) {
+
+        // }
+
+        // $singleProd = $prod->combine([$idProduk->all(), $jumlahProduk->all()]);
+
+        // dd($products->all());
+        
         return app('App\Http\Controllers\PenjualanLakuCashController')->store($request);
         // return redirect('/user/stok_jalan');
         // return redirect()->back('App\Http\Controllers\PenjualanLakuCashController')->index();
@@ -208,6 +230,10 @@ class SalesController extends Controller
         // return redirect('/user/stok_jalan');
         // return redirect()->back('App\Http\Controllers\PenjualanLakuCashController')->index();
 
+    }
+
+    public function tokoDropdown($id_routing) {
+        return app('App\Http\Controllers\PenjualanLakuCashController')->getTokoDariRouting($id_routing);
     }
 
     // public function insertBarang($id_produk, $jumlahBarang) {

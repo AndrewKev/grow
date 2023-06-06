@@ -38,7 +38,7 @@
                             <td>{{ $plk->keterangan }}</td>
                             <td>{{ $plk->emp }}</td>
                             <td></td>
-                            <td>{{ $plk->latitude.','.$plk->longitude}}</td>
+                            <td>{{ $plk->latitude . ',' . $plk->longitude }}</td>
                         </tr>
                         @php
                             $no++;
@@ -101,7 +101,10 @@
                                 <label class="form-label">Routing</label>
                                 <select class="form-select" aria-label="Default select example" required name="routing">
                                     <option selected disabled>Pilih Routing</option>
-                                    <option value="1">1</option>
+                                    @foreach ($routing as $rout)
+                                        <option value="{{ $rout->id_routing }}">{{ $rout->nama_routing }}</option>
+                                    @endforeach
+                                    {{-- <option value="1">1</option>
                                     <option value="2">2</option>
                                     <option value="3">3</option>
                                     <option value="4">4</option>
@@ -112,38 +115,32 @@
                                     <option value="9">9</option>
                                     <option value="10">10</option>
                                     <option value="11">11</option>
-                                    <option value="12">12</option>
+                                    <option value="12">12</option> --}}
                                 </select>
                             </div>
                             <div class="mb-3">
                                 <label for="namaToko" class="form-label">Nama Toko</label>
-                                <input type="text" class="form-control" id="namaToko" placeholder="Masukan Nama Toko" name="namaToko">
+                                <input type="text" class="form-control" id="namaToko"
+                                    placeholder="Masukan Nama Toko" name="namaToko">
                             </div>
                         </div>
                         <div class="mb-3 d-none" id="notFormIO">
                             <div class="mb-3">
                                 <label class="form-label">Routing</label>
-                                <select class="form-select" aria-label="Default select example" required name="routing">
+                                <select class="form-select" id="routingDropdown" aria-label="Default select example"
+                                    required name="routing">
                                     <option selected disabled>Pilih Routing</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                    <option value="6">6</option>
-                                    <option value="7">7</option>
-                                    <option value="8">8</option>
-                                    <option value="9">9</option>
-                                    <option value="10">10</option>
-                                    <option value="11">11</option>
-                                    <option value="12">12</option>
+                                    @foreach ($routing as $rout)
+                                        <option value="{{ $rout->id_routing }}">{{ $rout->nama_routing }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                             <div class="mb-3">
                                 <label for="namaToko" class="form-label">Nama Toko</label>
-                                <select class="form-select" aria-label="Default select example" required name="routing">
-                                    <option selected disabled>Pilih Routing</option>
-                                    <option value="namaToko" name="namaToko">namaToko</option>
+                                <select class="form-select" id="tokoDropdown" aria-label="Default select example"
+                                    required name="toko">
+                                    <option selected disabled>Pilih Toko</option>
+                                    {{-- <option value="namaToko" name="namaToko">namaToko</option> --}}
                                 </select>
                             </div>
                         </div>
@@ -210,24 +207,27 @@
                         <div>
                             <label for="keterangan" class="form-label">Keterangan</label>
                             <input id="keterangan" type="text" name="keterangan" placeholder="keterangan"
-                                class="form-control"><br>
+                                class="form-control" required><br>
                         </div>
                         <div>
                             <label class="form-label">EMP</label><br>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="emp[]" value="stiker" id="stiker">
+                                <input class="form-check-input" type="checkbox" name="emp[]" value="stiker"
+                                    id="stiker">
                                 <label class="form-check-label" for="stiker">
                                     Stiker
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="emp[]" value="plano" id="plano">
+                                <input class="form-check-input" type="checkbox" name="emp[]" value="plano"
+                                    id="plano">
                                 <label class="form-check-label" for="plano">
                                     Plane
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="emp[]" value="sunscreen" id="sunscreen">
+                                <input class="form-check-input" type="checkbox" name="emp[]" value="sunscreen"
+                                    id="sunscreen">
                                 <label class="form-check-label" for="sunscreen">
                                     Sunscreen
                                 </label>
@@ -250,4 +250,37 @@
     </div>
     <!-- End Modal -->
     <script src="{{ asset('js/custom.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            // Handle the change event of the first dropdown
+            $("#routingDropdown").change(function() {
+                var selectedOption = $(this).val();
+                console.log(selectedOption)
+                // Clear the options in the second dropdown
+                $("#tokoDropdown").empty();
+                $("#tokoDropdown").append('<option value="" disabled selected>Pilih Toko</option>');
+
+                // Fetch the dependent options for the selected option
+                $.ajax({
+                    url: "/user/get_routing/" + selectedOption,
+                    type: "GET",
+                    dataType: "json",
+                    success: function(data) {
+                        $.each(data, function(key, value) {
+                            $("#tokoDropdown").append(
+                                $("<option></option>")
+                                .attr("value", value.id_toko)
+                                .text(value.nama_toko)
+                            );
+                        });
+                    },
+                });
+            });
+
+            $("#tokoDropdown").change(function() {
+                let val = $(this).val()
+                console.log(val)
+            })
+        });
+    </script>
 @endsection
