@@ -26,16 +26,13 @@ class PenjualanLakuCashController extends Controller
         // dd($this->getRoutingUser($id_user));
         // $distrik = Distrik::where('id_user', Auth::id())->first();
         $distrik = DB::select("SELECT * FROM distrik WHERE id_user = $id_user");
-<<<<<<< HEAD
         
         $routing = $this->getRoutingUser($id_user);
         // dd($routing);
         
-=======
         // dd($distrik);
         $storToday = $this->isTodayStorProduk(auth()->user()->id, Carbon::now()->format('Y-m-d'));
         $carryToday = $this->isTodayCarryProduk(auth()->user()->id, Carbon::now()->format('Y-m-d'));
->>>>>>> f95792563409b2fe4b1592948d4a71d9cf51503d
         $penjualanLk = DB::select("SELECT DISTINCT toko.id_toko, toko.nama_toko, routing.nama_routing, keterangan, p.emp, p.latitude, p.longitude, p.created_at 
                                     FROM penjualan_laku_cash AS p 
                                     JOIN toko ON toko.id_toko = p.id_toko 
@@ -44,10 +41,8 @@ class PenjualanLakuCashController extends Controller
                                     WHERE p.id_user = '$id_user'");
     
         // dd($penjualanLk);
-<<<<<<< HEAD
-        return view('pages.karyawan.penjualanLakuCash', compact('distrik', 'penjualanLk', 'routing'));
-=======
-        return view('pages.karyawan.penjualanLakuCash', compact('distrik', 'penjualanLk', 'storToday', 'carryToday'));
+        // return view('pages.karyawan.penjualanLakuCash', compact('distrik', 'penjualanLk', 'routing'));
+        return view('pages.karyawan.penjualanLakuCash', compact('distrik', 'penjualanLk', 'routing', 'storToday', 'carryToday'));
     }
     public function isTodayStorProduk($id_user, $tanggal) { 
         $cek = DB::select("SELECT * FROM `stor_produk` 
@@ -69,7 +64,6 @@ class PenjualanLakuCashController extends Controller
             return true;
         }
         return false;
->>>>>>> f95792563409b2fe4b1592948d4a71d9cf51503d
     }
 
     public function detailPenjualan($id_toko){
