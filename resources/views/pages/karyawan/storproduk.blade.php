@@ -108,7 +108,6 @@
                     @endforeach
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" name="batalStorProduk" class="btn btn-danger" >Batal</button>
                     <button type="submit" name="setujuStorProduk" class="btn btn-success">Setuju</button>
                 </div>
             </form>
@@ -140,7 +139,6 @@
                     @endforeach
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" name="batalStorUang" class="btn btn-danger" >Batal</button>
                     <button type="submit" name="setujuStorUang" class="btn btn-success">Setuju</button>
                 </div>
             </form>

@@ -13,7 +13,7 @@ class Admin1Controller extends Controller
     }
 
     public function daftaReqSalesStorUang() {
-        $daftarSales = DB::select("SELECT DISTINCT u.id, u.nama, r.tanggal_stor 
+        $daftarSales = DB::select("SELECT DISTINCT u.id, u.nama, r.tanggal_stor_barang 
                                    FROM request_stor_barang AS r
                                    JOIN users AS u ON u.id = r.id_user
                                    WHERE konfirmasi2 = 0;");
@@ -26,7 +26,7 @@ class Admin1Controller extends Controller
 
     public function detailReqSalesStorUang($id) {
         // $tanggal = Carbon::now()->format('Y-m-d');
-        $data = DB::select("SELECT r.id_user, r.id_produk, p.nama_produk,r.terjual, r.tanggal_stor, r.tanggal_stor_uang, r.konfirmasi2, r.harga_produk, r.total_harga
+        $data = DB::select("SELECT r.id_user, r.id_produk, p.nama_produk,r.terjual, r.tanggal_stor_barang, r.tanggal_stor_uang, r.konfirmasi2, r.harga_produk, r.total_harga
                             FROM request_stor_barang r
                             JOIN products p ON p.id_produk = r.id_produk
                             WHERE id_user = $id AND r.konfirmasi2 = 0");

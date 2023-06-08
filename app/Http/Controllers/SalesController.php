@@ -28,8 +28,8 @@ class SalesController extends Controller
      */
     public function index()
     {
-        // $classSebelah = app('App\Http\Controllers\GudangKecilController');
-        // dd($classSebelah->getStok('B12'));
+        // $classSebelah = app('App\Http\Controllers\KPIController');
+        // dd($classSebelah->index());
         return view('pages.karyawan.dashboard');
     }
 
@@ -282,7 +282,7 @@ class SalesController extends Controller
                     [
                     'id_user'=> auth()->user()->id,
                     'id_produk'=> $request->id_produk[$i],
-                    'tanggal_stor'=>Carbon::now(),
+                    'tanggal_stor_barang'=>Carbon::now(),
                     'stok_awal'=>(int) $request->stok_awal[$i],
                     'sisa_stok'=>(int) $request->stok_sekarang[$i],
                     'terjual'=>(int) $request->terjual[$i],
@@ -307,7 +307,7 @@ class SalesController extends Controller
                     [
                     'id_user'=> auth()->user()->id,
                     'id_produk'=> $request->id_produk[$i],
-                    'tanggal_stor'=>Carbon::now(),
+                    'tanggal_stor_barang'=>Carbon::now(),
                     'stok_awal'=>(int) $request->stok_awal[$i],
                     'sisa_stok'=>(int) $request->stok_sekarang[$i],
                     'harga_produk'=>(int) $request->harga_toko[$i],
@@ -349,7 +349,7 @@ class SalesController extends Controller
         $tanggal = Carbon::now()->format('Y-m-d');
         $cek = DB::select("SELECT * FROM `request_stor_barang` 
                            WHERE id_user = '$id_user' 
-                           AND tanggal_stor BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59'");
+                           AND tanggal_stor_barang BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59'");
         // dd($cek);
         if(sizeof($cek) > 0) {
             return true;
@@ -360,7 +360,7 @@ class SalesController extends Controller
     public function isKonfirmasiStorBarang($id_user, $tanggal) { // cek apakah admin sudah melakukan konfirmasi
         $cek = DB::select("SELECT * FROM `request_stor_barang` 
                            WHERE id_user = '$id_user' 
-                           AND tanggal_stor BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59'
+                           AND tanggal_stor_barang BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59'
                            AND konfirmasi = 1;");
         // dd($cek);
         if(sizeof($cek) > 0) {
@@ -373,7 +373,7 @@ class SalesController extends Controller
         $tanggal = Carbon::now()->format('Y-m-d');
         $cek = DB::select("SELECT * FROM `request_stor_barang` 
                            WHERE id_user = '$id_user' 
-                           AND tanggal_stor BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59' AND konfirmasi = 1 AND konfirmasi2 = 0;");
+                           AND tanggal_stor_barang BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59' AND konfirmasi = 1 AND konfirmasi2 = 0;");
         // dd($cek);
         if(sizeof($cek) > 0) {
             return true;
@@ -384,7 +384,7 @@ class SalesController extends Controller
     public function isKonfirmasiStorUang($id_user, $tanggal) { // cek apakah admin sudah melakukan konfirmasi
         $cek = DB::select("SELECT * FROM `request_stor_barang` 
                            WHERE id_user = '$id_user' 
-                           AND tanggal_stor BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59'
+                           AND tanggal_stor_barang BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59'
                            AND konfirmasi = 1 AND konfirmasi2 = 1;");
         // dd($cek);
         if(sizeof($cek) > 0) {
@@ -393,9 +393,9 @@ class SalesController extends Controller
         return false;
     }
     public function isTodayStorProduk($id_user, $tanggal) { // cek apakah admin sudah melakukan konfirmasi
-        $cek = DB::select("SELECT * FROM `stor_produk` 
-                           WHERE id_user = '$id_user' 
-                           AND tanggal_stor BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59'");
+        $cek = DB::select("SELECT * FROM stor_produk
+                           WHERE id_user = $id_user
+                           AND tanggal_stor_barang BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59'");
         // dd($cek);
         if(sizeof($cek) > 0) {
             return true;
@@ -426,7 +426,7 @@ class SalesController extends Controller
         if($request->has('setujuStorUang')) {
             // dd($request->all());
                 $record = RequestStorBarang::where('id_user', $user)
-                    ->whereBetween('tanggal_stor', [$today . ' 00:00:00', $today . ' 23:59:59'])
+                    ->whereBetween('tanggal_stor_barang', [$today . ' 00:00:00', $today . ' 23:59:59'])
                     ->first();
                 // dd($record);
                 if ($record) {
@@ -449,7 +449,7 @@ class SalesController extends Controller
                     [
                     'id_user'=> auth()->user()->id,
                     'id_produk'=> $request->id_produk[$i],
-                    'tanggal_stor'=>Carbon::now(),
+                    'tanggal_stor_barang'=>Carbon::now(),
                     'tanggal_stor_uang'=>Carbon::now(),
                     'stok_awal'=>(int) $request->stok_awal[$i],
                     'terjual'=>(int)$request->terjual[$i],
@@ -461,6 +461,9 @@ class SalesController extends Controller
             }
         }
         DB::delete("DELETE FROM request_stor_barang WHERE id_user = $user");
+
+        // create KPI
+        app('App\Http\Controllers\KPIController')->insertKPI();
         return redirect('/user/stor_produk');
 
     }
