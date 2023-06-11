@@ -98,6 +98,7 @@ Route::group(
 
         // dropdown penjualan laku cash
         Route::get('/get_routing/{id_routing}', 'tokoDropdown');
+
         // Stor Produk ke admin 2
         Route::get('/stor_produk', 'tampilStorProduk');
         Route::post('/request_stor_barang', 'requestStorBarang');

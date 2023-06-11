@@ -12,7 +12,7 @@ class StorProduk extends Model
     protected $fillable = [
         'id_user',
         'id_produk',
-        'tanggal_stor',
+        'tanggal_stor_barang',
         'tanggal_stor_uang',
         'stok_awal',
         'terjual',

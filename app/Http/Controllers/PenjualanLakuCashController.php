@@ -49,7 +49,7 @@ class PenjualanLakuCashController extends Controller
     public function isTodayStorProduk($id_user, $tanggal) { 
         $cek = DB::select("SELECT * FROM `stor_produk` 
                            WHERE id_user = '$id_user' 
-                           AND tanggal_stor BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59'");
+                           AND tanggal_stor_barang BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59'");
         // dd($cek);
         if(sizeof($cek) > 0) {
             return true;
@@ -164,6 +164,9 @@ class PenjualanLakuCashController extends Controller
         // }
         
         // dd($request->all());
+
+        $id_user = auth()->user()->id;
+        $tanggal = Carbon::now()->format('Y-m-d');
     
         $emp = "";
         if (!empty($request->emp)) {
@@ -198,7 +201,12 @@ class PenjualanLakuCashController extends Controller
                 }
             }
             // Lakukan update pada tabel CarryProduk
-            CarryProduk::where('id_produk', $productId)->update(['stok_sekarang' => $produk->stok_sekarang]);
+            DB::update("UPDATE carry_produk 
+                        SET stok_sekarang = $produk->stok_sekarang 
+                        WHERE id_produk = '$productId'
+                        AND id_user = $id_user
+                        AND tanggal_carry BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59'");
+            // CarryProduk::where('id_produk', $productId)->update(['stok_sekarang' => $produk->stok_sekarang]);
         }
 
         // FOTO

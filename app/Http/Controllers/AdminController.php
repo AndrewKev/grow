@@ -71,7 +71,7 @@ class AdminController extends Controller
     // SALES REQ BARANG
 
     public function daftaReqSalesStorBarang() {
-        $daftarSales = DB::select("SELECT DISTINCT u.id, u.nama, r.tanggal_stor 
+        $daftarSales = DB::select("SELECT DISTINCT u.id, u.nama, r.tanggal_stor_barang
                                    FROM request_stor_barang AS r
                                    JOIN users AS u ON u.id = r.id_user
                                    WHERE konfirmasi = 0;");
@@ -85,7 +85,7 @@ class AdminController extends Controller
     }
 
     public function detailReqSalesStorBarang($id) {
-        $data = DB::select("SELECT r.id_user, r.id_produk, p.nama_produk, r.stok_awal,r.terjual, r.sisa_stok, r.tanggal_stor, r.konfirmasi
+        $data = DB::select("SELECT r.id_user, r.id_produk, p.nama_produk, r.stok_awal,r.terjual, r.sisa_stok, r.tanggal_stor_barang, r.konfirmasi
                             FROM request_stor_barang r
                             JOIN products p ON p.id_produk = r.id_produk
                             WHERE id_user = $id AND r.konfirmasi = 0");

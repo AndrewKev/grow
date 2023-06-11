@@ -36,7 +36,7 @@
                         @foreach ($data as $dt)
                             <tr>
                                 <td>{{ $no }}</td>
-                                <td>{{ $dt->tanggal_stor }}</td>
+                                <td>{{ $dt->tanggal_stor_barang }}</td>
                                 <td>{{ $dt->nama_produk }}</td>
                                 <td>{{ $dt->stok_awal }}</td>
                                 <td>{{ $dt->terjual }}</td>

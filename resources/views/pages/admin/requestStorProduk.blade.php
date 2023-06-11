@@ -19,7 +19,7 @@
                     @foreach ($daftarReqStorUang as $req)
                         <tr>
                             <td>{{ $no }}</td>
-                            <td>{{ $req->tanggal_stor }}</td>
+                            <td>{{ $req->tanggal_stor_barang }}</td>
                             <td>{{ $req->nama }}</td>
                             <td>
                                 <a href="request_stor_uang/{{ $req->id }}" class="btn btn-primary">
