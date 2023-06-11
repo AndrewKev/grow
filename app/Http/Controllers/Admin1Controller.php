@@ -26,10 +26,11 @@ class Admin1Controller extends Controller
 
     public function detailReqSalesStorUang($id) {
         // $tanggal = Carbon::now()->format('Y-m-d');
-        $data = DB::select("SELECT r.id_user, r.id_produk, p.nama_produk,r.terjual, r.tanggal_stor, r.tanggal_stor_uang, r.konfirmasi2, r.harga_produk, r.total_harga
-                            FROM request_stor_barang r
-                            JOIN products p ON p.id_produk = r.id_produk
-                            WHERE id_user = $id AND r.konfirmasi2 = 0");
+        $data = DB::select("SELECT r.id_user, r.id_produk, p.nama_produk,r.terjual, r.tanggal_stor, r.tanggal_stor_uang, r.konfirmasi2, r.harga_produk, r.total_harga, ru.seratus_ribu, ru.lima_puluh_ribu, ru.dua_puluh_ribu, ru.sepuluh_ribu, ru.lima_ribu, ru.dua_ribu, ru.seribu, ru.seribu_koin, ru.lima_ratus_koin, ru.dua_ratus_koin, ru.seratus_koin 
+                            FROM request_stor_barang r 
+                            JOIN products p ON p.id_produk = r.id_produk 
+                            JOIN rincian_uang ru ON ru.id_rincian_uang = r.id_rincian_uang 
+                            WHERE r.id_user = $id AND r.konfirmasi2 = 0");
         $sales = DB::select("SELECT id, nama
                             FROM users
                             WHERE id = $id");
@@ -42,6 +43,15 @@ class Admin1Controller extends Controller
         DB::update("UPDATE request_stor_barang SET konfirmasi2 = 1
                     WHERE id_user = $id_user");
         return redirect('/admin/request_stor_uang');
+    }
+
+    public function tampilAbsensi(){
+        $listAbsenUser = DB::select("SELECT u.nama, u.no_telp, a.waktu_masuk, a.waktu_keluar, a.keterangan, a.latitude, a.longitude
+                        FROM absensi as a
+                        JOIN users as u ON a.id_user = u.id
+                        ORDER BY a.waktu_masuk DESC");
+        // dd($listAbsenUser);
+        return view('pages.admin.tampilAbsensi', compact('listAbsenUser'));
     }
 
     

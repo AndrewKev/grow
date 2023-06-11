@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id('id_foto');
             $table->string('nama_foto');
             $table->foreignId('id_user');
+            $table->date('tanggal');
             $table->timestamps();
 
             $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');

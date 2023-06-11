@@ -50,6 +50,7 @@
                             <th>No Telepon</th>
                             <th>Waktu Masuk</th>
                             <th>Waktu Keluar</th>
+                            <th>Foto</th>
                             <th>Keterangan</th>
                             {{-- <th>Foto</th> --}}
                             <th>Lokasi</th>
@@ -62,6 +63,13 @@
                                 <td>{{ $list->no_telp }}</td>
                                 <td>{{ $list->waktu_masuk }}</td>
                                 <td>{{ $list->waktu_keluar == null ? '-' : $list->waktu_keluar }}</td>
+                                <td>
+                                    @if ($list->foto)
+                                        <img src="{{ asset('storage/' . $list->foto) }}" alt="Foto Absen" style="max-height: 350px; max-width: 200px; width: auto; height: auto;">
+                                    @else
+                                        No Foto
+                                    @endif
+                                </td>
                                 <td>{{ $list->keterangan }}</td>
                                 <td>{{ $list->latitude }}, {{ $list->longitude }}</td>
                             </tr>
@@ -80,7 +88,12 @@
                                         action="">
                                         @csrf
                                         <div class="modal-body">
-                                            <input type="file" name="foto" class="form-control" capture><br>
+                                            <input type="file" id="foto" name="foto" class="form-control  @error('foto') is-invalid @enderror" capture required><br>
+                                            @error('foto')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                            @enderror
                                             <input type="text" name="keterangan" placeholder="keterangan"
                                                 class="form-control" /><br>
                                             <input type="hidden" id="latitudeInput" name="latitude" placeholder="latitude"

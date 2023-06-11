@@ -18,6 +18,7 @@ class StorProduk extends Model
         'terjual',
         'sisa_stok',
         'harga_produk',
-        'total_harga'
+        'total_harga',
+        'id_rincian_uang'
     ];
 }

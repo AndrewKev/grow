@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('terjual');
             $table->integer('harga_produk');
             $table->integer('total_harga');
+            $table->foreignId('id_rincian_uang')->nullable();
             $table->boolean('konfirmasi');
             $table->boolean('konfirmasi2')->nullable();
             // $table->int('stok_kembali');
@@ -28,6 +29,7 @@ return new class extends Migration
 
             $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('id_produk')->references('id_produk')->on('products')->onDelete('cascade');
+            $table->foreign('id_rincian_uang')->references('id_rincian_uang')->on('rincian_uang')->onDelete('cascade');
         });
     }
 

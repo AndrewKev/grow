@@ -6,6 +6,7 @@ use App\Models\RequestBarang;
 use App\Models\Penjualan;
 use App\Models\Keterangan;
 use App\Models\Toko;
+use App\Models\Foto;
 use App\Models\CarryProduk;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -33,10 +34,11 @@ class PenjualanLakuCashController extends Controller
         // dd($distrik);
         $storToday = $this->isTodayStorProduk(auth()->user()->id, Carbon::now()->format('Y-m-d'));
         $carryToday = $this->isTodayCarryProduk(auth()->user()->id, Carbon::now()->format('Y-m-d'));
-        $penjualanLk = DB::select("SELECT DISTINCT toko.id_toko, toko.nama_toko, routing.nama_routing, keterangan, p.emp, p.latitude, p.longitude, p.created_at 
+        $penjualanLk = DB::select("SELECT DISTINCT toko.id_toko, toko.nama_toko, routing.nama_routing, keterangan, p.emp, p.latitude, p.longitude, p.created_at, foto.nama_foto 
                                     FROM penjualan_laku_cash AS p 
                                     JOIN toko ON toko.id_toko = p.id_toko 
                                     JOIN routing ON routing.id_routing = p.id_routing 
+                                    JOIN foto ON foto.id_foto = p.id_foto
                                     JOIN keterangan ON keterangan.id_keterangan = p.id_keterangan
                                     WHERE p.id_user = '$id_user'");
     
@@ -199,14 +201,31 @@ class PenjualanLakuCashController extends Controller
             CarryProduk::where('id_produk', $productId)->update(['stok_sekarang' => $produk->stok_sekarang]);
         }
 
-        
+        // FOTO
+        $tanggal = Carbon::now()->format('Y-m-d');
+        $validatedData = $request->validate([
+            'foto' => 'image'
+        ]);
+        // dd($validatedData);
+        $fotoPath = $request->file('foto')->store('public/fotoToko'); // Simpan file gambar ke direktori penyimpanan
+        Foto::create([
+            'nama_foto' => $fotoPath,
+            'id_user' =>auth()->user()->id,
+            'tanggal' =>$tanggal
+        ]);
+        $id_user = auth()->user()->id;
+        $foto = DB::select("SELECT * FROM `foto` 
+                       WHERE id_user = '$id_user' 
+                       AND tanggal = '$tanggal'
+                       ORDER BY created_at DESC");
+        // dd($foto);
         // KETERANGAN
         if($request->get('keterangan') != null) {
             $this->createKeterangan($request->get('keterangan'));
         }
 
-        $id_user = auth()->user()->id;
-        $tanggal = Carbon::now()->format('Y-m-d');
+        // $id_user = auth()->user()->id;
+        // $tanggal = Carbon::now()->format('Y-m-d');
         $keterangan = DB::select("SELECT * FROM `keterangan` 
                        WHERE id_user = '$id_user' 
                        AND tanggal = '$tanggal'
@@ -215,7 +234,7 @@ class PenjualanLakuCashController extends Controller
         if($request->jenis_kunjungan == 'IO') {
             $this->createToko($request);
             
-            $toko = getTokoIO($requset);
+            $toko = $this->getTokoIO($request);
         } else {
             $toko = $this->getToko($request);
         }
@@ -236,8 +255,8 @@ class PenjualanLakuCashController extends Controller
                             'id_keterangan' => $keterangan[0]->id_keterangan,
                             'emp' => $emp,
                             'latitude' => $request->latitude,
-                            'longitude' => $request->longitude
-                            // 'id_foto' => $request->id_foto[$i],
+                            'longitude' => $request->longitude,
+                            'id_foto' => $foto[0]->id_foto,
     
                         ]
                     );
@@ -247,6 +266,19 @@ class PenjualanLakuCashController extends Controller
         // dd($request->id_produk);
         return redirect('/user/penjualan_laku_cash');
     }
+
+    // public function createFoto($foto){
+    //     dd($foto);
+    //     $validatedData = $foto->validate([
+    //         'foto' => 'image'
+    //     ]);
+    
+    //     $fotoPath = $foto->file('foto')->store('public/fotoToko'); // Simpan file gambar ke direktori penyimpanan
+    //     Foto::create([
+    //         'nama_foto' => $fotoPath,
+    //         'id_user' =>auth()->user()->id,
+    //     ]);
+    // }
 
     public function createKeterangan($keterangan) {
         Keterangan::create(

@@ -21,5 +21,6 @@ class RequestStorBarang extends Model
         'total_harga',
         'konfirmasi',
         'konfirmasi2',
+        'id_rincian_uang',
     ];
 }

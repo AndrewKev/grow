@@ -45,6 +45,7 @@ Route::group(
         Route::get('/request_stor_uang', 'reqSalesStorUang');
         Route::get('/request_stor_uang/{id}', 'detailReqSalesStorUang');
         Route::post('/request_stor_uang/{id_user}/konfirmasi', 'konfirmasiRequestStorUang');
+        Route::get('/tampil_absensi', 'tampilAbsensi');
 
     }
 );

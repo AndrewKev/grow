@@ -51,7 +51,13 @@
                             <td><a href="penjualan_laku_cash/{{ $plk->id_toko }}">{{ $plk->nama_toko }}</a></td>
                             <td>{{ $plk->keterangan }}</td>
                             <td>{{ $plk->emp }}</td>
-                            <td></td>
+                            <td>
+                                @if ($plk->nama_foto)
+                                    <img src="{{ asset('storage/' . $plk->nama_foto) }}" alt="Foto Absen" style="max-height: 350px; max-width: 200px; width: auto; height: auto;">
+                                @else
+                                    No Foto
+                                @endif            
+                            </td>
                             <td>{{ $plk->latitude . ',' . $plk->longitude }}</td>
                         </tr>
                         @php
@@ -86,7 +92,7 @@
                             <label for="jKunjungan" class="form-label">Jenis Kunjungan</label><br>
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="radio" name="jenis_kunjungan" id="IO"
-                                    value="IO">
+                                    value="IO" required>
                                 <label class="form-check-label" for="IO">IO</label>
                             </div>
                             <div class="form-check form-check-inline">
@@ -161,61 +167,61 @@
                         <div>
                             <label for="b20" class="form-label">GROW BOLD 20</label>
                             <input type="number" id="B20" name="produk[]" placeholder="B20" class="form-control"
-                                value="0"><br>
+                                value="0" min="0"><br>
                             <input type="hidden" name="id_produk[]" value="B20">
                         </div>
                         <div>
                             <label for="b16" class="form-label">GROW BOLD 16</label>
                             <input type="number" name="produk[]" placeholder="B16" class="form-control"
-                                value="0"><br>
+                                value="0" min="0"><br>
                             <input type="hidden" name="id_produk[]" value="B16">
                         </div>
                         <div>
                             <label for="b12" class="form-label">GROW BOLD 12</label>
                             <input type="number" name="produk[]" placeholder="B12" class="form-control"
-                                value="0"><br>
+                                value="0" min="0"><br>
                             <input type="hidden" name="id_produk[]" value="B12">
                         </div>
                         <div>
                             <label for="r16" class="form-label">GROW REG 16</label>
                             <input type="number" name="produk[]" placeholder="R16" class="form-control"
-                                value="0"><br>
+                                value="0" min="0"><br>
                             <input type="hidden" name="id_produk[]" value="R16">
                         </div>
                         <div>
                             <label for="r12" class="form-label">GROW REG 12</label>
                             <input type="number" name="produk[]" placeholder="R12" class="form-control"
-                                value="0"><br>
+                                value="0" min="0"><br>
                             <input type="hidden" name="id_produk[]" value="R12">
                         </div>
                         <div>
                             <label for="kk" class="form-label">GROW KRETEK KUNING 12</label>
                             <input type="number" name="produk[]" placeholder="KK" class="form-control"
-                                value="0"><br>
+                                value="0" min="0"><br>
                             <input type="hidden" name="id_produk[]" value="KK">
                         </div>
                         <div>
                             <label for="kc" class="form-label">GROW KRETEK COKLAT 12</label>
                             <input type="number" name="produk[]" placeholder="KC" class="form-control"
-                                value="0"><br>
+                                value="0" min="0"><br>
                             <input type="hidden" name="id_produk[]" value="KC">
                         </div>
                         <div>
                             <label for="bb16" class="form-label">GROW BERRY BOLD 16</label>
                             <input type="number" name="produk[]" placeholder="BB16" class="form-control"
-                                value="0"><br>
+                                value="0" min="0"><br>
                             <input type="hidden" name="id_produk[]" value="BB16">
                         </div>
                         <div>
                             <label for="bb12" class="form-label">GROW BERRY BOLD 12</label>
                             <input type="number" name="produk[]" placeholder="BB12" class="form-control"
-                                value="0"><br>
+                                value="0" min="0"><br>
                             <input type="hidden" name="id_produk[]" value="BB12">
                         </div>
                         <div>
                             <label for="bice" class="form-label">GROW BLACK ICE 16</label>
                             <input type="number" name="produk[]" placeholder="BICE16" class="form-control"
-                                value="0"><br>
+                                value="0" min="0"><br>
                             <input type="hidden" name="id_produk[]" value="BICE16">
                         </div>
                         <div>
@@ -249,7 +255,13 @@
                         </div>
                         <div>
                             <br><label for="foto" class="form-label">Foto Toko</label>
-                            <input type="file" name="foto" class="form-control"><br>
+                            <input type="file" name="foto" id="foto" class="form-control @error('foto') is-invalid @enderror" required
+                            ><br>
+                            @error('foto')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                            @enderror                 
                         </div>
                         <input type="hidden" id="latitudeInput" name="latitude" placeholder="latitude"
                             class="form-control"><br>

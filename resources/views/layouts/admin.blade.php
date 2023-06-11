@@ -12,7 +12,7 @@
 					<div class="sb-sidenav-menu-heading">Menu</div>
 					<nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
 						<a class="nav-link" href="/admin/request_stor_uang">Request Sales Stor Penjualan</a>
-						<a class="nav-link" href="#">Menu 2</a>
+						<a class="nav-link" href="/admin/tampil_absensi">Daftar Absensi</a>
 					</nav>
 				</div>
 			</div>

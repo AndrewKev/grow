@@ -12,6 +12,7 @@ use App\Models\Keterangan;
 use App\Models\Toko;
 use App\Models\StorProduk;
 use App\Models\RequestStorBarang;
+use App\Models\RincianUang;
 use App\Http\Controllers\PenjualanLakuCashController;
 
 use Illuminate\Support\Facades\DB;
@@ -43,7 +44,7 @@ class SalesController extends Controller
         $username = auth()->user()->username;
         $finishStor = $this->isFinishStor(auth()->user()->id, Carbon::now()->format('Y-m-d'));
         $finishAbsensi = $this->isAbsensiFinish(auth()->user()->id, Carbon::now()->format('Y-m-d'));
-        $listAbsenUser = DB::select("SELECT u.nama, u.no_telp, a.waktu_masuk, a.waktu_keluar, a.keterangan, a.latitude, a.longitude
+        $listAbsenUser = DB::select("SELECT u.nama, u.no_telp, a.waktu_masuk, a.waktu_keluar, a.keterangan, a.latitude, a.longitude, a.foto
                                      FROM absensi as a
                                      JOIN users as u ON a.id_user = u.id
                                      WHERE u.username = '$username'
@@ -53,16 +54,21 @@ class SalesController extends Controller
     }
 
     public function postAbsensi(Request $request) {
-        // dd($request -> all());
-        Absensi::create(
-            [
-                'id_user' => auth()->user()->id,
-                'keterangan' => $request->keterangan,
-                'waktu_masuk' => Carbon::now(),
-                'latitude' => $request->latitude,
-                'longitude' => $request->longitude,
-            ]
-        );
+        // ddd($request);
+        $validatedData = $request->validate([
+            'foto' => 'image'
+        ]);
+    
+        $fotoPath = $request->file('foto')->store('public/images'); // Simpan file gambar ke direktori penyimpanan
+    
+        Absensi::create([
+            'id_user' => auth()->user()->id,
+            'keterangan' => $request->keterangan,
+            'waktu_masuk' => Carbon::now(),
+            'foto' => $fotoPath, // Simpan path atau nama file gambar ke kolom 'foto'
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
+        ]);
 
         return redirect('/user/absensi');
     }
@@ -402,9 +408,17 @@ class SalesController extends Controller
         }
         return false;
     }
-
+    public function getStorPenjualan(){
+        $id_user = auth()->user()->id;
+        $tanggal = Carbon::now()->format('Y-m-d');
+        $barang = DB::select("SELECT * FROM `request_stor_barang` 
+        WHERE id_user = '$id_user' 
+        AND tanggal_stor BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59'");
+        return $barang;
+    }
     public function tampilStorProduk() {
         $storproduk = $this->getStorProduk();
+        $storPenjualan = $this->getStorPenjualan();
         $req = $this->isRequestStorBarang(auth()->user()->id, Carbon::now()->format('Y-m-d'));
         $reqUang = $this->isRequestStorUang(auth()->user()->id, Carbon::now()->format('Y-m-d'));
         $konfirmasi = $this->isKonfirmasiStorBarang(auth()->user()->id, Carbon::now()->format('Y-m-d'));
@@ -412,7 +426,7 @@ class SalesController extends Controller
         $storToday = $this->isTodayStorProduk(auth()->user()->id, Carbon::now()->format('Y-m-d'));
         $carryToday = $this->isCarry(auth()->user()->id, Carbon::now()->format('Y-m-d'));
         // dd($storproduk);
-        return view('pages.karyawan.storproduk', compact('storproduk','req', 'reqUang', 'konfirmasi', 'konfirmasiUang', 'storToday', 'carryToday'));
+        return view('pages.karyawan.storproduk', compact('storproduk','storPenjualan', 'req', 'reqUang', 'konfirmasi', 'konfirmasiUang', 'storToday', 'carryToday'));
     }
 
 
@@ -425,6 +439,72 @@ class SalesController extends Controller
         $today = Carbon::now()->format('Y-m-d');
         if($request->has('setujuStorUang')) {
             // dd($request->all());
+            $request->validate([
+                'seratusribu.*' => 'nullable|numeric|min:0',
+                'limapuluhribu.*' => 'nullable|numeric|min:0',
+                'duapuluhribu.*' => 'nullable|numeric|min:0',
+                'sepuluhribu.*' => 'nullable|numeric|min:0',
+                'limaribu.*' => 'nullable|numeric|min:0',
+                'duaribu.*' => 'nullable|numeric|min:0',
+                'seribu.*' => 'nullable|numeric|min:0',
+                'seribukoin.*' => 'nullable|numeric|min:0',
+                'limaratuskoin.*' => 'nullable|numeric|min:0',
+                'duaratuskoin.*' => 'nullable|numeric|min:0',
+                'seratuskoin.*' => 'nullable|numeric|min:0',
+            ]);
+
+            $totalUang = 100000 * $request->input('seratusribu', 0)
+                 + 50000 * $request->input('limapuluhribu', 0)
+                 + 20000 * $request->input('duapuluhribu', 0)
+                 + 10000 * $request->input('sepuluhribu', 0)
+                 + 5000 * $request->input('limaribu', 0)
+                 + 2000 * $request->input('duaribu', 0)
+                 + 1000 * $request->input('seribu', 0)
+                 + 1000 * $request->input('seribukoin', 0)
+                 + 500 * $request->input('limaratuskoin', 0)
+                 + 200 * $request->input('duaratuskoin', 0)
+                 + 100 * $request->input('seratuskoin', 0);
+            // dd($totalUang);
+            $result = DB::select("SELECT total_harga FROM `request_stor_barang` 
+                                        WHERE id_user = '$user' 
+                                        AND tanggal_stor BETWEEN '$today 00:00:00' AND '$today 23:59:59'
+                                        AND konfirmasi = 1;");
+            $totalHarga = 0;
+            foreach ($result as $item) {
+                $totalHarga += $item->total_harga;
+            }
+
+            // dd($totalHarga);
+            if ($totalUang != $totalHarga) {
+                $errorMessage = 'Jumlah uang yang Anda masukkan (' . $totalUang . ') tidak sesuai dengan total harga (' . $totalHarga . ').';
+                return back()->with('error', $errorMessage);
+            }else{
+                $user = auth()->user()->id;
+                $today = Carbon::now()->format('Y-m-d');
+                // dd($request->all());
+                RincianUang::create(
+                    [
+                        'id_user' => auth()->user()->id,
+                        'tanggal_masuk'=>$today,
+                        'seratus_ribu' => $request->input('seratusribu'),
+                        'lima_puluh_ribu' => $request->input('limapuluhribu'),
+                        'dua_puluh_ribu' => $request->input('duapuluhribu'),
+                        'sepuluh_ribu' => $request->input('sepuluhribu'),
+                        'lima_ribu' => $request->input('limaribu'),
+                        'dua_ribu' => $request->input('duaribu'),
+                        'seribu' => $request->input('seribu'),
+                        'seribu_koin' => $request->input('seribukoin'),
+                        'lima_ratus_koin' => $request->input('limaratuskoin'),
+                        'dua_ratus_koin' => $request->input('duaratuskoin'),
+                        'seratus_koin' => $request->input('seratuskoin'),
+                    ]
+                );     
+                $ambilUang = DB::select("SELECT * FROM `rincian_uang` 
+                       WHERE id_user = '$user' 
+                       AND tanggal_masuk = '$today'
+                       ORDER BY created_at DESC
+                       LIMIT 1");
+                // dd($ambilUang);      
                 $record = RequestStorBarang::where('id_user', $user)
                     ->whereBetween('tanggal_stor', [$today . ' 00:00:00', $today . ' 23:59:59'])
                     ->first();
@@ -433,8 +513,10 @@ class SalesController extends Controller
                     $record->where('id_user', $user)->update([
                         'tanggal_stor_uang' => Carbon::now(),
                         'konfirmasi2' => 0,
+                        'id_rincian_uang' => $ambilUang[0]->id_rincian_uang
                     ]);
                 }
+            } 
         }
         // DB::delete("DELETE FROM stor_produk WHERE id_user = $user");
         return redirect('/user/stor_produk');
@@ -449,13 +531,14 @@ class SalesController extends Controller
                     [
                     'id_user'=> auth()->user()->id,
                     'id_produk'=> $request->id_produk[$i],
-                    'tanggal_stor'=>Carbon::now(),
-                    'tanggal_stor_uang'=>Carbon::now(),
+                    'tanggal_stor'=>$request->tanggal_stor[$i],
+                    'tanggal_stor_uang'=>$request->tanggal_stor_uang[$i],
                     'stok_awal'=>(int) $request->stok_awal[$i],
                     'terjual'=>(int)$request->terjual[$i],
-                    'sisa_stok'=>(int) $request->stok_sekarang[$i],
-                    'harga_produk'=>(int) $request->harga_toko[$i],
-                    'total_harga'=>(int) $request->total_harga[$i]
+                    'sisa_stok'=>(int) $request->sisa_stok[$i],
+                    'harga_produk'=>(int) $request->harga_produk[$i],
+                    'total_harga'=>(int) $request->total_harga[$i],
+                    'id_rincian_uang'=>(int) $request->id_rincian_uang[$i]
                     ]
                 );
             }

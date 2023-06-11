@@ -21,11 +21,13 @@ return new class extends Migration
             $table->integer('sisa_stok');
             $table->integer('harga_produk');
             $table->integer('total_harga');
+            $table->foreignId('id_rincian_uang');
             // $table->int('stok_kembali');
             $table->timestamps();
 
             $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('id_produk')->references('id_produk')->on('products')->onDelete('cascade');
+            $table->foreign('id_rincian_uang')->references('id_rincian_uang')->on('rincian_uang')->onDelete('cascade');
         });
     }
 

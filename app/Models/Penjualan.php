@@ -19,7 +19,7 @@ class Penjualan extends Model
         'jumlah_produk',
         'emp',
         'id_keterangan',
-        // 'id_foto',
+        'id_foto',
         'latitude',
         'longitude',
         'created_at',

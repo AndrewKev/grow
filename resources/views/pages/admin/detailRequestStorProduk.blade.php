@@ -30,6 +30,8 @@
                     <tbody>
                         @php
                             $no = 1;
+                            $totaljual = 0;
+                            $totalharga = 0;
                         @endphp
                         @foreach ($data as $dt)
                             <tr>
@@ -42,12 +44,39 @@
                             </tr>
                             @php
                                 $no++;
+                                $totaljual += ($dt->terjual);
+                                $totalharga += ($dt->total_harga);
                             @endphp
                         @endforeach
                     </tbody>
                 </table>
             </div>
         </div>
+        <div style="text-align: right;">
+            <label style="display: inline-block; width: 150px; font-weight: bold; text-align: left;"><b>Total Terjual</b></label>
+            <input type="text" style="text-align: left;" value="{{ $totaljual }}" disabled>
+        </div>
+          <br>
+        <div style="text-align: right;">
+            <label style="display: inline-block; width: 150px; font-weight: bold; text-align: left;"><b>Total Sisa Stok</b></label>
+            <input type="text" style="text-align: left;" value="Rp {{ number_format($totalharga, 0, ',', '.') }}" disabled><br><br>
+        </div>
+        <div style="text-align: left;">
+                <label style="font-weight: bold;"><b>RINCIAN STOR UANG</b></label><br><br>
+                <label style="display: inline-block; width: 150px; font-weight: bold;"><b>KERTAS</b></label><br>
+                <label style="display: inline-block; width: 150px; font-weight: bold;"><b>Rp 100.000 : {{ $data[0]->seratus_ribu }}</b></label><br>
+                <label style="display: inline-block; width: 150px; font-weight: bold;"><b>Rp 50.000 : {{ $data[0]->lima_puluh_ribu }}</b></label><br>
+                <label style="display: inline-block; width: 150px; font-weight: bold;"><b>Rp 20.000 : {{ $data[0]->dua_puluh_ribu }}</b></label><br>
+                <label style="display: inline-block; width: 150px; font-weight: bold;"><b>Rp 10.000 : {{ $data[0]->sepuluh_ribu }}</b></label><br>
+                <label style="display: inline-block; width: 150px; font-weight: bold;"><b>Rp 5.000 : {{ $data[0]->lima_ribu }}</b></label><br>
+                <label style="display: inline-block; width: 150px; font-weight: bold;"><b>Rp 2.000 : {{ $data[0]->dua_ribu }}</b></label><br>
+                <label style="display: inline-block; width: 150px; font-weight: bold;"><b>Rp 1.000 : {{ $data[0]->seribu }}</b></label><br><br>
 
+                <label style="display: inline-block; width: 150px; font-weight: bold;"><b>KOIN</b></label><br>
+                <label style="display: inline-block; width: 150px; font-weight: bold;"><b>Rp 1.000 : {{ $data[0]->seribu_koin }}</b></label><br>
+                <label style="display: inline-block; width: 150px; font-weight: bold;"><b>Rp 500 : {{ $data[0]->lima_ratus_koin }}</b></label><br>
+                <label style="display: inline-block; width: 150px; font-weight: bold;"><b>Rp 200 : {{ $data[0]->dua_ratus_koin }}</b></label><br>
+                <label style="display: inline-block; width: 150px; font-weight: bold;"><b>Rp 100 : {{ $data[0]->seratus_koin }}</b></label><br><br><br>
+        </div>
     </main>
 @endsection
