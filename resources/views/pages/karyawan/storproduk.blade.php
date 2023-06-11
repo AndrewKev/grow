@@ -224,7 +224,7 @@
                 <div class="modal-body">
                     @foreach ($storPenjualan as $r)
                         <div>
-                            <input type="hidden" name="tanggal_stor[]" value="{{ $r->tanggal_stor }}">
+                            <input type="hidden" name="tanggal_stor_barang[]" value="{{ $r->tanggal_stor_barang }}">
                             <input type="hidden" name="tanggal_stor_uang[]" value="{{ $r->tanggal_stor_uang }}">
                             <input type="hidden" name="id_produk[]" value="{{ $r->id_produk }}">
                             <input type="hidden" name="stok_awal[]" value="{{ $r->stok_awal }}">

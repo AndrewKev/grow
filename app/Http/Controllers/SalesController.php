@@ -413,7 +413,7 @@ class SalesController extends Controller
         $tanggal = Carbon::now()->format('Y-m-d');
         $barang = DB::select("SELECT * FROM `request_stor_barang` 
         WHERE id_user = '$id_user' 
-        AND tanggal_stor BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59'");
+        AND tanggal_stor_barang BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59'");
         return $barang;
     }
     public function tampilStorProduk() {
@@ -467,7 +467,7 @@ class SalesController extends Controller
             // dd($totalUang);
             $result = DB::select("SELECT total_harga FROM `request_stor_barang` 
                                         WHERE id_user = '$user' 
-                                        AND tanggal_stor BETWEEN '$today 00:00:00' AND '$today 23:59:59'
+                                        AND tanggal_stor_barang BETWEEN '$today 00:00:00' AND '$today 23:59:59'
                                         AND konfirmasi = 1;");
             $totalHarga = 0;
             foreach ($result as $item) {
@@ -531,7 +531,7 @@ class SalesController extends Controller
                     [
                     'id_user'=> auth()->user()->id,
                     'id_produk'=> $request->id_produk[$i],
-                    'tanggal_stor_barang'=>$request->tanggal_stor[$i],
+                    'tanggal_stor_barang'=>$request->tanggal_stor_barang[$i],
                     'tanggal_stor_uang'=>$request->tanggal_stor_uang[$i],
                     'stok_awal'=>(int) $request->stok_awal[$i],
                     'terjual'=>(int)$request->terjual[$i],
