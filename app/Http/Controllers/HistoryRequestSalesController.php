@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\HistoryRequest;
+use App\Models\HistoryRequestBarang;
+use App\Models\HistoryRequestPenjualan;
 use Carbon\Carbon;
 
 use Illuminate\Support\Facades\DB;
@@ -98,8 +100,106 @@ class HistoryRequestSalesController extends Controller
         return $data;
     }
 
+    // HISTORY REQUEST STOR BARANG
+    public function salesRequestStorBarang(Request $request, $konfirmasiAdmin)
+    {
+        for($i = 0; $i < sizeof($request->id_produk); $i++) {
+                $history = HistoryRequestBarang::create(
+                    [
+                        'tanggal' => Carbon::now(),
+                        'nama_sales' => auth()->user()->nama,
+                        'nama_produk'=> $request->nama_produk[$i],
+                        'stok_awal'=>(int) $request->stok_awal[$i],
+                        'sisa_stok'=>(int) $request->stok_sekarang[$i],
+                        'terjual'=>(int) $request->terjual[$i],
+                        'konfirmasi_admin' => $konfirmasiAdmin,
+                        'keterangan' => 'sales request',
+                    ]
+                );
+        }
+
+        return $history;
+    }
+
+    public function getReqKonfirmasiStorBarang($id_user) {
+        $data = DB::select("SELECT r.id_user, u.nama, r.id_produk, p.nama_produk, r.stok_awal, r.terjual, r.sisa_stok, r.konfirmasi 
+                            FROM request_stor_barang r 
+                            JOIN products p ON p.id_produk = r.id_produk 
+                            JOIN users u ON r.id_user = u.id 
+                            WHERE r.konfirmasi = 1 AND r.id_user = $id_user;");
+        return $data;
+    }
+
+    public function konfirmasiAdminStorBarang($id_user){
+        $dataKonfirmasi = $this->getReqKonfirmasiStorBarang($id_user);
+
+        foreach ($dataKonfirmasi as $data) {
+            $history = HistoryRequestBarang::create(
+                [
+                    'tanggal' => Carbon::now(),
+                    'nama_sales' => $data->nama,
+                    'nama_produk'=> $data->nama_produk,
+                    'stok_awal' => $data->stok_awal,
+                    'terjual'=>$data->terjual,
+                    'sisa_stok'=>$data->sisa_stok,
+                    'konfirmasi_admin' => 1,
+                    'keterangan' => 'admin konfirmasi',
+                ]
+            );
+        }
+
+        return $history;
+    }
 
 
+    // HISTORY REQUEST STOR PENJUALAN
+    public function salesRequestStorPenjualan(Request $request, $konfirmasiAdmin)
+    {
+        for($i = 0; $i < sizeof($request->id_produk); $i++) {
+                $history = HistoryRequestPenjualan::create(
+                    [
+                        'tanggal' => Carbon::now(),
+                        'nama_sales' => auth()->user()->nama,
+                        'nama_produk'=> $request->nama_produk[$i],
+                        'terjual'=>(int)$request->terjual[$i],
+                        'total_harga'=>(int) $request->total_harga[$i],
+                        'konfirmasi_admin' => $konfirmasiAdmin,
+                        'keterangan' => 'sales request penjualan',
+                    ]
+                );
+        }
+
+        return $history;
+    }
+
+    public function getReqKonfirmasiStorPenjualan($id_user) {
+        $data = DB::select("SELECT r.id_user, u.nama, r.id_produk, p.nama_produk, r.terjual, r.total_harga, r.konfirmasi 
+                            FROM request_stor_barang r 
+                            JOIN products p ON p.id_produk = r.id_produk 
+                            JOIN users u ON r.id_user = u.id 
+                            WHERE r.konfirmasi = 1 AND r.id_user = $id_user;");
+        return $data;
+    }
+
+    public function konfirmasiAdminStorPenjualan($id_user){
+        $dataKonfirmasi = $this->getReqKonfirmasiStorPenjualan($id_user);
+
+        foreach ($dataKonfirmasi as $data) {
+            $history = HistoryRequestPenjualan::create(
+                [
+                    'tanggal' => Carbon::now(),
+                    'nama_sales' => $data->nama,
+                    'nama_produk'=> $data->nama_produk,
+                    'terjual'=>$data->terjual,
+                    'total_harga'=>$data->total_harga,
+                    'konfirmasi_admin' => 1,
+                    'keterangan' => 'admin konfirmasi penjualan',
+                ]
+            );
+        }
+
+        return $history;
+    }
     /**
      * Display the specified resource.
      */

@@ -47,6 +47,10 @@ Route::group(
         Route::post('/request_stor_uang/{id_user}/konfirmasi', 'konfirmasiRequestStorUang');
         Route::get('/tampil_absensi', 'tampilAbsensi');
 
+        // HISTORY REQUEST SALES
+        Route::get('/history_request_stor_penjualan', 'historyRequestStorUang');
+        Route::get('/history_request_stor_penjualan/{keterangan}', 'detailHistoryRequestStorUang');
+
     }
 );
 
@@ -70,6 +74,13 @@ Route::group(
         Route::get('/request_stor_barang', 'reqSalesStorBarang');
         Route::get('/request_stor_barang/{id}', 'detailReqSalesStorBarang');
         Route::post('/request_stor_barang/{id_user}/konfirmasi', 'konfirmasiRequestStorBarang');
+
+        // HISTORY REQUEST SALES
+        Route::get('/history_request_sales', 'historyRequestSales');
+        Route::get('/history_request_sales/{keterangan}', 'detailHistoryRequestSales');
+
+        Route::get('/history_request_stor_barang', 'historyRequestStorBarang');
+        Route::get('/history_request_stor_barang/{keterangan}', 'detailHistoryRequestStorBarang');
         // testing aja
         Route::get('/test', 'test');
         

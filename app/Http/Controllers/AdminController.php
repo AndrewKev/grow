@@ -100,9 +100,47 @@ class AdminController extends Controller
         // dd("hello");
         DB::update("UPDATE request_stor_barang SET konfirmasi = 1
                     WHERE id_user = $id_user");
+        app('App\Http\Controllers\HistoryRequestSalesController')->konfirmasiAdminStorBarang($id_user);
         return redirect('/admin2/request_stor_barang');
     }
 
+    // HISTORY REQUEST SALES
+    public function historyRequestSales(){
+        $historyReqSales = $this->getHistoryRequestSales();
+        return view('pages.admin2.historyRequestSales', compact('historyReqSales'));
+    }
+
+    public function getHistoryRequestSales(){
+        $historyReqSales = DB::select("SELECT DISTINCT keterangan, tanggal, nama_sales FROM history_request_stok_sales;");
+        return $historyReqSales;
+    }
+
+    public function detailHistoryRequestSales($keterangan){
+        $data = DB::select("SELECT  * FROM history_request_stok_sales
+        WHERE keterangan = '$keterangan';");
+        // dd($data);
+        
+        return view('pages.admin2.detailHistoryRequestSales', compact('data'));
+    }
+
+    public function historyRequestStorBarang(){
+        $historyReqSalesSP = $this->getHistoryRequestSalesStorBarang();
+        return view('pages.admin2.historyRequestSalesStorBarang', compact('historyReqSalesSP'));
+    }
+
+    public function getHistoryRequestSalesStorBarang(){
+        $historyReqSales = DB::select("SELECT DISTINCT keterangan, tanggal, nama_sales FROM history_request_sales_stor_produk;");
+        return $historyReqSales;
+    }
+
+    public function detailHistoryRequestStorBarang($keterangan){
+        $data = DB::select("SELECT  * FROM history_request_sales_stor_produk
+        WHERE keterangan = '$keterangan';");
+        // dd($data);
+        
+        return view('pages.admin2.detailHistoryRequestSalesStorBarang', compact('data'));
+    }
+    
 
     // public function cekBarang($id_user, $id_produk) {
     //     $tanggal = Carbon::now()->format('Y-m-d');

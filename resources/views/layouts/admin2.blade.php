@@ -13,6 +13,8 @@
 					<nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
 						<a class="nav-link" href="/admin2/request_sales">Request Sales</a>
 						<a class="nav-link" href="/admin2/request_stor_barang">Request Sales Stor Barang</a>
+						<a class="nav-link" href="/admin2/history_request_sales">History Request Sales</a>
+						<a class="nav-link" href="/admin2/history_request_stor_barang">History Request Sales Stor Barang</a>
 					</nav>
 				</div>
 			</div>

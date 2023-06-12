@@ -300,6 +300,7 @@ class SalesController extends Controller
             }
         }
         // DB::delete("DELETE FROM stor_produk WHERE id_user = $user");
+        app('App\Http\Controllers\HistoryRequestSalesController')->salesRequestStorBarang($request, 0);
         return redirect('/user/stor_produk');
     }
 
@@ -519,6 +520,7 @@ class SalesController extends Controller
             } 
         }
         // DB::delete("DELETE FROM stor_produk WHERE id_user = $user");
+        app('App\Http\Controllers\HistoryRequestSalesController')->salesRequestStorPenjualan($request, 0);
         return redirect('/user/stor_produk');
     }
 
@@ -543,6 +545,8 @@ class SalesController extends Controller
                 );
             }
         }
+
+        // app('App\Http\Controllers\HistoryRequestSalesController')->konfirmasiSalesPenjualan($request, 'sales konfirmasi selesai', $i);
         DB::delete("DELETE FROM request_stor_barang WHERE id_user = $user");
 
         // create KPI
