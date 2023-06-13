@@ -19,9 +19,9 @@
                     @foreach ($historyReqSalesSP as $his)
                    <tr>
                         <th>{{ $no }}</th>
-                        <th>{{ $his->tanggal }}</th>
+                        <th>{{ $his->created_at }}</th>
                         <th>{{ $his->nama_sales }}</a></th>
-                        <th><a href="history_request_stor_barang/{{ $his->keterangan }}">{{ $his->keterangan }}</a></th>
+                        <th><a href="history_request_stor_barang/{{ $his->keterangan }}/{{ $his->nama_sales }}">{{ $his->keterangan }}</a></th>
                    </tr>
                         @php
                             $no++;

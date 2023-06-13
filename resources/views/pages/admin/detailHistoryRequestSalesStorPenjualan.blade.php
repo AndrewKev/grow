@@ -22,6 +22,8 @@
                     <tbody>
                         @php
                         $no = 1;
+                        $totaljual = 0;
+                        $totalharga = 0;
                         @endphp
                         @foreach ($data as $dt)
                             <tr>
@@ -32,11 +34,22 @@
                             </tr>
                             @php
                             $no++;
+                            $totaljual += ($dt->terjual);
+                            $totalharga += ($dt->total_harga);
                             @endphp
                         @endforeach
                     </tbody>
                 </table>
             </div>
+        </div>
+        <div style="text-align: right;">
+            <label style="display: inline-block; width: 150px; font-weight: bold; text-align: left;"><b>Total Terjual</b></label>
+            <input type="text" style="text-align: left;" value="{{ $totaljual }}" disabled>
+        </div>
+          <br>
+        <div style="text-align: right;">
+            <label style="display: inline-block; width: 150px; font-weight: bold; text-align: left;"><b>Total Harga</b></label>
+            <input type="text" style="text-align: left;" value="Rp {{ number_format($totalharga, 0, ',', '.') }}" disabled><br><br>
         </div>
     </main>
 @endsection

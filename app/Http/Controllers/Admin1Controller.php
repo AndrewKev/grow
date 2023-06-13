@@ -61,13 +61,15 @@ class Admin1Controller extends Controller
     }
 
     public function getHistoryRequestSalesStorUang(){
-        $historyReqSales = DB::select("SELECT DISTINCT keterangan, tanggal, nama_sales FROM history_request_sales_stor_penjualan;");
+        // $historyReqSales = DB::select("SELECT DISTINCT keterangan, tanggal, nama_sales FROM history_request_sales_stor_penjualan;");
+        // return $historyReqSales;
+        $historyReqSales = DB::select("SELECT keterangan, tanggal, nama_sales, MAX(created_at) AS created_at FROM history_request_sales_stor_penjualan GROUP BY keterangan, tanggal, nama_sales ORDER BY created_at DESC;");
         return $historyReqSales;
     }
 
-    public function detailHistoryRequestStorUang($keterangan){
+    public function detailHistoryRequestStorUang($keterangan, $nama_sales){
         $data = DB::select("SELECT  * FROM history_request_sales_stor_penjualan
-        WHERE keterangan = '$keterangan';");
+        WHERE keterangan = '$keterangan' AND nama_sales = '$nama_sales';");
         // dd($data);
         
         return view('pages.admin.detailHistoryRequestSalesStorPenjualan', compact('data'));

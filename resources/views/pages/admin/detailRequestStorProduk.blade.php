@@ -58,7 +58,7 @@
         </div>
           <br>
         <div style="text-align: right;">
-            <label style="display: inline-block; width: 150px; font-weight: bold; text-align: left;"><b>Total Sisa Stok</b></label>
+            <label style="display: inline-block; width: 150px; font-weight: bold; text-align: left;"><b>Total Harga</b></label>
             <input type="text" style="text-align: left;" value="Rp {{ number_format($totalharga, 0, ',', '.') }}" disabled><br><br>
         </div>
         <div style="text-align: left;">

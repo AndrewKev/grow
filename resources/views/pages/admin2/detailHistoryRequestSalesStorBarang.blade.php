@@ -23,6 +23,8 @@
                     <tbody>
                         @php
                         $no = 1;
+                        $totaljual = 0;
+                        $sisastok = 0;
                         @endphp
                         @foreach ($data as $dt)
                             <tr>
@@ -34,11 +36,23 @@
                             </tr>
                             @php
                             $no++;
+                            $totaljual += ($dt->terjual);
+                            $sisastok += ($dt->sisa_stok);
                             @endphp
                         @endforeach
                     </tbody>
                 </table>
             </div>
         </div>
+        <div style="text-align: right;">
+            <label style="display: inline-block; width: 150px; font-weight: bold; text-align: left;"><b>Total Terjual</b></label>
+            <input type="text" style="text-align: left;" value="{{ $totaljual }}" disabled>
+        </div>
+        <br>
+        <div style="text-align: right;">
+            <label style="display: inline-block; width: 150px; font-weight: bold; text-align: left;"><b>Sisa Stok</b></label>
+            <input type="text" style="text-align: left;" value="{{ $sisastok }}" disabled>
+        </div>
+        <br><br>
     </main>
 @endsection

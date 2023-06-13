@@ -49,7 +49,7 @@ Route::group(
 
         // HISTORY REQUEST SALES
         Route::get('/history_request_stor_penjualan', 'historyRequestStorUang');
-        Route::get('/history_request_stor_penjualan/{keterangan}', 'detailHistoryRequestStorUang');
+        Route::get('/history_request_stor_penjualan/{keterangan}/{nama_sales}', 'detailHistoryRequestStorUang');
 
     }
 );
@@ -77,10 +77,10 @@ Route::group(
 
         // HISTORY REQUEST SALES
         Route::get('/history_request_sales', 'historyRequestSales');
-        Route::get('/history_request_sales/{keterangan}', 'detailHistoryRequestSales');
+        Route::get('/history_request_sales/{keterangan}/{nama_sales}', 'detailHistoryRequestSales');
 
         Route::get('/history_request_stor_barang', 'historyRequestStorBarang');
-        Route::get('/history_request_stor_barang/{keterangan}', 'detailHistoryRequestStorBarang');
+        Route::get('/history_request_stor_barang/{keterangan}/{nama_sales}', 'detailHistoryRequestStorBarang');
         // testing aja
         Route::get('/test', 'test');
         

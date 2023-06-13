@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('history_request_sales_stor_produk', function (Blueprint $table) {
             $table->id();
-            $table->datetime('tanggal');
+            $table->date('tanggal');
             $table->string('nama_sales');
             $table->string('nama_produk');
             $table->integer('stok_awal');

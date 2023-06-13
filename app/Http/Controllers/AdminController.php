@@ -111,13 +111,14 @@ class AdminController extends Controller
     }
 
     public function getHistoryRequestSales(){
-        $historyReqSales = DB::select("SELECT DISTINCT keterangan, tanggal, nama_sales FROM history_request_stok_sales;");
+        $historyReqSales = DB::select("SELECT keterangan, tanggal, nama_sales, MAX(created_at) AS created_at FROM history_request_stok_sales GROUP BY keterangan, tanggal, nama_sales ORDER BY created_at DESC;");
         return $historyReqSales;
+
     }
 
-    public function detailHistoryRequestSales($keterangan){
+    public function detailHistoryRequestSales($keterangan, $nama_sales){
         $data = DB::select("SELECT  * FROM history_request_stok_sales
-        WHERE keterangan = '$keterangan';");
+        WHERE keterangan = '$keterangan' AND nama_sales = '$nama_sales';");
         // dd($data);
         
         return view('pages.admin2.detailHistoryRequestSales', compact('data'));
@@ -129,13 +130,15 @@ class AdminController extends Controller
     }
 
     public function getHistoryRequestSalesStorBarang(){
-        $historyReqSales = DB::select("SELECT DISTINCT keterangan, tanggal, nama_sales FROM history_request_sales_stor_produk;");
+        // $historyReqSales = DB::select("SELECT DISTINCT keterangan, tanggal, nama_sales FROM history_request_sales_stor_produk;");
+        // return $historyReqSales;
+        $historyReqSales = DB::select("SELECT keterangan, tanggal, nama_sales, MAX(created_at) AS created_at FROM history_request_sales_stor_produk GROUP BY keterangan, tanggal, nama_sales ORDER BY created_at DESC;");
         return $historyReqSales;
     }
 
-    public function detailHistoryRequestStorBarang($keterangan){
+    public function detailHistoryRequestStorBarang($keterangan, $nama_sales){
         $data = DB::select("SELECT  * FROM history_request_sales_stor_produk
-        WHERE keterangan = '$keterangan';");
+        WHERE keterangan = '$keterangan' AND nama_sales = '$nama_sales';");
         // dd($data);
         
         return view('pages.admin2.detailHistoryRequestSalesStorBarang', compact('data'));
