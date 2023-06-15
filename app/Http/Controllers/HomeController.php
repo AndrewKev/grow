@@ -30,6 +30,12 @@ class HomeController extends Controller
             return redirect('/admin2/dashboard');
         }else if(auth()->user()->level == 0) {
             return redirect('/user/dashboard');
+        }else if(auth()->user()->level == 4) {
+            return redirect('/gKecil/dashboard');
+        }else if(auth()->user()->level == 5) {
+            return redirect('/gBesar/dashboard');
+        }else if(auth()->user()->level == 6) {
+            return redirect('/pimArea/dashboard');
         } else {
             return view('home');
         }

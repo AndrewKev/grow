@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\RequestGudangKecil;
+use App\Models\Product;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -145,6 +147,86 @@ class AdminController extends Controller
     }
     
 
+    // STOK GUDANG KECIL
+    public function stokGudangKecil(){
+        $stokSample = $this->getStokSampleBarang();
+        $requestBarang = $this->isRequestProduk(auth()->user()->id);
+        $accPimArea = $this->isPimAreaAcc(auth()->user()->id);
+        $accGBesar = $this->isGudangBesarAcc(auth()->user()->id);
+        $barangKonfirmasi = $this->getBarangKonfirmasi();
+        return view('pages.admin2.stokGudangKecil', compact('stokSample', 'requestBarang', 'accPimArea', 'accGBesar', 'barangKonfirmasi'));
+    }
+
+    public function getBarangKonfirmasi() {
+        $user = auth()->user()->id;
+        $barangKonfirmasi = DB::select("SELECT p.id_produk, p.nama_produk, r.stok FROM request_gudang_kecil r
+                    JOIN products p ON r.id_produk = p.id_produk
+                    WHERE id_user = $user
+                    AND konfirmasi2 =  1");
+
+        return $barangKonfirmasi;
+    }
+
+    public function getStokSampleBarang(){
+        $stokSampleBarang = DB::select("SELECT * FROM gudang_kecil");
+        return $stokSampleBarang;
+    }
+
+    public function isRequestProduk($id_user) { // cek apakah user sudah melakukan request ke admin
+        $cek = DB::select("SELECT * FROM `request_gudang_kecil` 
+                           WHERE id_user = '$id_user' AND konfirmasi = 0;");
+        // dd($cek);
+        if(sizeof($cek) > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public function isPimAreaAcc($id_user) { // cek apakah user sudah melakukan request ke admin
+        $cek = DB::select("SELECT * FROM `request_gudang_kecil` 
+                           WHERE id_user = '$id_user' AND konfirmasi = 1 AND konfirmasi2 = 0;");
+        // dd($cek);
+        if(sizeof($cek) > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public function isGudangBesarAcc($id_user) { // cek apakah user sudah melakukan request ke admin
+        $cek = DB::select("SELECT * FROM `request_gudang_kecil` 
+                           WHERE id_user = '$id_user' AND konfirmasi2 = 1;");
+        // dd($cek);
+        if(sizeof($cek) > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public function requestStokGKecil(Request $request) {
+        // dd($request->all());
+        for($i = 0; $i < 10; $i++) {
+            if($request->produk[$i] != '0') {
+                $produk = Product::where('id_produk', $request->id_produk[$i])->first(); // Ambil data produk dari tabel products
+                // dd($produk);
+                $hargaStok = $produk->harga_toko * (int) $request->produk[$i]; // Kalikan harga_toko dengan stok
+                // dd($hargaStok);
+                RequestGudangKecil::create(
+                    [
+                        'id_user' => auth()->user()->id,
+                        'id_produk' => $request->id_produk[$i],
+                        'tanggal_po' => Carbon::now()->format('Y-m-d'),
+                        'nomor_po' =>$request->nomor_po,
+                        'stok' => (int) $request->produk[$i],
+                        'harga_stok' => $hargaStok,
+                        'deadline_kirim' =>Carbon::now()->addDays(2),
+                        'catatan' => $request->catatan,
+                        'konfirmasi' => 0
+                    ]
+                );
+            }
+        }
+        return redirect('/admin2/stok_barang_gKecil');
+    }
     // public function cekBarang($id_user, $id_produk) {
     //     $tanggal = Carbon::now()->format('Y-m-d');
     //     $barang = DB::select("SELECT * FROM `request_sales` 

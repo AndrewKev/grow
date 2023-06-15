@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('gudang_kecil', function (Blueprint $table) {
+        Schema::create('request_gudang_kecil', function (Blueprint $table) {
+            $table->foreignId('id_user');
             $table->char('id_produk');
-            $table->foreignId('id_user')->nullable();
             $table->date('tanggal_po')->nullable();
             $table->string('nomor_po')->nullable();
             $table->integer('stok');
@@ -21,10 +21,15 @@ return new class extends Migration
             $table->integer('harga_stok');
             $table->date('deadline_kirim')->nullable();
             $table->string('catatan')->nullable();
+            $table->boolean('konfirmasi');
+            $table->datetime('tgl_konfirmasi')->nullable();
+            $table->boolean('konfirmasi2')->nullable();
+            $table->datetime('tgl_konfirmasi2')->nullable();
+            // $table->int('stok_kembali');
             $table->timestamps();
 
-            $table->foreign('id_produk')->references('id_produk')->on('products')->onDelete('cascade');
             $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('id_produk')->references('id_produk')->on('products')->onDelete('cascade');
         });
     }
 
@@ -33,6 +38,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('gudang_kecil');
+        Schema::dropIfExists('request_gudang_kecil');
     }
 };

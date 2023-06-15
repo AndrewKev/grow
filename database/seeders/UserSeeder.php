@@ -53,6 +53,42 @@ class UserSeeder extends Seeder
 
         DB::table('users')->insert(
             [
+                'nama' => 'gkecil',
+                'username' => 'gkecil',
+                'password' => Hash::make('kecil004'),
+                'level' => 4, // admin
+                'no_telp' => '123',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ]
+        );
+
+        DB::table('users')->insert(
+            [
+                'nama' => 'gbesar',
+                'username' => 'gbesar',
+                'password' => Hash::make('besar005'),
+                'level' => 5, // admin
+                'no_telp' => '123',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ]
+        );
+
+        DB::table('users')->insert(
+            [
+                'nama' => 'pimArea',
+                'username' => 'pimArea',
+                'password' => Hash::make('area006'),
+                'level' => 6, // admin
+                'no_telp' => '123',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ]
+        );
+
+        DB::table('users')->insert(
+            [
                 'nama' => 'Alan',
                 'username' => 'Alan',
                 'password' => Hash::make('sls001'),

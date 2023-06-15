@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
         $this->call(JenisKunjunganSeeder::class);
         $this->call(TokoSeeder::class);
         $this->call(GudangKecilSeeder::class);
+        $this->call(GudangBesarSeeder::class);
         
         // \App\Models\User::factory(10)->create();
 
