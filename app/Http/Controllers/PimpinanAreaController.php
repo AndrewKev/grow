@@ -44,15 +44,15 @@ class PimpinanAreaController extends Controller
 
     public function ubahReqGudangKecil(Request $request, $id_user, $nomor_po, $id_produk){
         // dd($request->all());
-        // $produk = Product::where('id_produk', $request->id_produk)->first(); // Ambil data produk dari tabel products
-        //         // dd($produk);
-        // $hargaStok = $produk->harga_toko * (int) $request->produk; 
+        $produk = Product::where('id_produk', $request->id_produk)->first(); // Ambil data produk dari tabel products
+                // dd($produk);
+        $hargaStok = $produk->harga_toko * (int) $request->jumlah; 
         // dd($hargaStok);
-        DB::update("UPDATE request_gudang_kecil SET stok = $request->jumlah
+        DB::update("UPDATE request_gudang_kecil SET stok = $request->jumlah, harga_stok = $hargaStok
         WHERE id_user = $id_user AND nomor_po = '$nomor_po'
         AND id_produk = '$id_produk'");
-
-        // DB::update("UPDATE request_gudang_kecil SET stok = $request->jumlah, harga_stok = $hargaStok
+        
+        // DB::update("UPDATE request_gudang_kecil SET stok = $request->jumlah
         // WHERE id_user = $id_user AND nomor_po = '$nomor_po'
         // AND id_produk = '$id_produk'");
 

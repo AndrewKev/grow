@@ -74,8 +74,8 @@ class GudangBesarController extends Controller
         return $daftarReq;
     }
 
-    public function detailReqGudangKecil($id, $nomor_po){
-        $data = DB::select("SELECT r.id_user, r.id_produk, p.nama_produk, r.stok, r.sample, r.harga_stok, r.created_at,r.nomor_po
+    public function detailReqGudangKecil($id, $nomor_po) {
+        $data = DB::select("SELECT r.id_user, r.id_produk, p.nama_produk, r.stok, r.sample, r.harga_stok, r.created_at, r.nomor_po
                             FROM request_gudang_kecil r
                             JOIN products p ON p.id_produk = r.id_produk
                             WHERE id_user = $id AND nomor_po = '$nomor_po'");
@@ -83,37 +83,68 @@ class GudangBesarController extends Controller
                             FROM users
                             WHERE id = $id");
         $nomor_po = DB::select("SELECT nomor_po FROM request_gudang_kecil WHERE id_user = $id AND nomor_po = '$nomor_po'");
-        // dd($data);
-        return view('pages.gBesar.detailRequestBarangGKecil', compact('data', 'user', 'nomor_po'));
+        // $dataBarangKonfirmasi = $this->getBarangKonfirmasi($id, $nomor_po);
+        $nomor_po_value = $nomor_po[0]; // Ambil elemen pertama dari array $nomor_po
+        $dataBarangKonfirmasi = $this->getBarangKonfirmasi($id, $nomor_po_value);
+        // dd($dataBarangKonfirmasi);
+        return view('pages.gBesar.detailRequestBarangGKecil', compact('data', 'user', 'nomor_po', 'dataBarangKonfirmasi'));
     }
 
-    public function konfirmasiRequest($id_user, $nomor_po){
-        // dd($nomor_po);
-        // dd($id_user );
+    public function getBarangKonfirmasi($id, $nomor_po) {
+        // $user = auth()->user()->id;
+        // dd($id);
+        $barangKonfirmasi = DB::select("SELECT p.id_produk, p.nama_produk, r.stok FROM request_gudang_kecil r
+                    JOIN products p ON r.id_produk = p.id_produk
+                    WHERE id_user = $id
+                    AND nomor_po =  '$nomor_po->nomor_po'");
+        // dd($barangKonfirmasi);
+        return $barangKonfirmasi;
+    }
+
+    public function konfirmasiRequest(Request $request, $id_user, $nomor_po){
+        $barangKonfirmasi = $this->getBarangKonfirmasiAdmin2($id_user, $nomor_po);
+        // dd($request->all());;
+
+        foreach ($barangKonfirmasi as $barang) {
+            $id_produk = $barang->id_produk;
+            $jumlahDiminta = $barang->stok;
+            // dd($jumlahDiminta);
+            $stokGudangBesar = $this->getStokGudangBesar($id_produk);
+            // dd($stokGudangBesar);
+            if ($stokGudangBesar < $jumlahDiminta) {
+                // Stok kurang dari yang diminta, tampilkan pesan peringatan
+                session()->flash('error', 'Stok barang tidak mencukupi untuk konfirmasi. Silahkan Cek kembali stok Gudang Besar Area!');
+                return redirect()->back();
+            }
+        } 
+        foreach ($barangKonfirmasi as $barang) {
+                    $id_produk = $barang->id_produk;
+                    $jumlahDiminta = $barang->stok;
+            //         // dd($jumlahDiminta);
+                    DB::update("UPDATE `gudang_besar` 
+                        SET `stok` = `stok` - :stok
+                        WHERE `id_produk` = :id_produk", [
+                            'stok' => (int) $jumlahDiminta,
+                            'id_produk' => $id_produk
+                        ]);
+                    }       
         $tanggal = Carbon::now();
         $coba = DB::update("UPDATE request_gudang_kecil SET konfirmasi2 = 1, tgl_konfirmasi2 = '$tanggal'
                     WHERE id_user = $id_user AND nomor_po = '$nomor_po';");
         // dd($coba);
         return redirect('/gBesar/request_gKecil/');
     }
-
-    public function terimaBarang(Request $request) {
-        dd($request->all());
-        $user = auth()->user()->id;
-        if($request->has('setuju')) {
-            // dd($request->all());
-            for($i = 0; $i < sizeof($request->id_produk); $i++) {
-                GudangKecil::create(
-                    [
-                        'id_user' => auth()->user()->id,
-                        'id_produk' => $request->id_produk[$i],
-                        'stok' => (int) $request->jumlah[$i],
-                    ]
-                );
-            }
-        }
-        DB::delete("DELETE FROM request_gudang_kecil WHERE id_user = $user");
-
-        return redirect('/gBesar/request_gKecil/');
+    
+    public function getBarangKonfirmasiAdmin2($id_user, $nomor_po) {
+        $barangKonfirmasi = DB::select("SELECT id_produk, stok FROM request_gudang_kecil
+                                        WHERE id_user = $id_user AND nomor_po = '$nomor_po'");
+        // dd($barangKonfirmasi);
+        return $barangKonfirmasi;
     }
+    
+    public function getStokGudangBesar($id_produk) {
+        $stokGudangBesar = DB::select("SELECT stok FROM gudang_besar WHERE id_produk = '$id_produk'")[0]->stok;    
+        // dd($stokGudangKecil);
+        return $stokGudangBesar;
+    }  
 }

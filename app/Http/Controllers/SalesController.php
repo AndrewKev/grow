@@ -13,6 +13,7 @@ use App\Models\Toko;
 use App\Models\StorProduk;
 use App\Models\RequestStorBarang;
 use App\Models\RincianUang;
+use App\Models\GudangKecil;
 use App\Http\Controllers\PenjualanLakuCashController;
 
 use Illuminate\Support\Facades\DB;
@@ -193,7 +194,24 @@ class SalesController extends Controller
             }
         }else {
             for($i = 0; $i < sizeof($request->id_produk); $i++) {
+                // melakukan pengembalian barang ke gudang kecil
+                $id_produk = $request->id_produk[$i];
+                $jumlah = $request->jumlah[$i];
+                // dd($id_produk);
+                // Mendapatkan stok awal di gudang kecil
+                $stokAwal = DB::select("SELECT stok FROM gudang_kecil WHERE id_produk = '$id_produk'")[0]->stok;  
+                // dd($stokAwal);
+
+                // Menghitung stok setelah pengembalian
+                $stokSekarang = $stokAwal + $jumlah;
+                // dd($stokSekarang);
+
+                // Update stok di gudang kecil
+                DB::update("UPDATE `gudang_kecil` 
+                        SET `stok` = $stokSekarang
+                        WHERE `id_produk` = '$id_produk'");
                 app('App\Http\Controllers\HistoryRequestSalesController')->konfirmasiSales($request, 'sales tolak', $i);
+
             }
         }
         DB::delete("DELETE FROM request_sales WHERE id_user = $user");

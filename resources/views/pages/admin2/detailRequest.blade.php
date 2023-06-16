@@ -9,6 +9,11 @@
         <div class="mt-4">
 			<form action="{{ $sales[0]->id }}/konfirmasi" method="post" onsubmit="return confirm('Konfirmasi Request Sales?')">
 				@csrf
+                @if (session('error'))
+                    <div class="alert alert-danger">
+                        {{ session('error') }}
+                    </div>
+                @endif
 				<button type="submit" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#editkm">
 					Konfirmasi
 				</button>

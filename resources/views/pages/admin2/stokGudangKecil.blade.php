@@ -12,10 +12,6 @@
                 <div class="alert alert-info" style="width: fit-content;" role="alert">
                     Anda sudah melakukan request Stok, tunggu konfirmasi dari Pimpinan Area!
                 </div>
-                @elseif($accPimArea)
-                <div class="alert alert-info" style="width: fit-content;" role="alert">
-                    Pimpinan Area ACC, tunggu stok dikirim Gudang Besar
-                </div>
                 @elseif($accGBesar)
                 <div class="alert alert-info" style="width: fit-content;" role="alert">
                     Barang anda sudah dikonfirmasi Gudang Besar!
@@ -23,6 +19,10 @@
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCekBarang">
                     Cek Barang
                 </button>
+                @elseif($accPimArea)
+                <div class="alert alert-info" style="width: fit-content;" role="alert">
+                    Pimpinan Area ACC, tunggu stok dikirim Gudang Besar
+                </div>
                 @else
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalRequestStok">
                     Purchasing Order

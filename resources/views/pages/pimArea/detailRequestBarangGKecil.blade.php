@@ -29,6 +29,8 @@
                     <tbody>
                         @php
                             $no = 1;
+                            $totalharga = 0;
+                            $totalreq = 0;
                         @endphp
                         @foreach ($data as $dt)
                             <tr>
@@ -36,7 +38,7 @@
                                 <td>{{ $dt->created_at }}</td>
                                 <td>{{ $dt->nama_produk }}</td>
                                 <td>{{ $dt->stok }}</td>
-                                <td>{{ $dt->harga_stok }}</td>
+                                <td>Rp {{ number_format($dt->harga_stok, 0, ',', '.') }}</td>
                                 <td>
                                     <button type="button" class="btn btn-warning ubah-stok" style="margin-right: 0.5rem;"
                                         data-bs-toggle="modal" data-bs-target="#exampleModal-{{ $dt->id_produk }}">
@@ -74,11 +76,22 @@
                             </tr>
                             @php
                                 $no++;
+                                $totalharga += ($dt->harga_stok);
+                                $totalreq += ($dt->stok);
                             @endphp
                         @endforeach
                     </tbody>
                 </table>
             </div>
+        </div>
+        <div style="text-align: right;">
+            <label style="display: inline-block; width: 150px; font-weight: bold; text-align: left;"><b>Total Request Stok</b></label>
+            <input type="text" style="text-align: left;" value="{{ $totalreq }}" disabled>
+        </div>
+        <br>
+        <div style="text-align: right;">
+            <label style="display: inline-block; width: 150px; font-weight: bold; text-align: left;"><b>Total Harga</b></label>
+            <input type="text" style="text-align: left;" value="Rp {{ number_format($totalharga, 0, ',', '.') }}" disabled><br><br>
         </div>
     </main>
 @endsection

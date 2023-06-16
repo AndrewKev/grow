@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\RequestGudangKecil;
+use App\Models\GudangKecil;
 use App\Models\Product;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -58,13 +59,76 @@ class AdminController extends Controller
     }
 
     public function konfirmasiRequest($id_user) {
-        // dd("hello");
-        DB::update("UPDATE request_sales SET konfirmasi = 1
-                    WHERE id_user = $id_user");
+        $barangKonfirmasi = $this->getBarangKonfirmasiSales($id_user);
+        // dd($barangKonfirmasi);
+    
+        foreach ($barangKonfirmasi as $barang) {
+            $id_produk = $barang->id_produk;
+            $jumlahDiminta = $barang->jumlah;
+            // dd($jumlahDiminta);
+            $stokGudangKecil = $this->getStokGudangKecil($id_produk);
+            // dd($stokGudangKecil);
+            if ($stokGudangKecil < $jumlahDiminta) {
+                // Stok kurang dari yang diminta, tampilkan pesan peringatan
+                session()->flash('error', 'Stok barang tidak mencukupi untuk konfirmasi. Silahkan Cek kembali stok Gudang Kecil Area!');
+                return redirect()->back();
+            }
+        }
 
+        foreach ($barangKonfirmasi as $barang) {
+            $id_produk = $barang->id_produk;
+            $jumlahDiminta = $barang->jumlah;
+            // dd($jumlahDiminta);
+            DB::update("UPDATE `gudang_kecil` 
+                        SET `stok` = `stok` - :stok
+                        WHERE `id_produk` = :id_produk", [
+                            'stok' => (int) $jumlahDiminta,
+                            'id_produk' => $id_produk
+                        ]);
+        }
+
+        // for ($i = 0; $i < sizeof($request->id_produk); $i++) {
+        //     DB::update("UPDATE `gudang_kecil` 
+        //                 SET `stok` = `stok` - :stok
+        //                 WHERE `id_produk` = :id_produk", [
+        //                     'stok' => (int) $request->jumlah[$i],
+        //                     'id_produk' => $request->id_produk[$i]
+        //                 ]);
+        // } 
+        // Update konfirmasi pada tabel request_sales
+        // DB::table('request_sales')
+        //     ->where('id_user', $id_user)
+        //     ->update(['konfirmasi' => 1]);
+
+        DB::update("UPDATE request_sales SET konfirmasi = 1
+                        WHERE id_user = $id_user");
+    
+        // Panggil fungsi konfirmasiAdmin dari controller lain
         app('App\Http\Controllers\HistoryRequestSalesController')->konfirmasiAdmin($id_user);
+    
         return redirect('/admin2/request_sales');
     }
+    
+    public function getBarangKonfirmasiSales($id_user) {
+        // $barangKonfirmasi = DB::table('request_sales')
+        //     ->select('id_produk', 'jumlah')
+        //     ->where('id_user', $id_user)
+        //     ->get();
+        $barangKonfirmasi = DB::select("SELECT id_produk, jumlah FROM request_sales
+                                        WHERE id_user = $id_user");
+        // dd($barangKonfirmasi);
+        return $barangKonfirmasi;
+    }
+    
+    public function getStokGudangKecil($id_produk) {
+        // $stokGudangKecil = DB::table('gudang_kecil')
+        //     ->select('stok')
+        //     ->where('id_produk', $id_produk)
+        //     ->value('stok');
+        $stokGudangKecil = DB::select("SELECT stok FROM gudang_kecil WHERE id_produk = '$id_produk'")[0]->stok;    
+        // dd($stokGudangKecil);
+        return $stokGudangKecil;
+    }    
 
     public function test() {
         dd(app('App\Http\Controllers\HistoryRequestSalesController')->getReqKonfirmasiByIdSales(4));
@@ -182,9 +246,9 @@ class AdminController extends Controller
         return false;
     }
 
-    public function isPimAreaAcc($id_user) { // cek apakah user sudah melakukan request ke admin
+    public function isPimAreaAcc($id_user) { 
         $cek = DB::select("SELECT * FROM `request_gudang_kecil` 
-                           WHERE id_user = '$id_user' AND konfirmasi = 1 AND konfirmasi2 = 0;");
+                           WHERE id_user = '$id_user' AND konfirmasi = 1;");
         // dd($cek);
         if(sizeof($cek) > 0) {
             return true;
@@ -194,7 +258,7 @@ class AdminController extends Controller
 
     public function isGudangBesarAcc($id_user) { // cek apakah user sudah melakukan request ke admin
         $cek = DB::select("SELECT * FROM `request_gudang_kecil` 
-                           WHERE id_user = '$id_user' AND konfirmasi2 = 1;");
+                           WHERE id_user = '$id_user' AND ((konfirmasi2 = 1 AND konfirmasi = 0) OR (konfirmasi2 = 1) );");
         // dd($cek);
         if(sizeof($cek) > 0) {
             return true;
@@ -220,13 +284,54 @@ class AdminController extends Controller
                         'harga_stok' => $hargaStok,
                         'deadline_kirim' =>Carbon::now()->addDays(2),
                         'catatan' => $request->catatan,
-                        'konfirmasi' => 0
+                        'konfirmasi' => 0,
+                        'konfirmasi2' =>0
                     ]
                 );
             }
         }
         return redirect('/admin2/stok_barang_gKecil');
     }
+
+    public function terimaBarang(Request $request) {
+        // dd($request->all());
+        $user = auth()->user()->id;
+        if($request->has('setuju')) {
+            // dd($request->all());
+            for($i = 0; $i < sizeof($request->id_produk); $i++) {
+                // GudangKecil::create(
+                //     [
+                //         'id_user' => auth()->user()->id,
+                //         'id_produk' => $request->id_produk[$i],
+                //         'stok' => (int) $request->jumlah[$i],
+                //     ]
+                // );
+                $id_user = auth()->user()->id;
+                // dd($id_user);
+                $id_produk = $request->id_produk[$i];
+                // dd($id_produk);
+                $jumlah_input = (int) $request->jumlah[$i];
+                // dd($jumlah_input);
+
+                $gudangKecil = GudangKecil::where('id_produk', $id_produk)
+                    ->first();
+                // dd($gudangKecil);
+                if ($gudangKecil) {
+                    $stok_sekarang = $gudangKecil->stok;
+                    $stok_baru = $stok_sekarang + $jumlah_input;
+                    // dd($stok_baru);
+                    GudangKecil::where('id_produk', $id_produk)
+                        ->update([
+                            'stok' => $stok_baru,
+                        ]);
+                }
+            }
+        }
+        DB::delete("DELETE FROM request_gudang_kecil WHERE id_user = $user");
+
+        return redirect('/admin2/stok_barang_gKecil');
+    }
+
     // public function cekBarang($id_user, $id_produk) {
     //     $tanggal = Carbon::now()->format('Y-m-d');
     //     $barang = DB::select("SELECT * FROM `request_sales` 

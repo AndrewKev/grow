@@ -11,6 +11,7 @@ class GudangKecil extends Model
     protected $table = 'gudang_kecil';
     protected $fillable = [
         'id_user',
+        'id_produk',
         'tanggal_po',
         'nomor_po',
         'stok',
