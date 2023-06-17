@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('history_request_stok_sales', function (Blueprint $table) {
+        Schema::create('history_request_sales_stor_penjualan', function (Blueprint $table) {
             $table->id();
             $table->date('tanggal');
             $table->string('nama_sales');
             $table->string('nama_produk');
-            $table->integer('jumlah');
+            $table->integer('terjual');
+            $table->integer('total_harga');
             $table->boolean('konfirmasi_admin');  // => 0
-            $table->boolean('konfirmasi_sales');  // => 0
             $table->string('keterangan'); 
             $table->timestamps();
         });
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('history_request_stok_sales');
+        Schema::dropIfExists('history_request_sales_stor_penjualan');
     }
 };

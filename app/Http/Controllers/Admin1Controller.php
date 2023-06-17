@@ -42,6 +42,7 @@ class Admin1Controller extends Controller
         // dd("hello");
         DB::update("UPDATE request_stor_barang SET konfirmasi2 = 1
                     WHERE id_user = $id_user");
+                    app('App\Http\Controllers\HistoryRequestSalesController')->konfirmasiAdminStorPenjualan($id_user);
         return redirect('/admin/request_stor_uang');
     }
 
@@ -54,7 +55,25 @@ class Admin1Controller extends Controller
         return view('pages.admin.tampilAbsensi', compact('listAbsenUser'));
     }
 
-    
+    public function historyRequestStorUang(){
+        $historyReqSalesSU = $this->getHistoryRequestSalesStorUang();
+        return view('pages.admin.historyRequestStorProduk', compact('historyReqSalesSU'));
+    }
+
+    public function getHistoryRequestSalesStorUang(){
+        // $historyReqSales = DB::select("SELECT DISTINCT keterangan, tanggal, nama_sales FROM history_request_sales_stor_penjualan;");
+        // return $historyReqSales;
+        $historyReqSales = DB::select("SELECT keterangan, tanggal, nama_sales, MAX(created_at) AS created_at FROM history_request_sales_stor_penjualan GROUP BY keterangan, tanggal, nama_sales ORDER BY created_at DESC;");
+        return $historyReqSales;
+    }
+
+    public function detailHistoryRequestStorUang($keterangan, $nama_sales){
+        $data = DB::select("SELECT  * FROM history_request_sales_stor_penjualan
+        WHERE keterangan = '$keterangan' AND nama_sales = '$nama_sales';");
+        // dd($data);
+        
+        return view('pages.admin.detailHistoryRequestSalesStorPenjualan', compact('data'));
+    }
     // public function konfirmasiRequestStorUang($id_user){
     //     // dd($request -> all());
     //     $user = auth()->user()->id;

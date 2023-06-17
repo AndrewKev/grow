@@ -5,7 +5,10 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Admin1Controller;
 use App\Http\Controllers\SalesController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\GudangBesarController;
+use App\Http\Controllers\GudangKecilController;
 use App\Http\Controllers\PenjualanLakuCashController;
+use App\Http\Controllers\PimpinanAreaController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -30,6 +33,57 @@ Route::get('/', function () {
 
 Auth::routes();
 
+Route::group(
+    [
+        'controller' => PimpinanAreaController::class,
+        'prefix' => 'pimArea',
+        'middleware' => ['auth', 'level:6']
+    ],
+    function() {
+        Route::get('/dashboard', 'pimpinanArea');
+        Route::get('/daftar_req_gudang_kecil', 'reqGudangKecil');
+        Route::get('/daftar_req_gudang_kecil/{id}/{nomor_po}', 'detailReqGudangKecil');
+
+        Route::post('/daftar_req_gudang_kecil/{id_user}/{nomor_po}/ubah_stok/{id_produk}', 'ubahReqGudangKecil');
+        Route::post('/daftar_req_gudang_kecil/{id_user}/{nomor_po}/konfirmasi', 'konfirmasiRequest');
+
+    }
+);
+
+Route::group(
+    [
+        'controller' => GudangBesarController::class,
+        'prefix' => 'gBesar',
+        'middleware' => ['auth', 'level:5']
+    ],
+    function() {
+        Route::get('/dashboard', 'gudangBesar');
+
+        Route::get('/stok_barang', 'getStokBarang');
+        Route::post('/tambah_stok', 'tambahStok');
+        Route::post('/tambah_sample', 'tambahSample');
+
+        // REQUEST GUDANG KECIL
+        Route::get('/request_gKecil', 'reqGudangKecil');
+        Route::get('/request_gKecil/{id}/{nomor_po}', 'detailReqGudangKecil');
+        Route::post('/request_gKecil/{id_user}/{nomor_po}/konfirmasi', 'konfirmasiRequest');
+
+    }
+);
+
+Route::group(
+    [
+        'controller' => GudangKecilController::class,
+        'prefix' => 'gKecil',
+        'middleware' => ['auth', 'level:4']
+    ],
+    function() {
+        Route::get('/dashboard', 'gudangKecil');
+
+        Route::get('/stok_barang', 'getStokBarang');
+        Route::post('/request_stok', 'requestStokGKecil');
+    }
+);
 // URL : .com/admin/
 // admin1
 Route::group(
@@ -46,6 +100,10 @@ Route::group(
         Route::get('/request_stor_uang/{id}', 'detailReqSalesStorUang');
         Route::post('/request_stor_uang/{id_user}/konfirmasi', 'konfirmasiRequestStorUang');
         Route::get('/tampil_absensi', 'tampilAbsensi');
+
+        // HISTORY REQUEST SALES
+        Route::get('/history_request_stor_penjualan', 'historyRequestStorUang');
+        Route::get('/history_request_stor_penjualan/{keterangan}/{nama_sales}', 'detailHistoryRequestStorUang');
 
     }
 );
@@ -70,6 +128,19 @@ Route::group(
         Route::get('/request_stor_barang', 'reqSalesStorBarang');
         Route::get('/request_stor_barang/{id}', 'detailReqSalesStorBarang');
         Route::post('/request_stor_barang/{id_user}/konfirmasi', 'konfirmasiRequestStorBarang');
+
+        // HISTORY REQUEST SALES
+        Route::get('/history_request_sales', 'historyRequestSales');
+        Route::get('/history_request_sales/{keterangan}/{nama_sales}', 'detailHistoryRequestSales');
+
+        Route::get('/history_request_stor_barang', 'historyRequestStorBarang');
+        Route::get('/history_request_stor_barang/{keterangan}/{nama_sales}', 'detailHistoryRequestStorBarang');
+
+
+        // GUDANG KECIL
+        Route::get('/stok_barang_gKecil', 'stokGudangKecil');
+        Route::post('/request_stok', 'requestStokGKecil');
+        Route::post('/terima_barang', 'terimaBarang');
         // testing aja
         Route::get('/test', 'test');
         
@@ -120,5 +191,7 @@ Route::group(
 //     Route::get('/dashboard', [SalesController::class, 'index']);
 //     Route::get('/absensi', [AbsensiController::class, 'index']);
 // });
-
+// Route::middleware(['auth', 'level:5'])->group(function () {
+//     Route::get('/gBesar/dashboard', [GudangBesarController::class, 'gudangBesar']);
+// });
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
