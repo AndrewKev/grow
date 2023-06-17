@@ -11530,4 +11530,13 @@ body {
   height: 200px;
 }
 
+.inner-footer {
+    display: flex;
+    width: -webkit-fill-available;
+    justify-content: space-between;
+}
 
+.footer-alert {
+    display: flex;
+    width: -webkit-fill-available;
+}

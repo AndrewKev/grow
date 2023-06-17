@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
     <meta charset="UTF-8">
@@ -13,9 +13,12 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
     {{-- data table --}}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
+    {{-- <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/fixedheader/3.3.2/js/dataTables.fixedHeader.min.js"></script>
+    <script src="https://cdn.datatables.net/fixedheader/3.3.2/js/dataTables.fixedHeader.min.js"></script> --}}
     @yield('head')
 </head>
 
@@ -60,9 +63,9 @@
     </div>
 
     <script src="{{ asset('js/scripts.js') }}"></script>
-    <script src="{{ asset('js/chart-area-demo.js') }}"></script>
-    <script src="{{ asset('js/chart-bar-demo.js') }}"></script>
-    <script src="{{ asset('js/chart-simple-demo.js') }}"></script>
+    {{-- <script src="{{ asset('js/chart-area-demo.js') }}"></script> --}}
+    {{-- <script src="{{ asset('js/chart-bar-demo.js') }}"></script> --}}
+    {{-- <script src="{{ asset('js/chart-simple-demo.js') }}"></script> --}}
     <script src="{{ asset('js/datatables-simple-demo.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous">
     </script>
@@ -73,7 +76,7 @@
     {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script> --}}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
-    
+
 </body>
 
 </html>

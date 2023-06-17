@@ -27,6 +27,7 @@ class PenjualanLakuCashController extends Controller
         // dd($this->getRoutingUser($id_user));
         // $distrik = Distrik::where('id_user', Auth::id())->first();
         $distrik = DB::select("SELECT * FROM distrik WHERE id_user = $id_user");
+        $tanggal = Carbon::now()->format('Y-m-d');
         
         $routing = $this->getRoutingUser($id_user);
         // dd($routing);
@@ -40,7 +41,8 @@ class PenjualanLakuCashController extends Controller
                                     JOIN routing ON routing.id_routing = p.id_routing 
                                     JOIN foto ON foto.id_foto = p.id_foto
                                     JOIN keterangan ON keterangan.id_keterangan = p.id_keterangan
-                                    WHERE p.id_user = '$id_user'");
+                                    WHERE p.id_user = '$id_user'
+                                    AND p.created_at BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59'");
     
         // dd($penjualanLk);
         // return view('pages.karyawan.penjualanLakuCash', compact('distrik', 'penjualanLk', 'routing'));

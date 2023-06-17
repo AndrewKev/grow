@@ -12,14 +12,6 @@ use Carbon\Carbon;
 
 class KPIController extends Controller
 {
-    protected $callMadeTarget = 35;
-    protected $empTarget = 35;
-    protected $volumeTarget = 150;
-    protected $ioTarget = 5;
-    protected $roTarget = 15;
-    protected $rocTarget = 0;
-    protected $greenlandTarget = 10;
-
     /**
      * Menampilkan penjualan toko tanggal tertentu.
      * Return Collection.
@@ -30,10 +22,10 @@ class KPIController extends Controller
                             WHERE id_user = $user
                             AND created_at BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59'
                             ");
-        // return $list;
+
         $collection = collect($list);
         $grouped = $collection->groupBy('id_toko');
-        
+
         return $grouped;
     }
 
@@ -46,13 +38,11 @@ class KPIController extends Controller
         $datas = $this->getpenjualan(Carbon::now()->format('Y-m-d'))->all();
 
         foreach ($datas as $data) {
-            for ($i=0; $i < $data->count(); $i++) { 
+            for ($i=0; $i < $data->count(); $i++) {
                 $volume->push($data->all()[$i]->jumlah_produk);
             }
         }
 
-        // return $datas['440']->all()[0]->jumlah_produk;
-        // return $datas;
         return $volume->sum();
     }
 
@@ -71,11 +61,6 @@ class KPIController extends Controller
 
         $combinedKeyEmp = $keys->combine($emp->all());
 
-        // return $keys;
-        // return $datas;
-        // return $datas['440']->all()[0]->emp;
-        // return $emp->all();
-        // return $emp->where('emp', '!=', '');
         return $combinedKeyEmp->where('emp', '!=', '')->count();
     }
 
@@ -134,7 +119,7 @@ class KPIController extends Controller
     }
 
     /**
-     * Menampilkan toko dan produk yang dijual.
+     * Hitung produk yang dijual.
      * Return int.
      */
     public function getGreenland() {
@@ -147,7 +132,7 @@ class KPIController extends Controller
 
         foreach ($datas as $data) {
             $jumlahPerToko = collect();
-            for ($i=0; $i < $data->count(); $i++) { 
+            for ($i=0; $i < $data->count(); $i++) {
                 $jumlahPerToko->push($data->all()[$i]->jumlah_produk);
             }
             $sum->push(['jumlah' => $jumlahPerToko->sum()]);
@@ -158,6 +143,75 @@ class KPIController extends Controller
         return $combinedKeyToko->where('jumlah', '>=', 10)->count();
     }
 
+    /**
+     * Hitung ACV Call Made.
+     * Return float.
+     */
+    public function countAcvCallMade() {
+        $callMade = $this->getPenjualan(Carbon::now()->format('Y-m-d'))->count();
+
+        return $callMade / 35 * 100;
+    }
+
+    /**
+     * Hitung ACV EMP.
+     * Return float.
+     */
+    public function countAcvEmp() {
+        $emp = $this->getEmp();
+
+        return $emp / 35 * 100;
+    }
+
+    /**
+     * Hitung ACV Volume.
+     * Return float.
+     */
+    public function countAcvVolume() {
+        $volume = $this->getVolume();
+
+        return $volume / 150 * 100;
+    }
+
+    /**
+     * Hitung ACV IO.
+     * Return float.
+     */
+    public function countAcvIO() {
+        $io = $this->getIO();
+
+        return $io / 5 * 100;
+    }
+
+    /**
+     * Hitung ACV RO.
+     * Return float.
+     */
+    public function countAcvRO() {
+        $ro = $this->getRO();
+
+        return $ro / 15 * 100;
+    }
+
+    /**
+     * Hitung ACV ROC.
+     * Return float.
+     */
+    public function countAcvROC() {
+        $roc = $this->getROC();
+
+        return $roc * (-2);
+    }
+
+    /**
+     * Hitung ACV Greenland.
+     * Return float.
+     */
+    public function countAvcGreenland() {
+        $greenland = $this->getGreenland();
+
+        return $greenland / 10 * 100;
+    }
 
     /**
      * Get user id yg login.
@@ -180,8 +234,78 @@ class KPIController extends Controller
                 'ro' => $this->getRO(),
                 'roc' => $this->getROC(),
                 'greenland' => $this->getGreenland(),
+                'acv_call_made' => $this->countAcvCallMade(),
+                'acv_emp' => $this->countAcvEmp(),
+                'acv_volume' => $this->countAcvVolume(),
+                'acv_io' => $this->countAcvIO(),
+                'acv_ro' => $this->countAcvRO(),
+                'acv_roc' => $this->countAcvROC(),
+                'acv_greenland' => $this->countAvcGreenland(),
             ]
         );
+    }
+
+    /**
+     * Get KPI untuk per minggu.
+     * Return Collection.
+     */
+    public function getKPI() {
+        $startDate = Carbon::now()->startOfWeek();
+        $endDate = Carbon::now()->endOfWeek();
+
+        $data = DB::table('kpi')
+        ->whereBetween('created_at', [$startDate, $endDate])
+        ->where('id_user', $this->getUser())
+        ->get();
+
+        $collection = collect($data);
+
+        return $collection;
+    }
+
+    /**
+     * Get efektivitas untuk per minggu.
+     * Return Collection.
+     */
+    public function getWeeklyEv() {
+        $collection = $this->getKPI();
+        $tempTotalEvPerDay = collect();
+        $totalEvPerDay = collect();
+
+        foreach($collection as $data) {
+            $tempTotalEvPerDay->push($data->acv_call_made);
+            $tempTotalEvPerDay->push($data->acv_emp);
+            $tempTotalEvPerDay->push($data->acv_volume);
+            $tempTotalEvPerDay->push($data->acv_io);
+            $tempTotalEvPerDay->push($data->acv_ro);
+            $tempTotalEvPerDay->push($data->acv_roc);
+            $tempTotalEvPerDay->push($data->acv_greenland);
+
+            $totalEvPerDay->push($tempTotalEvPerDay->sum() / 6);
+            $tempTotalEvPerDay = collect();
+        }
+
+        return $totalEvPerDay;
+    }
+
+    /**
+     * Get efektivitas untuk per minggu
+     * dengan key hari dan value nilai efektivitas.
+     * Return Collection.
+     */
+    public function getWeeklyEvDay() {
+        $collection = $this->getKPI();
+        $ev = $this->getWeeklyEv();
+        $days = collect();
+
+        foreach ($collection as $data) {
+            $dayData = Carbon::parse($data->created_at);
+            $dayData->settings(['formatFunction' => 'translatedFormat']); // translate nama hari
+            $days->push($dayData->format('l'));
+        }
+        $combinedDayName = $days->combine($ev);
+
+        return $combinedDayName;
     }
 
     /**
@@ -197,5 +321,9 @@ class KPIController extends Controller
         // dd($this->getRO());
         // dd($this->getROC());
         // dd($this->getTokoJumlahJual());
+        // dd($this->countAvcGreenland());
+        // dd($this->getKPI());
+        // dd($this->getWeeklyEv());
+        // dd($this->getWeeklyEvDay());
     }
 }

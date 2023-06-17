@@ -18,5 +18,13 @@ class KPI extends Model
         'ro',
         'roc',
         'greenland',
+        'acv_call_made',
+        'acv_emp',
+        'acv_volume',
+        'acv_io',
+        'acv_ro',
+        'acv_roc',
+        'acv_greenland',
+        // 'efektivitas',
     ];
 }

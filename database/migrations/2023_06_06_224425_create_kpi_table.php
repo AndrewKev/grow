@@ -21,6 +21,14 @@ return new class extends Migration
             $table->integer('ro');
             $table->integer('roc');
             $table->integer('greenland');
+            $table->float('acv_call_made');
+            $table->float('acv_emp');
+            $table->float('acv_volume');
+            $table->float('acv_io');
+            $table->float('acv_ro');
+            $table->float('acv_roc');
+            $table->float('acv_greenland');
+            // $table->float('efektivitas');
             $table->timestamps();
 
             $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');

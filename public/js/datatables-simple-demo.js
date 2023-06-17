@@ -6,4 +6,14 @@ window.addEventListener('DOMContentLoaded', event => {
     if (datatablesSimple) {
         new simpleDatatables.DataTable(datatablesSimple);
     }
+
+    const tableNominalKertas = document.getElementById('tableNominalKertas');
+    if (tableNominalKertas) {
+        new simpleDatatables.DataTable(tableNominalKertas);
+    }
+
+    const tableNominalKoin = document.getElementById('tableNominalKoin');
+    if (tableNominalKoin) {
+        new simpleDatatables.DataTable(tableNominalKoin);
+    }
 });
