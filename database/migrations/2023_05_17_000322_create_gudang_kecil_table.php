@@ -13,18 +13,12 @@ return new class extends Migration
     {
         Schema::create('gudang_kecil', function (Blueprint $table) {
             $table->char('id_produk');
-            $table->foreignId('id_user')->nullable();
-            $table->date('tanggal_po')->nullable();
-            $table->string('nomor_po')->nullable();
             $table->integer('stok');
             $table->integer('sample')->nullable();
             $table->integer('harga_stok');
-            $table->date('deadline_kirim')->nullable();
-            $table->string('catatan')->nullable();
             $table->timestamps();
 
             $table->foreign('id_produk')->references('id_produk')->on('products')->onDelete('cascade');
-            $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

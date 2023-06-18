@@ -14,6 +14,9 @@
 						<a class="nav-link" href="/gBesar/stok_barang">Stok Barang</a>
 						<a class="nav-link" href="/gBesar/request_gKecil">Request Gudang Kecil</a>
 					</nav>
+					<nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+						<a class="nav-link" href="/gBesar/history_request_barang_gKecil">History Gudang Kecil</a>
+					</nav>
 				</div>
 			</div>
 			<div class="sb-sidenav-footer">

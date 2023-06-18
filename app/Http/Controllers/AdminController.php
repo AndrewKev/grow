@@ -217,8 +217,9 @@ class AdminController extends Controller
         $requestBarang = $this->isRequestProduk(auth()->user()->id);
         $accPimArea = $this->isPimAreaAcc(auth()->user()->id);
         $accGBesar = $this->isGudangBesarAcc(auth()->user()->id);
+        $isTodayReq = $this->isTodayReqStok(auth()->user()->nama, Carbon::now()->format('Y-m-d'));
         $barangKonfirmasi = $this->getBarangKonfirmasi();
-        return view('pages.admin2.stokGudangKecil', compact('stokSample', 'requestBarang', 'accPimArea', 'accGBesar', 'barangKonfirmasi'));
+        return view('pages.admin2.stokGudangKecil', compact('stokSample', 'requestBarang', 'accPimArea', 'accGBesar', 'isTodayReq','barangKonfirmasi'));
     }
 
     public function getBarangKonfirmasi() {
@@ -238,7 +239,7 @@ class AdminController extends Controller
 
     public function isRequestProduk($id_user) { // cek apakah user sudah melakukan request ke admin
         $cek = DB::select("SELECT * FROM `request_gudang_kecil` 
-                           WHERE id_user = '$id_user' AND konfirmasi = 0;");
+                           WHERE id_user = '$id_user' AND konfirmasi = 0 AND konfirmasi2 = 0;");
         // dd($cek);
         if(sizeof($cek) > 0) {
             return true;
@@ -248,7 +249,18 @@ class AdminController extends Controller
 
     public function isPimAreaAcc($id_user) { 
         $cek = DB::select("SELECT * FROM `request_gudang_kecil` 
-                           WHERE id_user = '$id_user' AND konfirmasi = 1;");
+                           WHERE id_user = '$id_user' AND konfirmasi = 1 AND konfirmasi2 = 0;");
+        // dd($cek);
+        if(sizeof($cek) > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public function isTodayReqStok($nama_admin, $tanggal) { 
+        $cek = DB::select("SELECT * FROM `history_stok_pimpinan_area` 
+                           WHERE nama_admin = '$nama_admin' AND konfirmasi = 0 AND konfirmasi2 = 0
+                           AND tanggal_po BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59';");
         // dd($cek);
         if(sizeof($cek) > 0) {
             return true;
@@ -278,8 +290,7 @@ class AdminController extends Controller
                     [
                         'id_user' => auth()->user()->id,
                         'id_produk' => $request->id_produk[$i],
-                        'tanggal_po' => Carbon::now()->format('Y-m-d'),
-                        'nomor_po' =>$request->nomor_po,
+                        'tanggal_po' => Carbon::now(),
                         'stok' => (int) $request->produk[$i],
                         'harga_stok' => $hargaStok,
                         'deadline_kirim' =>Carbon::now()->addDays(2),
@@ -290,6 +301,7 @@ class AdminController extends Controller
                 );
             }
         }
+        app('App\Http\Controllers\HistoryPimpinanAreaController')->admin2RequestStok($request, 0,0, $hargaStok);
         return redirect('/admin2/stok_barang_gKecil');
     }
 

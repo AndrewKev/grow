@@ -8,7 +8,6 @@
                     <tr>
                         <th>No</th>
                         <th>Tanggal PO</th>
-                        <th>Nomor PO</th>
                         <th>Deadline Pengiriman</th>
                         <th>Nama Requested</th>
                         <th>Catatan</th>
@@ -23,12 +22,11 @@
                         <tr>
                             <td>{{ $no }}</td>
                             <td>{{ $dr->tanggal_po }}</td>
-                            <td>{{ $dr->nomor_po }}</td>
                             <td>{{ $dr->deadline_kirim }}</td>
                             <td>{{ $dr->nama }}</td>
                             <td>{{ $dr->catatan }}</td>
                             <td>
-                                <a href="daftar_req_gudang_kecil/{{ $dr->id }}/{{ $dr->nomor_po }}" class="btn btn-primary">
+                                <a href="daftar_req_gudang_kecil/{{ $dr->id }}" class="btn btn-primary">
                                     Detail
                                 </a>
                             </td>

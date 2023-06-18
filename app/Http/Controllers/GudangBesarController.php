@@ -66,43 +66,41 @@ class GudangBesarController extends Controller
     }
 
     public function daftaReqGKecil() {
-        $daftarReq = DB::select("SELECT u.id, u.nama, r.tanggal_po, r.nomor_po, r.deadline_kirim, r.catatan, MAX(r.created_at) AS created_at, r.konfirmasi
+        $daftarReq = DB::select("SELECT u.id, u.nama, r.tanggal_po, r.deadline_kirim, r.catatan, MAX(r.created_at) AS created_at, r.konfirmasi
         FROM request_gudang_kecil AS r
         JOIN users AS u ON u.id = r.id_user
         WHERE r.konfirmasi2 = 0
-        GROUP BY u.id, u.nama, r.tanggal_po, r.nomor_po, r.deadline_kirim, r.catatan, r.konfirmasi;");
+        GROUP BY u.id, u.nama, r.tanggal_po,
+         r.deadline_kirim, r.catatan, r.konfirmasi;");
         return $daftarReq;
     }
 
-    public function detailReqGudangKecil($id, $nomor_po) {
-        $data = DB::select("SELECT r.id_user, r.id_produk, p.nama_produk, r.stok, r.sample, r.harga_stok, r.created_at, r.nomor_po
+    public function detailReqGudangKecil($id) {
+        $data = DB::select("SELECT r.id_user, r.id_produk, p.nama_produk, r.stok, r.sample, r.harga_stok, r.created_at
                             FROM request_gudang_kecil r
                             JOIN products p ON p.id_produk = r.id_produk
-                            WHERE id_user = $id AND nomor_po = '$nomor_po'");
+                            WHERE id_user = $id");
         $user = DB::select("SELECT id, nama
                             FROM users
                             WHERE id = $id");
-        $nomor_po = DB::select("SELECT nomor_po FROM request_gudang_kecil WHERE id_user = $id AND nomor_po = '$nomor_po'");
-        // $dataBarangKonfirmasi = $this->getBarangKonfirmasi($id, $nomor_po);
-        $nomor_po_value = $nomor_po[0]; // Ambil elemen pertama dari array $nomor_po
-        $dataBarangKonfirmasi = $this->getBarangKonfirmasi($id, $nomor_po_value);
+        // $dataBarangKonfirmasi = 
+        $dataBarangKonfirmasi = $this->getBarangKonfirmasi($id);
         // dd($dataBarangKonfirmasi);
-        return view('pages.gBesar.detailRequestBarangGKecil', compact('data', 'user', 'nomor_po', 'dataBarangKonfirmasi'));
+        return view('pages.gBesar.detailRequestBarangGKecil', compact('data', 'user', 'dataBarangKonfirmasi'));
     }
 
-    public function getBarangKonfirmasi($id, $nomor_po) {
+    public function getBarangKonfirmasi($id) {
         // $user = auth()->user()->id;
         // dd($id);
         $barangKonfirmasi = DB::select("SELECT p.id_produk, p.nama_produk, r.stok FROM request_gudang_kecil r
                     JOIN products p ON r.id_produk = p.id_produk
-                    WHERE id_user = $id
-                    AND nomor_po =  '$nomor_po->nomor_po'");
+                    WHERE id_user = $id");
         // dd($barangKonfirmasi);
         return $barangKonfirmasi;
     }
 
-    public function konfirmasiRequest(Request $request, $id_user, $nomor_po){
-        $barangKonfirmasi = $this->getBarangKonfirmasiAdmin2($id_user, $nomor_po);
+    public function konfirmasiRequest(Request $request, $id_user){
+        $barangKonfirmasi = $this->getBarangKonfirmasiAdmin2($id_user);
         // dd($request->all());;
 
         foreach ($barangKonfirmasi as $barang) {
@@ -130,14 +128,16 @@ class GudangBesarController extends Controller
                     }       
         $tanggal = Carbon::now();
         $coba = DB::update("UPDATE request_gudang_kecil SET konfirmasi2 = 1, tgl_konfirmasi2 = '$tanggal'
-                    WHERE id_user = $id_user AND nomor_po = '$nomor_po';");
+                    WHERE id_user = $id_user ;");
+        $controller = new HistoryPimpinanAreaController();
+        $controller->konfirmasiStokGB($id_user);
         // dd($coba);
         return redirect('/gBesar/request_gKecil/');
     }
     
-    public function getBarangKonfirmasiAdmin2($id_user, $nomor_po) {
+    public function getBarangKonfirmasiAdmin2($id_user) {
         $barangKonfirmasi = DB::select("SELECT id_produk, stok FROM request_gudang_kecil
-                                        WHERE id_user = $id_user AND nomor_po = '$nomor_po'");
+                                        WHERE id_user = $id_user ");
         // dd($barangKonfirmasi);
         return $barangKonfirmasi;
     }
@@ -147,4 +147,24 @@ class GudangBesarController extends Controller
         // dd($stokGudangKecil);
         return $stokGudangBesar;
     }  
+
+    // HISTORY GUDANG KECIL
+    public function historyRequestBarangGKecil(){
+        $historyRequestGKecil = $this->getHistoryRequestGKecil();
+        return view('pages.gBesar.historyRequestBarangGKecil', compact('historyRequestGKecil'));
+    }
+
+    public function getHistoryRequestGKecil(){
+        $historyGKecil = DB::select("SELECT keterangan, tanggal, nama_admin, MAX(tanggal_po) AS tanggal_po, MAX(deadline_kirim) AS deadline_kirim, catatan, konfirmasi, konfirmasi2, MAX(tanggal_konfirm) AS tanggal_konfirm, MAX(tanggal_konfirm2) AS tanggal_konfirm2, MAX(created_at) AS created_at FROM history_stok_pimpinan_area GROUP BY keterangan, tanggal, nama_admin,  deadline_kirim, catatan, konfirmasi, konfirmasi2 ORDER BY created_at DESC;");
+        return $historyGKecil;
+    }
+
+    public function detailHistoryRequestStorGKecil($keterangan, $nama_admin){
+        $data = DB::select("SELECT  * FROM history_stok_pimpinan_area
+        WHERE keterangan = '$keterangan' AND nama_admin  = '$nama_admin';");
+        // dd($data);
+        
+        return view('pages.gBesar.detailHistoryRequestBarangGKecil', compact('data'));
+
+    }
 }

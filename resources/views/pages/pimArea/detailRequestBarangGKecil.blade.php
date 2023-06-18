@@ -6,7 +6,7 @@
             Kembali
         </a>
         <div class="mt-4">
-			<form action="{{ $nomor_po[0]->nomor_po }}/konfirmasi" method="post" onsubmit="return confirm('Konfirmasi Request Sales?')">
+			<form action="{{ $user[0]->id }}/konfirmasi" method="post" onsubmit="return confirm('Konfirmasi Request Sales?')">
 				@csrf
 				<button type="submit" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#editkm">
 					Konfirmasi
@@ -49,7 +49,7 @@
                                     <div class="modal fade" id="exampleModal-{{ $dt->id_produk }}" tabindex="-1"
                                         aria-labelledby="exampleModalLabel" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                                            <form class="modal-content" action="{{ $dt->nomor_po }}/ubah_stok/{{ $dt->id_produk }}" method="post">
+                                            <form class="modal-content" action="{{ $dt->id_user }}/ubah_stok/{{ $dt->id_produk }}" method="post">
                                                 @csrf
                                                 <div class="modal-header">
                                                     <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>

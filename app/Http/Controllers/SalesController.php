@@ -317,6 +317,13 @@ class SalesController extends Controller
                     'konfirmasi' => 0,
                     ]
                 );
+
+                DB::update("UPDATE `gudang_kecil` 
+                        SET `stok` = `stok` + :stok
+                        WHERE `id_produk` = :id_produk", [
+                            'stok' => (int) $request->stok_sekarang[$i],
+                            'id_produk' => $request->id_produk[$i]
+                        ]);
             }
         }
         // DB::delete("DELETE FROM stor_produk WHERE id_user = $user");
@@ -497,8 +504,8 @@ class SalesController extends Controller
 
             // dd($totalHarga);
             if ($totalUang != $totalHarga) {
-                $errorMessage = 'Jumlah uang yang Anda masukkan (' . $totalUang . ') tidak sesuai dengan total harga (' . $totalHarga . ').';
-                return back()->with('error', $errorMessage);
+                // $errorMessage = 'Jumlah uang yang Anda masukkan (' . $totalUang . ') tidak sesuai dengan total harga (' . $totalHarga . ').';
+                // return back()->with('error', $errorMessage);
             }else{
                 $user = auth()->user()->id;
                 $today = Carbon::now()->format('Y-m-d');

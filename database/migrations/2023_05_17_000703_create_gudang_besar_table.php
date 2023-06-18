@@ -16,7 +16,6 @@ return new class extends Migration
             $table->integer('stok');
             $table->integer('sample')->nullable();
             $table->integer('harga_stok');
-            $table->integer('retur')->nullable();
             $table->timestamps();
 
             $table->foreign('id_produk')->references('id_produk')->on('products')->onDelete('cascade');

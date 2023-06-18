@@ -13,7 +13,6 @@ class RequestGudangKecil extends Model
         'id_user',
         'id_produk',
         'tanggal_po',
-        'nomor_po',
         'stok',
         'harga_stok',
         'sample',

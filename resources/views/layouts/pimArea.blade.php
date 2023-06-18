@@ -11,7 +11,19 @@
 					</a>
 					<div class="sb-sidenav-menu-heading">Menu</div>
 					<nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+						<a class="nav-link" href="/pimArea/stok_gudang_besar">Stok Gudang Besar</a>
+					</nav>
+					<nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+						<a class="nav-link" href="/pimArea/stok_gudang_kecil">Stok Gudang Kecil</a>
+					</nav>
+					<nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
 						<a class="nav-link" href="/pimArea/daftar_req_gudang_kecil">Request Stok Gudang Kecil</a>
+					</nav>
+					<nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+						<a class="nav-link" href="/pimArea/history_request_barang_gKecil">History Gudang Kecil</a>
+					</nav>
+					<nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+						<a class="nav-link" href="/pimArea/tampil_absensi">Daftar Absensi</a>
 					</nav>
 				</div>
 			</div>

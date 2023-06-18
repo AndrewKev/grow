@@ -15,7 +15,6 @@ return new class extends Migration
             $table->foreignId('id_user');
             $table->char('id_produk');
             $table->date('tanggal_po')->nullable();
-            $table->string('nomor_po')->nullable();
             $table->integer('stok');
             $table->integer('sample')->nullable();
             $table->integer('harga_stok');

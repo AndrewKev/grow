@@ -6,7 +6,7 @@
             Kembali
         </a>
         <div class="mt-4">
-			<form action="{{ $nomor_po[0]->nomor_po }}/konfirmasi" method="post" onsubmit="return confirm('Konfirmasi Request Sales?')">
+			<form action="{{ $user[0]->id }}/konfirmasi" method="post" onsubmit="return confirm('Konfirmasi Request Sales?')">
 				@csrf
                 @foreach ($dataBarangKonfirmasi as $index => $brg)
                     <input type="hidden" name="id_produk[{{ $index }}]" value="{{ $brg->id_produk }}">

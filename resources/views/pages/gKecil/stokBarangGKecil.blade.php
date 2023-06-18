@@ -62,10 +62,7 @@
                 <form action="/gKecil/request_stok" method="post" class="myForm" enctype="multipart/form-data" id="formToko">
                     @csrf
                     <div class="modal-body">
-                        <div>
-                            <label for="nomorPO" class="form-label">Nomor PO</label>
-                            <input type="text" id="nomor_po" name="nomor_po" placeholder="nomor PO" class="form-control"><br>
-                        </div>
+                        
                         <div>
                             <label for="b20" class="form-label">GROW BOLD 20</label>
                             <input type="number" id="B20" name="produk[]" placeholder="B20" class="form-control"

@@ -42,10 +42,18 @@ Route::group(
     function() {
         Route::get('/dashboard', 'pimpinanArea');
         Route::get('/daftar_req_gudang_kecil', 'reqGudangKecil');
-        Route::get('/daftar_req_gudang_kecil/{id}/{nomor_po}', 'detailReqGudangKecil');
+        Route::get('/daftar_req_gudang_kecil/{id}', 'detailReqGudangKecil');
 
-        Route::post('/daftar_req_gudang_kecil/{id_user}/{nomor_po}/ubah_stok/{id_produk}', 'ubahReqGudangKecil');
-        Route::post('/daftar_req_gudang_kecil/{id_user}/{nomor_po}/konfirmasi', 'konfirmasiRequest');
+        Route::post('/daftar_req_gudang_kecil/{id_user}/ubah_stok/{id_produk}', 'ubahReqGudangKecil');
+        Route::post('/daftar_req_gudang_kecil/{id_user}/konfirmasi', 'konfirmasiRequest');
+
+        // HISTORY REQUEST GUDANG KECIL
+        Route::get('/history_request_barang_gKecil', 'historyRequestBarangGKecil');
+        Route::get('/history_request_barang_gKecil/{keterangan}/{nama_admin}', 'detailHistoryRequestStorGKecil');
+
+        Route::get('/tampil_absensi', 'tampilAbsensi');
+        Route::get('/stok_gudang_besar', 'tampilGudangBesar');
+        Route::get('/stok_gudang_kecil', 'tampilGudangKecil');
 
     }
 );
@@ -65,8 +73,12 @@ Route::group(
 
         // REQUEST GUDANG KECIL
         Route::get('/request_gKecil', 'reqGudangKecil');
-        Route::get('/request_gKecil/{id}/{nomor_po}', 'detailReqGudangKecil');
-        Route::post('/request_gKecil/{id_user}/{nomor_po}/konfirmasi', 'konfirmasiRequest');
+        Route::get('/request_gKecil/{id}', 'detailReqGudangKecil');
+        Route::post('/request_gKecil/{id_user}/konfirmasi', 'konfirmasiRequest');
+
+        // HISTORY REQUEST GUDANG KECIL
+        Route::get('/history_request_barang_gKecil', 'historyRequestBarangGKecil');
+        Route::get('/history_request_barang_gKecil/{keterangan}/{nama_admin}', 'detailHistoryRequestStorGKecil');
 
     }
 );

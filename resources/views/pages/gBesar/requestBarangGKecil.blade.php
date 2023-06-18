@@ -8,7 +8,6 @@
                     <tr>
                         <th>No</th>
                         <th>Tanggal PO</th>
-                        <th>Nomor PO</th>
                         <th>Deadline Pengiriman</th>
                         <th>Nama Requested</th>
                         <th>Catatan</th>
@@ -24,7 +23,6 @@
                         <tr>
                             <td>{{ $no }}</td>
                             <td>{{ $req->created_at }}</td>
-                            <td>{{ $req->nomor_po }}</td>
                             <td>{{ $req->deadline_kirim }}</td>
                             <td>{{ $req->nama }}</td>
                             <td>{{ $req->catatan }}</td>
@@ -40,7 +38,7 @@
                                 @endif
                             </td>
                             <td>
-                                <a href="request_gKecil/{{ $req->id }}/{{ $req->nomor_po }}" class="btn btn-primary">
+                                <a href="request_gKecil/{{ $req->id }}" class="btn btn-primary">
                                     Detail
                                 </a>
                             </td>
