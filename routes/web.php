@@ -9,6 +9,7 @@ use App\Http\Controllers\GudangBesarController;
 use App\Http\Controllers\GudangKecilController;
 use App\Http\Controllers\PenjualanLakuCashController;
 use App\Http\Controllers\PimpinanAreaController;
+use App\Http\Controllers\HeadAccountController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -35,6 +36,27 @@ Auth::routes();
 
 Route::group(
     [
+        'controller' => HeadAccountController::class,
+        'prefix' => 'headAcc',
+        'middleware' => ['auth', 'level:7']
+    ],
+    function() {
+        Route::get('/dashboard', 'headAccount');
+
+        // REQUEST GUDANG KECIL
+        Route::get('/request_gudang_besar', 'reqGudangBesar');
+        Route::get('/request_gudang_besar/{id}', 'detailReqGudangBesar');
+        Route::post('/request_gudang_besar/{id_user}/konfirmasi', 'konfirmasiRequest');
+
+        // HISTORY REQUEST GUDANG BESAR
+        Route::get('/history_request_barang_gBesar', 'historyRequestBarangGBesar');
+        Route::get('/history_request_barang_gBesar/{keterangan}/{nama_admin}/{tanggal}', 'detailHistoryRequestStorGBesar');
+
+    }
+);
+
+Route::group(
+    [
         'controller' => PimpinanAreaController::class,
         'prefix' => 'pimArea',
         'middleware' => ['auth', 'level:6']
@@ -49,7 +71,7 @@ Route::group(
 
         // HISTORY REQUEST GUDANG KECIL
         Route::get('/history_request_barang_gKecil', 'historyRequestBarangGKecil');
-        Route::get('/history_request_barang_gKecil/{keterangan}/{nama_admin}', 'detailHistoryRequestStorGKecil');
+        Route::get('/history_request_barang_gKecil/{keterangan}/{nama_admin}/{tanggal}', 'detailHistoryRequestStorGKecil');
 
         Route::get('/tampil_absensi', 'tampilAbsensi');
         Route::get('/stok_gudang_besar', 'tampilGudangBesar');
@@ -76,9 +98,12 @@ Route::group(
         Route::get('/request_gKecil/{id}', 'detailReqGudangKecil');
         Route::post('/request_gKecil/{id_user}/konfirmasi', 'konfirmasiRequest');
 
+        // REQUEST KE HEAD ACCOUNT
+        Route::post('/request_gKecil/{id_user}/request_head_acc', 'reqHeadAcc');
+
         // HISTORY REQUEST GUDANG KECIL
         Route::get('/history_request_barang_gKecil', 'historyRequestBarangGKecil');
-        Route::get('/history_request_barang_gKecil/{keterangan}/{nama_admin}', 'detailHistoryRequestStorGKecil');
+        Route::get('/history_request_barang_gKecil/{keterangan}/{nama_admin}/{tanggal}', 'detailHistoryRequestStorGKecil');
 
     }
 );

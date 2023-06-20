@@ -47,7 +47,7 @@
                             </div>
                         @endif</th>
                         <th>{{ $his->catatan }}</th>
-                        <th><a href="history_request_barang_gKecil/{{ $his->keterangan }}/{{ $his->nama_admin }}">{{ $his->keterangan }}</a></th>
+                        <th><a href="history_request_barang_gKecil/{{ $his->keterangan }}/{{ $his->nama_admin }}/{{ $his->tanggal }}">{{ $his->keterangan }}</a></th>
                    </tr>
                         @php
                             $no++;

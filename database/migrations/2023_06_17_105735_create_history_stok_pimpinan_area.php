@@ -19,12 +19,15 @@ return new class extends Migration
             $table->integer('harga_stok');
             $table->string('catatan');
             $table->boolean('konfirmasi');
-            $table->boolean('konfirmasi2');
+            $table->boolean('konfirmasi2')->nullable();
+            $table->boolean('konfirmasi3')->nullable();
             $table->date('tanggal');
             $table->datetime('tanggal_po');
             $table->date('deadline_kirim');
             $table->datetime('tanggal_konfirm')->nullable();
             $table->datetime('tanggal_konfirm2')->nullable();
+            $table->datetime('tanggal_konfirm3')->nullable();
+            $table->datetime('tgl_req_gb')->nullable();
             $table->string('keterangan');
             $table->timestamps();
         });

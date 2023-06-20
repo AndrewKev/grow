@@ -83,9 +83,9 @@ class PimpinanAreaController extends Controller
         return $historyGKecil;
     }
 
-    public function detailHistoryRequestStorGKecil($keterangan, $nama_admin){
+    public function detailHistoryRequestStorGKecil($keterangan, $nama_admin, $tanggal){
         $data = DB::select("SELECT  * FROM history_stok_pimpinan_area
-        WHERE keterangan = '$keterangan' AND nama_admin  = '$nama_admin';");
+        WHERE keterangan = '$keterangan' AND nama_admin  = '$nama_admin'AND tanggal = '$tanggal';");
         // dd($data);
         
         return view('pages.pimArea.detailHistoryRequestBarangGKecil', compact('data'));

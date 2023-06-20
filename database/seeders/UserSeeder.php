@@ -134,5 +134,17 @@ class UserSeeder extends Seeder
                 'updated_at' => Carbon::now()
             ]
         );
+
+        DB::table('users')->insert(
+            [
+                'nama' => 'HeadAcc',
+                'username' => 'HeadAcc',
+                'password' => Hash::make('headacc'),
+                'level' => 7, // sales
+                'no_telp' => '123',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ]
+        );
     }
 }

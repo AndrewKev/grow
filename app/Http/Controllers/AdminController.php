@@ -296,12 +296,13 @@ class AdminController extends Controller
                         'deadline_kirim' =>Carbon::now()->addDays(2),
                         'catatan' => $request->catatan,
                         'konfirmasi' => 0,
-                        'konfirmasi2' =>0
+                        'konfirmasi2' =>0,
+                        'konfirmasi3' =>null
                     ]
                 );
             }
         }
-        app('App\Http\Controllers\HistoryPimpinanAreaController')->admin2RequestStok($request, 0,0, $hargaStok);
+        app('App\Http\Controllers\HistoryPimpinanAreaController')->admin2RequestStok($request, 0,0, null, $hargaStok);
         return redirect('/admin2/stok_barang_gKecil');
     }
 

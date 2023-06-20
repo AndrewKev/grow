@@ -17,11 +17,14 @@ class HistoryStokPimpinanArea extends Model
         'catatan',
         'konfirmasi',
         'konfirmasi2',
+        'konfirmasi3',
         'tanggal',
         'tanggal_po',
         'deadline_kirim',
         'tanggal_konfirm',
         'tanggal_konfirm2',
+        'tanggal_konfirm3',
+        'tgl_req_gb',
         'keterangan'
     ];
 }

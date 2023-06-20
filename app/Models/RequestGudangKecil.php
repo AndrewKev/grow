@@ -21,6 +21,9 @@ class RequestGudangKecil extends Model
         'konfirmasi',
         'tgl_konfirmasi',
         'konfirmasi2',
-        'tgl_konfirmasi2'
+        'tgl_konfirmasi2',
+        'konfirmasi3',
+        'tgl_req_gb',
+        'tgl_konfirmasi3'
     ];
 }

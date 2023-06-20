@@ -6,7 +6,7 @@
             Kembali
         </a>
         <div class="mt-4">
-			<form action="{{ $user[0]->id }}/konfirmasi" method="post" onsubmit="return confirm('Konfirmasi Request Sales?')">
+			<form action="{{ $user[0]->id }}/konfirmasi" method="post" onsubmit="return confirm('Konfirmasi Request Admin2?')">
 				@csrf
 				<button type="submit" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#editkm">
 					Konfirmasi

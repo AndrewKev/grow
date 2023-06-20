@@ -85,8 +85,30 @@ class GudangBesarController extends Controller
                             WHERE id = $id");
         // $dataBarangKonfirmasi = 
         $dataBarangKonfirmasi = $this->getBarangKonfirmasi($id);
+        $isKonfirm = $this->isKonfirmHeadAcc($id);
+        $isReqHA = $this->isReqHA($id);
         // dd($dataBarangKonfirmasi);
-        return view('pages.gBesar.detailRequestBarangGKecil', compact('data', 'user', 'dataBarangKonfirmasi'));
+        return view('pages.gBesar.detailRequestBarangGKecil', compact('data', 'user', 'dataBarangKonfirmasi', 'isKonfirm', 'isReqHA'));
+    }
+
+    public function isKonfirmHeadAcc($id_user){
+        $cek = DB::select("SELECT * FROM `request_gudang_kecil`
+                           WHERE id_user = '$id_user' AND konfirmasi2= 0 AND konfirmasi3 IS NULL");
+        // dd($cek);
+        if(sizeof($cek) > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public function isReqHA($id_user){
+        $cek = DB::select("SELECT * FROM `request_gudang_kecil`
+                           WHERE id_user = '$id_user' AND konfirmasi2 = 0 AND konfirmasi3 = 0");
+        // dd($cek);
+        if(sizeof($cek) > 0) {
+            return true;
+        }
+        return false;
     }
 
     public function getBarangKonfirmasi($id) {
@@ -134,6 +156,31 @@ class GudangBesarController extends Controller
         // dd($coba);
         return redirect('/gBesar/request_gKecil/');
     }
+
+    public function reqHeadAcc(Request $request, $id_user){
+        $barangKonfirmasi = $this->getBarangKonfirmasiAdmin2($id_user);
+        // dd($request->all());;
+
+        foreach ($barangKonfirmasi as $barang) {
+            $id_produk = $barang->id_produk;
+            $jumlahDiminta = $barang->stok;
+            // dd($jumlahDiminta);
+            $stokGudangBesar = $this->getStokGudangBesar($id_produk);
+            // dd($stokGudangBesar);
+            if ($stokGudangBesar < $jumlahDiminta) {
+                // Stok kurang dari yang diminta, tampilkan pesan peringatan
+                session()->flash('error', 'Stok barang tidak mencukupi untuk konfirmasi. Silahkan Cek kembali stok Gudang Besar Area!');
+                return redirect()->back();
+            }
+        } 
+        $tanggal = Carbon::now();
+        $coba = DB::update("UPDATE request_gudang_kecil SET konfirmasi3 = 0, tgl_req_gb = '$tanggal'
+                    WHERE id_user = $id_user ;");
+        $controller = new HistoryPimpinanAreaController();
+        $controller->requestStokHA($id_user);
+        // dd($coba);
+        return redirect('/gBesar/request_gKecil/');
+    }
     
     public function getBarangKonfirmasiAdmin2($id_user) {
         $barangKonfirmasi = DB::select("SELECT id_produk, stok FROM request_gudang_kecil
@@ -159,9 +206,9 @@ class GudangBesarController extends Controller
         return $historyGKecil;
     }
 
-    public function detailHistoryRequestStorGKecil($keterangan, $nama_admin){
+    public function detailHistoryRequestStorGKecil($keterangan, $nama_admin, $tanggal){
         $data = DB::select("SELECT  * FROM history_stok_pimpinan_area
-        WHERE keterangan = '$keterangan' AND nama_admin  = '$nama_admin';");
+        WHERE keterangan = '$keterangan' AND nama_admin  = '$nama_admin' AND tanggal = '$tanggal';");
         // dd($data);
         
         return view('pages.gBesar.detailHistoryRequestBarangGKecil', compact('data'));

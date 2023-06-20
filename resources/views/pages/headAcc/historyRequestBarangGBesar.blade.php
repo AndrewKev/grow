@@ -1,7 +1,7 @@
-@extends('layouts.pimArea')
-@section('pimArea.body')
+@extends('layouts.headAcc')
+@section('headAcc.body')
     <main>
-        <h2>History Request Gudang Kecil</h2>
+        <h2>History Request Gudang Besar</h2>
         <div>
             <table id="datatablesSimple">
                 <thead>
@@ -21,7 +21,7 @@
                     @php
                         $no = 1;
                     @endphp
-                    @foreach ($historyRequestGKecil as $his)
+                    @foreach ($historyRequestGBesar as $his)
                    <tr>
                         <th>{{ $no }}</th>
                         <th>{{ $his->tanggal }}</th>
@@ -47,7 +47,7 @@
                             </div>
                         @endif</th>
                         <th>{{ $his->catatan }}</th>
-                        <th><a href="history_request_barang_gKecil/{{ $his->keterangan }}/{{ $his->nama_admin }}/{{ $his->tanggal }}">{{ $his->keterangan }}</a></th>
+                        <th><a href="history_request_barang_gBesar/{{ $his->keterangan }}/{{ $his->nama_admin }}/{{ $his->tanggal }}">{{ $his->keterangan }}</a></th>
                    </tr>
                         @php
                             $no++;
