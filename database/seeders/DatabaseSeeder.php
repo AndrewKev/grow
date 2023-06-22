@@ -20,6 +20,8 @@ class DatabaseSeeder extends Seeder
         $this->call(TokoSeeder::class);
         $this->call(GudangKecilSeeder::class);
         $this->call(GudangBesarSeeder::class);
+        $this->call(TokoSPOSeeder::class);
+        $this->call(AktivasiSPOSeeder::class);
         
         // \App\Models\User::factory(10)->create();
 

@@ -55,7 +55,7 @@
                     @foreach ($stokSample as $sp)
                         <tr>
                             <td>{{ $no }}</td>
-                            <td>{{ $sp->id_produk }}</td>
+                            <td>{{ $sp->nama_produk }}</td>
                             <td>{{ $sp->stok }}</td>
                             <td>{{ $sp->sample }}</td>
                         </tr>

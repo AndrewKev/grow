@@ -18,12 +18,12 @@ class RequestGudangKecil extends Model
         'sample',
         'deadline_kirim',
         'catatan',
+        'catatan_pim_area',
         'konfirmasi',
         'tgl_konfirmasi',
         'konfirmasi2',
         'tgl_konfirmasi2',
         'konfirmasi3',
-        'tgl_req_gb',
         'tgl_konfirmasi3'
     ];
 }

@@ -14,24 +14,24 @@ class TokoSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('toko')->delete();
-        $csvData = fopen(base_path('database/csv/namaToko.csv'), 'r');
-        $transRaw = true;
+        // DB::table('toko')->delete();
+        // $csvData = fopen(base_path('database/csv/namaToko.csv'), 'r');
+        // $transRaw = true;
 
-        while (($data = fgetcsv($csvData, 555, ',')) !== false) {
-            if (! $transRaw) {
-                DB::table('toko')->insert([
-                    'id_routing' => $data[0],
-                    'nama_toko' => $data[1],
-                    'id_kunjungan' => $data[2],
-                    'created_at' => Carbon::now(),
-                    'updated_at' => Carbon::now()
-                ]);
-            }
-            $transRaw = false;
-        }
+        // while (($data = fgetcsv($csvData, 555, ',')) !== false) {
+        //     if (! $transRaw) {
+        //         DB::table('toko')->insert([
+        //             'id_routing' => $data[0],
+        //             'nama_toko' => $data[1],
+        //             'id_kunjungan' => $data[2],
+        //             'created_at' => Carbon::now(),
+        //             'updated_at' => Carbon::now()
+        //         ]);
+        //     }
+        //     $transRaw = false;
+        // }
 
-        fclose($csvData);
+        // fclose($csvData);
 
         // DB::table('toko')->insert(
         //     [

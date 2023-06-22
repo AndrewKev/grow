@@ -85,15 +85,15 @@ class GudangBesarController extends Controller
                             WHERE id = $id");
         // $dataBarangKonfirmasi = 
         $dataBarangKonfirmasi = $this->getBarangKonfirmasi($id);
-        $isKonfirm = $this->isKonfirmHeadAcc($id);
-        $isReqHA = $this->isReqHA($id);
+        $isKonfirm = $this->isKonfirmHAorPA($id);
+        // $isReqHA = $this->isReqHA($id);
         // dd($dataBarangKonfirmasi);
-        return view('pages.gBesar.detailRequestBarangGKecil', compact('data', 'user', 'dataBarangKonfirmasi', 'isKonfirm', 'isReqHA'));
+        return view('pages.gBesar.detailRequestBarangGKecil', compact('data', 'user', 'dataBarangKonfirmasi', 'isKonfirm'));
     }
 
-    public function isKonfirmHeadAcc($id_user){
+    public function isKonfirmHAorPA($id_user){
         $cek = DB::select("SELECT * FROM `request_gudang_kecil`
-                           WHERE id_user = '$id_user' AND konfirmasi2= 0 AND konfirmasi3 IS NULL");
+                           WHERE id_user = '$id_user' AND konfirmasi= 1 OR konfirmasi3 = 1");
         // dd($cek);
         if(sizeof($cek) > 0) {
             return true;
@@ -101,15 +101,15 @@ class GudangBesarController extends Controller
         return false;
     }
 
-    public function isReqHA($id_user){
-        $cek = DB::select("SELECT * FROM `request_gudang_kecil`
-                           WHERE id_user = '$id_user' AND konfirmasi2 = 0 AND konfirmasi3 = 0");
-        // dd($cek);
-        if(sizeof($cek) > 0) {
-            return true;
-        }
-        return false;
-    }
+    // public function isReqHA($id_user){
+    //     $cek = DB::select("SELECT * FROM `request_gudang_kecil`
+    //                        WHERE id_user = '$id_user' AND konfirmasi2 = 0 AND konfirmasi3 = 0");
+    //     // dd($cek);
+    //     if(sizeof($cek) > 0) {
+    //         return true;
+    //     }
+    //     return false;
+    // }
 
     public function getBarangKonfirmasi($id) {
         // $user = auth()->user()->id;
@@ -174,7 +174,7 @@ class GudangBesarController extends Controller
             }
         } 
         $tanggal = Carbon::now();
-        $coba = DB::update("UPDATE request_gudang_kecil SET konfirmasi3 = 0, tgl_req_gb = '$tanggal'
+        $coba = DB::update("UPDATE request_gudang_kecil SET konfirmasi3 = 0
                     WHERE id_user = $id_user ;");
         $controller = new HistoryPimpinanAreaController();
         $controller->requestStokHA($id_user);
@@ -202,7 +202,7 @@ class GudangBesarController extends Controller
     }
 
     public function getHistoryRequestGKecil(){
-        $historyGKecil = DB::select("SELECT keterangan, tanggal, nama_admin, MAX(tanggal_po) AS tanggal_po, MAX(deadline_kirim) AS deadline_kirim, catatan, konfirmasi, konfirmasi2, MAX(tanggal_konfirm) AS tanggal_konfirm, MAX(tanggal_konfirm2) AS tanggal_konfirm2, MAX(created_at) AS created_at FROM history_stok_pimpinan_area GROUP BY keterangan, tanggal, nama_admin,  deadline_kirim, catatan, konfirmasi, konfirmasi2 ORDER BY created_at DESC;");
+        $historyGKecil = DB::select("SELECT keterangan, tanggal, nama_admin, MAX(tanggal_po) AS tanggal_po, MAX(deadline_kirim) AS deadline_kirim, catatan, konfirmasi, konfirmasi2, konfirmasi3, catatan_pim_area, MAX(tanggal_konfirm) AS tanggal_konfirm, MAX(tanggal_konfirm2) AS tanggal_konfirm2,MAX(tanggal_konfirm3) AS tanggal_konfirm3, MAX(created_at) AS created_at FROM history_stok_pimpinan_area GROUP BY keterangan, tanggal, nama_admin,  deadline_kirim, catatan, konfirmasi, konfirmasi2,konfirmasi3, catatan_pim_area ORDER BY created_at DESC;");
         return $historyGKecil;
     }
 

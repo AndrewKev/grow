@@ -25,7 +25,7 @@ class DistrikSeeder extends Seeder
                 DB::table('distrik')->insert([
                     'id_distrik' => $data[0],
                     'nama_distrik' => $data[1],
-                    'id_user' => $data[2],
+                    'id_user' => $data[2] ?? null,
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now()
                 ]);

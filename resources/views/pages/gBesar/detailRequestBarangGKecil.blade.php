@@ -6,8 +6,12 @@
             Kembali
         </a>
         <div class="mt-4">
-            @if ($isKonfirm)
-            <form action="{{ $user[0]->id }}/request_head_acc" method="post">
+        @if (!$isKonfirm)
+        <div class="alert alert-info" style="width: fit-content;" role="alert">
+            Tunggu konfirmasi Pimpinan Area untuk konfirmasi!
+        </div>    
+        @else
+            <form action="{{ $user[0]->id }}/konfirmasi" method="post" onsubmit="return confirm('Konfirmasi Request Admin2?')">
                 @csrf
                 @foreach ($dataBarangKonfirmasi as $index => $brg)
                     <input type="hidden" name="id_produk[{{ $index }}]" value="{{ $brg->id_produk }}">
@@ -19,33 +23,11 @@
                         {{ session('error') }}
                     </div>
                 @endif
-                <button type="submit" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#">
-                    Request Head Account
+                <button type="submit" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalKurangStok">
+                    Konfirmasi
                 </button>
-            </form> 
-            @elseif($isReqHA)
-            <div class="alert alert-info" style="width: fit-content;" role="alert">
-                Anda sudah req ke Head Account. Tunggu Konfirmasi untuk melanjutkan!
-            </div>
-            @else
-                <form action="{{ $user[0]->id }}/konfirmasi" method="post" onsubmit="return confirm('Konfirmasi Request Admin2?')">
-                    @csrf
-                    @foreach ($dataBarangKonfirmasi as $index => $brg)
-                        <input type="hidden" name="id_produk[{{ $index }}]" value="{{ $brg->id_produk }}">
-                        <input type="hidden" name="nama_produk[{{ $index }}]" value="{{ $brg->nama_produk }}">
-                        <input type="hidden" name="stok[{{ $index }}]" value="{{ $brg->stok }}">
-                    @endforeach
-                    @if (session('error'))
-                        <div class="alert alert-danger">
-                            {{ session('error') }}
-                        </div>
-                    @endif
-                    <button type="submit" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalKurangStok">
-                        Konfirmasi
-                    </button>
-                </form> 
-            @endif        
-
+            </form>            
+        @endif
 			{{-- <form action="{{ $user[0]->id }}/konfirmasi" method="post" onsubmit="return confirm('Konfirmasi Request Sales?')">
 				@csrf
                 @foreach ($dataBarangKonfirmasi as $index => $brg)

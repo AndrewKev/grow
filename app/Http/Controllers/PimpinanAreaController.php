@@ -24,7 +24,7 @@ class PimpinanAreaController extends Controller
         $daftarReq = DB::select("SELECT u.id, u.nama, r.tanggal_po, r.deadline_kirim, r.catatan,MAX(r.created_at) AS created_at
         FROM request_gudang_kecil AS r
         JOIN users AS u ON u.id = r.id_user
-        WHERE r.konfirmasi = 0 AND r.konfirmasi2=0
+        WHERE r.konfirmasi = 0 AND r.konfirmasi3=0
         GROUP BY u.id, u.nama,r.tanggal_po, r.deadline_kirim,r.catatan");
         return $daftarReq;
     }
@@ -79,7 +79,7 @@ class PimpinanAreaController extends Controller
     }
 
     public function getHistoryRequestGKecil(){
-        $historyGKecil = DB::select("SELECT keterangan, tanggal, nama_admin, MAX(tanggal_po) AS tanggal_po, MAX(deadline_kirim) AS deadline_kirim, catatan, konfirmasi, konfirmasi2, MAX(tanggal_konfirm) AS tanggal_konfirm, MAX(tanggal_konfirm2) AS tanggal_konfirm2, MAX(created_at) AS created_at FROM history_stok_pimpinan_area GROUP BY keterangan, tanggal, nama_admin,  deadline_kirim, catatan, konfirmasi, konfirmasi2 ORDER BY created_at DESC;");
+        $historyGKecil = DB::select("SELECT keterangan, tanggal, nama_admin, MAX(tanggal_po) AS tanggal_po, MAX(deadline_kirim) AS deadline_kirim, catatan, konfirmasi, konfirmasi2, konfirmasi3, catatan_pim_area, MAX(tanggal_konfirm) AS tanggal_konfirm, MAX(tanggal_konfirm2) AS tanggal_konfirm2,MAX(tanggal_konfirm3) AS tanggal_konfirm3, MAX(created_at) AS created_at FROM history_stok_pimpinan_area GROUP BY keterangan, tanggal, nama_admin,  deadline_kirim, catatan, konfirmasi, konfirmasi2,konfirmasi3, catatan_pim_area ORDER BY created_at DESC;");
         return $historyGKecil;
     }
 

@@ -233,7 +233,8 @@ class AdminController extends Controller
     }
 
     public function getStokSampleBarang(){
-        $stokSampleBarang = DB::select("SELECT * FROM gudang_kecil");
+        $stokSampleBarang = DB::select("SELECT p.id_produk, p.nama_produk, gk.stok, gk.sample FROM gudang_kecil gk
+        JOIN products p ON gk.id_produk = p.id_produk");
         return $stokSampleBarang;
     }
 
@@ -297,7 +298,7 @@ class AdminController extends Controller
                         'catatan' => $request->catatan,
                         'konfirmasi' => 0,
                         'konfirmasi2' =>0,
-                        'konfirmasi3' =>null
+                        'konfirmasi3' =>0
                     ]
                 );
             }

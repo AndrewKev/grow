@@ -15,6 +15,7 @@ class HistoryStokPimpinanArea extends Model
         'req_stok',
         'harga_stok',
         'catatan',
+        'catatan_pim_area',
         'konfirmasi',
         'konfirmasi2',
         'konfirmasi3',
@@ -24,7 +25,6 @@ class HistoryStokPimpinanArea extends Model
         'tanggal_konfirm',
         'tanggal_konfirm2',
         'tanggal_konfirm3',
-        'tgl_req_gb',
         'keterangan'
     ];
 }

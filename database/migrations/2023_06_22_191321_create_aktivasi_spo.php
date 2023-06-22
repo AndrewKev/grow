@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('distrik', function (Blueprint $table) {
-            $table->char('id_distrik')->primary();
-            $table->string('nama_distrik');
-            $table->foreignId('id_user')->nullable();
+        Schema::create('aktivasi_spo', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('id_toko');
+            $table->char('aktivasi',3);
             $table->timestamps();
 
-            $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('id_toko')->references('id')->on('toko_spo')->onDelete('cascade');;
         });
     }
 
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('distrik');
+        Schema::dropIfExists('aktivasi_spo');
     }
 };
