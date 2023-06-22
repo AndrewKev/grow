@@ -1,5 +1,5 @@
-@extends('layouts.karyawan')
-@section('karyawan.body')
+@extends('layouts.spo')
+@section('spo.body')
     <main>
         <h1>Dashboard Karyawan</h1>
         <div class="row">
@@ -25,22 +25,8 @@
             </div>
         </div>
     </main>
-
-    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.3.0/chart.min.js"
-        integrity="sha512-mlz/Fs1VtBou2TrUkGzX4VoGvybkD9nkeXWJm3rle0DPHssYYx4j+8kIS15T78ttGfmOjH0lLaBXGcShaVkdkg=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script> --}}
-    {{-- @php
-            $tes = 0;
-        @endphp --}}
     <script>
         const ctx = document.getElementById('myChartEft');
-
-        let senin = {{ $efektivitas->get('Senin') ? $efektivitas->get('Senin') : 0 }}
-        let selasa = {{ $efektivitas->get('Selasa') ? $efektivitas->get('Selasa') : 0 }}
-        let rabu = {{ $efektivitas->get('Rabu') ? $efektivitas->get('Rabu') : 0 }}
-        let kamis = {{ $efektivitas->get('Kamis') ? $efektivitas->get('Kamis') : 0 }}
-        let jumat = {{ $efektivitas->get('Jumat') ? $efektivitas->get('Jumat') : 0 }}
-        let sabtu = {{ $efektivitas->get('Sabtu') ? $efektivitas->get('Sabtu') : 0 }}
         // let tes = 0
         new Chart(ctx, {
             type: 'line',
@@ -48,7 +34,7 @@
                 labels: ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'],
                 datasets: [{
                     label: 'Efektivitas',
-                    data: [senin, selasa, rabu, kamis, jumat, sabtu],
+                    data: [10, 20, 24, 50, 67, 33],
                     borderWidth: 1
                 }]
             },
