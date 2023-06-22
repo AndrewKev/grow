@@ -44,13 +44,14 @@ Route::group(
         Route::get('/dashboard', 'headAccount');
 
         // REQUEST GUDANG KECIL
-        Route::get('/request_gudang_besar', 'reqGudangBesar');
-        Route::get('/request_gudang_besar/{id}', 'detailReqGudangBesar');
-        Route::post('/request_gudang_besar/{id_user}/konfirmasi', 'konfirmasiRequest');
+        Route::get('/request_gudang_kecil', 'reqGudangKecil');
+        Route::get('/request_gudang_kecil/{id}', 'detailReqGudangKecil');
+        Route::post('/request_gudang_kecil/{id_user}/ubah_stok/{id_produk}', 'ubahReqGudangKecil');
+        Route::post('/request_gudang_kecil/{id_user}/konfirmasi', 'konfirmasiRequest');
 
         // HISTORY REQUEST GUDANG BESAR
-        Route::get('/history_request_barang_gBesar', 'historyRequestBarangGBesar');
-        Route::get('/history_request_barang_gBesar/{keterangan}/{nama_admin}/{tanggal}', 'detailHistoryRequestStorGBesar');
+        Route::get('/history_request_barang_gKecil', 'historyRequestBarangGKecil');
+        Route::get('/history_request_barang_gKecil/{keterangan}/{nama_admin}/{tanggal}', 'detailHistoryRequestStorGKecil');
 
     }
 );

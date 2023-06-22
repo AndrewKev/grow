@@ -1,11 +1,11 @@
 @extends('layouts.headAcc')
 @section('headAcc.body')
     <main>
-        <a href="/headAcc/history_request_barang_gBesar" class="btn btn-outline-secondary mb-2">
+        <a href="/headAcc/history_request_barang_gKecil" class="btn btn-outline-secondary mb-2">
             <i class="fa-solid fa-arrow-left"></i>
             Kembali
         </a>
-        <h3>Detail History Request Barang Gudang Besar</h3>
+        <h3>Detail History Request Barang Gudang Kecil</h3>
         <div class="mt-4">
         </div>
         <div class="card mb-4 mt-4">

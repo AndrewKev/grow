@@ -11,10 +11,10 @@
 					</a>
 					<div class="sb-sidenav-menu-heading">Menu</div>
 					<nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-						<a class="nav-link" href="/headAcc/request_gudang_besar">Request Gudang Besar</a>
+						<a class="nav-link" href="/headAcc/request_gudang_kecil">Request Gudang Kecil</a>
 					</nav>
 					<nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-						<a class="nav-link" href="/headAcc/history_request_barang_gBesar">History Request Gudang Besar</a>
+						<a class="nav-link" href="/headAcc/history_request_barang_gKecil">History Request Gudang Kecil</a>
 					</nav>
 					
 				</div>

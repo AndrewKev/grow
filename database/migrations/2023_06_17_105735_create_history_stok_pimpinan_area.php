@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('req_stok');
             $table->integer('harga_stok');
             $table->string('catatan');
+            $table->string('catatan_pim_area')->nullable();
             $table->boolean('konfirmasi');
             $table->boolean('konfirmasi2')->nullable();
             $table->boolean('konfirmasi3')->nullable();
@@ -27,7 +28,6 @@ return new class extends Migration
             $table->datetime('tanggal_konfirm')->nullable();
             $table->datetime('tanggal_konfirm2')->nullable();
             $table->datetime('tanggal_konfirm3')->nullable();
-            $table->datetime('tgl_req_gb')->nullable();
             $table->string('keterangan');
             $table->timestamps();
         });

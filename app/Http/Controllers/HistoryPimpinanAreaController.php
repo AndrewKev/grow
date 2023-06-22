@@ -69,7 +69,7 @@ class HistoryPimpinanAreaController extends Controller
     }
 
     public function getReqKonfirmasiGB($id_user) {
-        $data = DB::select("SELECT r.id_user, u.nama, r.id_produk, p.nama_produk, r.tanggal_po, r.stok, r.harga_stok, r.deadline_kirim, r.catatan, r.konfirmasi, r.tgl_konfirmasi, r.konfirmasi2, r.tgl_konfirmasi2, r.konfirmasi3, r.tgl_konfirmasi3, r.tgl_req_gb
+        $data = DB::select("SELECT r.id_user, u.nama, r.id_produk, p.nama_produk, r.tanggal_po, r.stok, r.harga_stok, r.deadline_kirim, r.catatan, r.konfirmasi, r.tgl_konfirmasi, r.konfirmasi2, r.tgl_konfirmasi2, r.konfirmasi3, r.tgl_konfirmasi3, r.catatan_pim_area
                             FROM request_gudang_kecil r 
                             JOIN products p ON p.id_produk = r.id_produk 
                             JOIN users u ON r.id_user = u.id 
@@ -99,13 +99,13 @@ class HistoryPimpinanAreaController extends Controller
                 'harga_stok' => $data->harga_stok,
                 'deadline_kirim' => $data->deadline_kirim,
                 'catatan' => $data->catatan,
+                'catatan_pim_area' =>$data->catatan_pim_area,
                 'konfirmasi' => $data->konfirmasi,
                 'konfirmasi2' => $data->konfirmasi2,
                 'konfirmasi3' => $data->konfirmasi3,
                 'tanggal_konfirm' => $data->tgl_konfirmasi,
                 'tanggal_konfirm2' => $data->tgl_konfirmasi2,
                 'tanggal_konfirm3' => $data->tgl_konfirmasi3,
-                'tgl_req_gb' =>$data->tgl_req_gb,
                 'keterangan' => $keterangan,
             ]);
         }
@@ -114,7 +114,7 @@ class HistoryPimpinanAreaController extends Controller
     }
 
     public function getRequestStokHA($id_user) {
-        $data = DB::select("SELECT r.id_user, u.nama, r.id_produk, p.nama_produk, r.tanggal_po, r.stok, r.harga_stok, r.deadline_kirim, r.catatan, r.konfirmasi, r.tgl_konfirmasi, r.konfirmasi2, r.tgl_konfirmasi2, r.konfirmasi3, tgl_req_gb
+        $data = DB::select("SELECT r.id_user, u.nama, r.id_produk, p.nama_produk, r.tanggal_po, r.stok, r.harga_stok, r.deadline_kirim, r.catatan, r.konfirmasi, r.tgl_konfirmasi, r.konfirmasi2, r.tgl_konfirmasi2, r.konfirmasi3,
                             FROM request_gudang_kecil r 
                             JOIN products p ON p.id_produk = r.id_produk 
                             JOIN users u ON r.id_user = u.id 
@@ -139,7 +139,6 @@ class HistoryPimpinanAreaController extends Controller
                 'konfirmasi3' => 0,
                 'tanggal_konfirm' => $data->tgl_konfirmasi,
                 'tanggal_konfirm2' => $data->tgl_konfirmasi2,
-                'tgl_req_gb' =>$data->tgl_req_gb,
                 'keterangan' => 'GB req HA',
             ]);
         }
@@ -148,7 +147,7 @@ class HistoryPimpinanAreaController extends Controller
     }
 
     public function getKonfirmasiReqHA($id_user) {
-        $data = DB::select("SELECT r.id_user, u.nama, r.id_produk, p.nama_produk, r.tanggal_po, r.stok, r.harga_stok, r.deadline_kirim, r.catatan, r.konfirmasi, r.tgl_konfirmasi, r.konfirmasi2, r.tgl_konfirmasi2, r.konfirmasi3, r.tgl_konfirmasi3, r.tgl_req_gb
+        $data = DB::select("SELECT r.id_user, u.nama, r.id_produk, p.nama_produk, r.tanggal_po, r.stok, r.harga_stok, r.deadline_kirim, r.catatan, r.konfirmasi, r.tgl_konfirmasi, r.konfirmasi2, r.tgl_konfirmasi2, r.konfirmasi3, r.tgl_konfirmasi3, r.catatan_pim_area
                             FROM request_gudang_kecil r 
                             JOIN products p ON p.id_produk = r.id_produk 
                             JOIN users u ON r.id_user = u.id 
@@ -170,13 +169,13 @@ class HistoryPimpinanAreaController extends Controller
                 'harga_stok' => $data->harga_stok,
                 'deadline_kirim' => $data->deadline_kirim,
                 'catatan' => $data->catatan,
+                'catatan_pim_area' =>$data->catatan_pim_area,
                 'konfirmasi' => $data->konfirmasi,
                 'konfirmasi2' => $data->konfirmasi2,
                 'konfirmasi3' => 1,
                 'tanggal_konfirm' => $data->tgl_konfirmasi,
                 'tanggal_konfirm2' => $data->tgl_konfirmasi2,
                 'tanggal_konfirm3' => $data->tgl_konfirmasi3,
-                'tgl_req_gb' =>$data->tgl_req_gb,
                 'keterangan' => 'HA Konfirmasi',
             ]);
         }

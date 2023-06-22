@@ -1,16 +1,16 @@
 @extends('layouts.headAcc')
 @section('headAcc.body')
     <main>
-        <h2>Daftar Request Gudang Besar</h2>
+        <h2>Daftar Request Gudang Kecil</h2>
         <div>
+
             <table id="datatablesSimple">
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Tanggal Req GB</th>
-                        <th>Tanggal PO GK</th>
+                        <th>Tanggal PO</th>
                         <th>Deadline Pengiriman</th>
-                        <th>Dikirim ke</th>
+                        <th>Nama Requested</th>
                         <th>Catatan</th>
                         <th>Konfirmasi PimArea</th>
                         <th></th>
@@ -23,7 +23,6 @@
                     @foreach ($daftarReq as $req)
                         <tr>
                             <td>{{ $no }}</td>
-                            <td>{{ $req->tgl_req_gb }}</td>
                             <td>{{ $req->created_at }}</td>
                             <td>{{ $req->deadline_kirim }}</td>
                             <td>{{ $req->nama }}</td>
@@ -35,12 +34,12 @@
                                     </div>
                                 @elseif($req->konfirmasi == 1)
                                     <div class="alert alert-info" style="width: fit-content;" role="alert">
-                                        {{ $req->tgl_konfirmasi }}
+                                        Sudah
                                     </div>
                                 @endif
                             </td>
                             <td>
-                                <a href="request_gudang_besar/{{ $req->id }}" class="btn btn-primary">
+                                <a href="request_gudang_kecil/{{ $req->id }}" class="btn btn-primary">
                                     Detail
                                 </a>
                             </td>
