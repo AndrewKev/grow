@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Absensi;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class AbsensiController extends Controller
 {
@@ -17,11 +18,11 @@ class AbsensiController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Absensi SPO.
      */
-    public function create()
+    public function indexSpo($finishStor, $isAbsensi, $listAbsenUser)
     {
-        //
+        return view('pages.spo.absensi', compact('finishStor', 'isAbsensi', 'listAbsenUser'));
     }
 
     /**
@@ -29,10 +30,36 @@ class AbsensiController extends Controller
      */
     public function store(Request $request)
     {
-        Absensi::create(
-            
-        );
+        $validatedData = $request->validate([
+            'foto' => 'image'
+        ]);
+
+        $fotoPath = $request->file('foto')->store('public/images'); // Simpan file gambar ke direktori penyimpanan
+
+        Absensi::create([
+            'id_user' => auth()->user()->id,
+            'keterangan' => $request->keterangan,
+            'waktu_masuk' => Carbon::now(),
+            'foto' => $fotoPath, // Simpan path atau nama file gambar ke kolom 'foto'
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
+        ]);
+
+        if(auth()->user()->level == 0) {
+            return redirect('/user/absensi');
+        } else {
+            return redirect('/spo/absensi');
+        }
     }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+    }
+
 
     /**
      * Display the specified resource.

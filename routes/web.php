@@ -4,6 +4,7 @@ use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Admin1Controller;
 use App\Http\Controllers\SalesController;
+use App\Http\Controllers\SPOController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\GudangBesarController;
 use App\Http\Controllers\GudangKecilController;
@@ -184,7 +185,7 @@ Route::group(
         Route::post('/terima_barang', 'terimaBarang');
         // testing aja
         Route::get('/test', 'test');
-        
+
     }
 );
 
@@ -215,12 +216,35 @@ Route::group(
         Route::get('/stor_produk', 'tampilStorProduk');
         Route::post('/request_stor_barang', 'requestStorBarang');
         // Route::post('/input_stor_produk', 'inputStorProduk');
-        
-        // Stor Keuangan ke admin 1 
+
+        // Stor Keuangan ke admin 1
         Route::post('/request_stor_uang', 'requestStorUang');
 
         // Selesai stor produk
         Route::post('/insert_produk', 'insertStorProduk');
+    }
+);
+
+// URL : .com/spo/
+Route::group(
+    [
+        'controller' => SPOController::class,
+        'prefix' => 'spo',
+        'middleware' => ['auth', 'level:8']
+    ],
+    function() {
+        // Dashboard
+        Route::get('/dashboard', 'index');
+
+        // Absensi
+        Route::get('/absensi', 'pageAbsensiSPO');
+        Route::post('/absensi', 'postAbsensi');
+
+        // Stok Jalan
+        Route::get('/stok_jalan', 'stokJalanPage');
+        Route::post('/request_barang', 'requestBarangStokJalan');
+        Route::post('/terima_barang', 'terimaBarang');
+
     }
 );
 

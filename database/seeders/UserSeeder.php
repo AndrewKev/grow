@@ -140,7 +140,30 @@ class UserSeeder extends Seeder
                 'nama' => 'HeadAcc',
                 'username' => 'HeadAcc',
                 'password' => Hash::make('headacc'),
-                'level' => 7, // sales
+                'level' => 7, // HeadAcc
+                'no_telp' => '123',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ]
+        );
+
+        DB::table('users')->insert(
+            [
+                'nama' => 'Ferry',
+                'username' => 'Ferry',
+                'password' => Hash::make('spo001'),
+                'level' => 8, // SPO
+                'no_telp' => '123',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ]
+        );
+        DB::table('users')->insert(
+            [
+                'nama' => 'Yudi',
+                'username' => 'Yudi',
+                'password' => Hash::make('spo002'),
+                'level' => 8, // SPO
                 'no_telp' => '123',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()

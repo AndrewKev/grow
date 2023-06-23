@@ -37,8 +37,10 @@ class HomeController extends Controller
         }else if(auth()->user()->level == 6) {
             return redirect('/pimArea/dashboard');
         }else if(auth()->user()->level == 7) {
-            return redirect('/headAcc/dashboard'); 
-        }else {
+            return redirect('/headAcc/dashboard');
+        } else if (auth()->user()->level == 8) {
+            return redirect('/spo/dashboard');
+        } else {
             return view('home');
         }
     }
