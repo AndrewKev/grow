@@ -240,6 +240,7 @@ Route::group(
         // Stok Jalan
         Route::get('/stok_jalan', 'stokJalanPage');
         Route::post('/request_barang', 'requestBarangStokJalan');
+        Route::post('/terima_barang', 'terimaBarang');
 
     }
 );

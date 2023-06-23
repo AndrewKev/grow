@@ -7,7 +7,7 @@
                 <div class="card mb-4">
                     <div class="card-header">
                         <i class="fas fa-chart-area me-1"></i>
-                        Area Chart Example
+                        Efektivitas
                     </div>
                     <div class="card-body">
                         <canvas id="myChartEft" width="100%" height="40"></canvas>

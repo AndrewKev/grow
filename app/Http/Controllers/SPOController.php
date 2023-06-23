@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\RequestBarang;
+use App\Models\CarryProduk;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -98,10 +99,10 @@ class SPOController extends Controller
         $id_user = auth()->user()->id;
         $tanggal = Carbon::now()->format('Y-m-d');
         $barang = DB::select("SELECT u.nama, c.*, p.nama_produk
-            FROM carry_spo c
+            FROM carry_produk c
             JOIN products p ON p.id_produk = c.id_produk
             JOIN users u ON c.id_user = u.id
-            WHERE c.id_user = 12 AND c.tanggal_carry BETWEEN '2023-06-22 00:00:00' AND '2023-06-22 23:59:59';");
+            WHERE c.id_user = $id_user AND c.tanggal_carry BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59';");
 
         $collection = collect($barang);
         return $collection;
@@ -153,7 +154,7 @@ class SPOController extends Controller
 
     /**
      * Get barang yg sudah dikonfirmasi oleh admin.
-     * Return .
+     * Return Collection.
      */
     public function getBarangKonfirmasi() {
         $user = auth()->user()->id;
@@ -178,7 +179,7 @@ class SPOController extends Controller
         $barangKonfirmasi = $this->getBarangKonfirmasi();
         $isCarry = $this->isCarry();
 
-        // dd($this->getStokSPO()->count());
+        // dd($this->getStokSPO());
         return view('pages.spo.stokJalan', compact('barang', 'req', 'konfirmasi', 'absenMasuk', 'barangKonfirmasi', 'isCarry'));
     }
 
@@ -189,8 +190,8 @@ class SPOController extends Controller
         $keys = collect(['idProduk', 'namaProduk', 'jumlah']);
         $products = collect();
 
-        for ($i=0; $i < sizeof($request->jumlah); $i++) {
-            $combined = $keys->combine([$request->id_produk[$i], $request->nama_produk[$i], (int)$request->jumlah[$i]]);
+        for ($i=0; $i < sizeof($request->id_produk); $i++) {
+            $combined = $keys->combine([$request->id_produk[$i], $request->nama_produk[$i], (int)$request->produk[$i]]);
             $products->push($combined->all());
         }
 
@@ -208,8 +209,51 @@ class SPOController extends Controller
             );
         }
 
+        app('App\Http\Controllers\HistoryRequestSalesController')->salesRequest($request, 0, 0);
+
         return redirect('/spo/stok_jalan');
-        // dd($filteredProduct->get(0)['namaProduk']);
+    }
+
+    /**
+     * Terima barang yang sudah diberikan admin.
+     */
+    public function terimaBarang(Request $request) {
+        $user = auth()->user()->id;
+        if($request->has('setuju')) {
+            for($i = 0; $i < sizeof($request->id_produk); $i++) {
+                CarryProduk::create(
+                    [
+                        'id_user' => auth()->user()->id,
+                        'id_produk' => $request->id_produk[$i],
+                        'tanggal_carry' => Carbon::now(),
+                        'stok_awal' => (int) $request->jumlah[$i],
+                        'stok_sekarang' =>(int) $request->jumlah[$i],
+                    ]
+                );
+
+                app('App\Http\Controllers\HistoryRequestSalesController')->konfirmasiSales($request, 'sales terima', $i);
+            }
+        }else {
+            for($i = 0; $i < sizeof($request->id_produk); $i++) {
+                // melakukan pengembalian barang ke gudang kecil
+                $id_produk = $request->id_produk[$i];
+                $jumlah = $request->jumlah[$i];
+
+                // Mendapatkan stok awal di gudang kecil
+                $stokAwal = DB::select("SELECT stok FROM gudang_kecil WHERE id_produk = '$id_produk'")[0]->stok;
+
+                // Menghitung stok setelah pengembalian
+                $stokSekarang = $stokAwal + $jumlah;
+
+                // Update stok di gudang kecil
+                app('App\Http\Controllers\GudangKecilController')->update($id_produk, $stokSekarang);
+                app('App\Http\Controllers\HistoryRequestSalesController')->konfirmasiSales($request, 'sales tolak', $i);
+
+            }
+        }
+        DB::delete("DELETE FROM request_sales WHERE id_user = $user");
+
+        return redirect('/spo/stok_jalan');
     }
 
     /**
