@@ -257,6 +257,13 @@ class SPOController extends Controller
     }
 
     /**
+     * Formulir Penjualan SPO
+     */
+    public function penjualanSPO(){
+        return view('pages.spo.tampilPenjualanSPO');
+    }
+
+    /**
      * Show the form for creating a new resource.
      */
     public function create()

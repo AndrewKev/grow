@@ -245,6 +245,9 @@ Route::group(
         Route::post('/request_barang', 'requestBarangStokJalan');
         Route::post('/terima_barang', 'terimaBarang');
 
+        // Penjualan SPO
+        Route::get('/penjualan_spo', 'penjualanSPO');
+
     }
 );
 
