@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\RequestGudangKecil;
 use App\Models\Product;
+use App\Models\Emp;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 
@@ -58,6 +59,17 @@ class PimpinanAreaController extends Controller
         return redirect('/pimArea/daftar_req_gudang_kecil/'.$id_user);
     }
 
+    public function ubahEmp(Request $request, $jenis){
+        $produk = Emp::where('jenis', $request->jenis)->first();
+        // dd($produk);
+
+        $jumlahStok = $produk->jumlah + (int) $request->jumlah; 
+        // dd($jumlahStok);
+        DB::update("UPDATE emp SET jumlah = $jumlahStok
+        WHERE jenis = '$jenis'");
+        return redirect('/pimArea/tampil_emp/');
+    }
+
     public function konfirmasiRequest($id_user){
         // dd($nomor_po);
         // dd($id_user );
@@ -100,6 +112,11 @@ class PimpinanAreaController extends Controller
                         ORDER BY a.waktu_masuk DESC");
         // dd($listAbsenUser);
         return view('pages.pimArea.tampilAbsensi', compact('listAbsenUser'));
+    }
+
+    public function tampilEmp(){
+        $listEmp = DB::select("SELECT *  FROM emp");
+        return view('pages.pimArea.tampilEmp', compact('listEmp'));
     }
 
     // GUDANG BESAR

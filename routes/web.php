@@ -77,6 +77,9 @@ Route::group(
         Route::get('/tampil_absensi', 'tampilAbsensi');
         Route::get('/stok_gudang_besar', 'tampilGudangBesar');
         Route::get('/stok_gudang_kecil', 'tampilGudangKecil');
+        Route::get('/tampil_emp', 'tampilEmp');
+        Route::post('/tampil_emp/{jenis}/ubah_stok', 'ubahEmp');
+
 
     }
 );

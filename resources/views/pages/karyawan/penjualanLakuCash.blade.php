@@ -78,6 +78,9 @@
                     <h5 class="modal-title" id="exampleModalLabel">Penjualan</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+                {{-- @if (session('error'))
+                    <div class="error-message">{{ session('error') }}</div>
+                @endif --}}
                 <form action="/user/penjualan_laku_cash" method="post" class="myForm" enctype="multipart/form-data"
                     id="formToko">
                     @csrf
@@ -105,7 +108,7 @@
                                     value="ROC">
                                 <label class="form-check-label" for="ROC">ROC</label>
                             </div>
-                            <div class="form-check form-check-inline">
+                            {{-- <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="radio" name="jenis_kunjungan" id="R"
                                     value="R">
                                 <label class="form-check-label" for="R">R</label>
@@ -114,7 +117,7 @@
                                 <input class="form-check-input" type="radio" name="jenis_kunjungan" id="STA"
                                     value="STA">
                                 <label class="form-check-label" for="STA">STA</label>
-                            </div>
+                            </div> --}}
                         </div>
                         <div class="mb-3 d-none" id="formIO">
                             <div class="mb-3">
@@ -164,73 +167,26 @@
                                 </select>
                             </div>
                         </div>
-                        <div>
-                            <label for="b20" class="form-label">GROW BOLD 20</label>
-                            <input type="number" id="B20" name="produk[]" placeholder="B20" class="form-control"
-                                value="0" min="0"><br>
-                            <input type="hidden" name="id_produk[]" value="B20">
-                        </div>
-                        <div>
-                            <label for="b16" class="form-label">GROW BOLD 16</label>
-                            <input type="number" name="produk[]" placeholder="B16" class="form-control"
-                                value="0" min="0"><br>
-                            <input type="hidden" name="id_produk[]" value="B16">
-                        </div>
-                        <div>
-                            <label for="b12" class="form-label">GROW BOLD 12</label>
-                            <input type="number" name="produk[]" placeholder="B12" class="form-control"
-                                value="0" min="0"><br>
-                            <input type="hidden" name="id_produk[]" value="B12">
-                        </div>
-                        <div>
-                            <label for="r16" class="form-label">GROW REG 16</label>
-                            <input type="number" name="produk[]" placeholder="R16" class="form-control"
-                                value="0" min="0"><br>
-                            <input type="hidden" name="id_produk[]" value="R16">
-                        </div>
-                        <div>
-                            <label for="r12" class="form-label">GROW REG 12</label>
-                            <input type="number" name="produk[]" placeholder="R12" class="form-control"
-                                value="0" min="0"><br>
-                            <input type="hidden" name="id_produk[]" value="R12">
-                        </div>
-                        <div>
-                            <label for="kk" class="form-label">GROW KRETEK KUNING 12</label>
-                            <input type="number" name="produk[]" placeholder="KK" class="form-control"
-                                value="0" min="0"><br>
-                            <input type="hidden" name="id_produk[]" value="KK">
-                        </div>
-                        <div>
-                            <label for="kc" class="form-label">GROW KRETEK COKLAT 12</label>
-                            <input type="number" name="produk[]" placeholder="KC" class="form-control"
-                                value="0" min="0"><br>
-                            <input type="hidden" name="id_produk[]" value="KC">
-                        </div>
-                        <div>
-                            <label for="bb16" class="form-label">GROW BERRY BOLD 16</label>
-                            <input type="number" name="produk[]" placeholder="BB16" class="form-control"
-                                value="0" min="0"><br>
-                            <input type="hidden" name="id_produk[]" value="BB16">
-                        </div>
-                        <div>
-                            <label for="bb12" class="form-label">GROW BERRY BOLD 12</label>
-                            <input type="number" name="produk[]" placeholder="BB12" class="form-control"
-                                value="0" min="0"><br>
-                            <input type="hidden" name="id_produk[]" value="BB12">
-                        </div>
-                        <div>
-                            <label for="bice" class="form-label">GROW BLACK ICE 16</label>
-                            <input type="number" name="produk[]" placeholder="BICE16" class="form-control"
-                                value="0" min="0"><br>
-                            <input type="hidden" name="id_produk[]" value="BICE16">
-                        </div>
+                        @if (!empty($totalCarryProduk))
+                            @foreach ($totalCarryProduk as $dt)
+                                    <div>
+                                        <label for="{{ $dt->id_produk }}" class="form-label">{{ $dt->nama_produk }}</label>
+                                        <input min="0" value="0" type="number" id="{{ $dt->id_produk }}" name="jumlah[]"
+                                            placeholder="{{ $dt->id_produk }}" class="form-control"><br>
+                                        <input type="hidden" name="id_produk[]" value="{{ $dt->id_produk }}">
+                                    </div>
+                            @endforeach
+                        @else
+                            <!-- Tampilkan pesan jika tidak ada data -->
+                            <div>Data tidak ditemukan.</div>
+                        @endif
                         <div>
                             <label for="keterangan" class="form-label">Keterangan</label>
                             <input id="keterangan" type="text" name="keterangan" placeholder="keterangan"
                                 class="form-control" required><br>
                         </div>
                         <div>
-                            <label class="form-label">EMP</label><br>
+                            {{-- <label class="form-label">EMP</label><br>
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="emp[]" value="stiker"
                                     id="stiker">
@@ -242,7 +198,7 @@
                                 <input class="form-check-input" type="checkbox" name="emp[]" value="plano"
                                     id="plano">
                                 <label class="form-check-label" for="plano">
-                                    Plane
+                                    Plano
                                 </label>
                             </div>
                             <div class="form-check">
@@ -251,7 +207,28 @@
                                 <label class="form-check-label" for="sunscreen">
                                     Sunscreen
                                 </label>
+                            </div> --}}
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="emp[]" value="stiker" id="stiker">
+                                <label class="form-check-label" for="stiker">
+                                    Stiker
+                                </label>
+                                <input type="number" id="jumlahStiker" name="jumlahEmp[]" value="0" class="form-control">
                             </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="emp[]" value="plano" id="plano">
+                                <label class="form-check-label" for="plano">
+                                    Plano
+                                </label>
+                                <input type="number" id="jumlahPlano" name="jumlahEmp[]" value="0" class="form-control">
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="emp[]" value="sunscreen" id="sunscreen">
+                                <label class="form-check-label" for="sunscreen">
+                                    Sunscreen
+                                </label>
+                                <input type="number" id="jumlahSunscreen" name="jumlahEmp[]" value="0" class="form-control">
+                            </div>                            
                         </div>
                         <div>
                             <br><label for="foto" class="form-label">Foto Toko</label>
@@ -267,7 +244,12 @@
                             class="form-control"><br>
                         <input type="hidden" id="longitudeInput" name="longitude" placeholder="longitude"
                             class="form-control"><br>
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                            @if (session('error'))
+                            <div class="alert alert-danger">
+                                {{ session('error') }}
+                            </div>
+                        @endif
+                        <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     </div>
                 </form>
@@ -308,5 +290,5 @@
                 console.log(val)
             })
         });
-    </script>
+    </script> 
 @endsection

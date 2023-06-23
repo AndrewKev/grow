@@ -25,6 +25,9 @@
 					<nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
 						<a class="nav-link" href="/pimArea/tampil_absensi">Daftar Absensi</a>
 					</nav>
+					<nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+						<a class="nav-link" href="/pimArea/tampil_emp">Daftar Emp</a>
+					</nav>
 				</div>
 			</div>
 			<div class="sb-sidenav-footer">

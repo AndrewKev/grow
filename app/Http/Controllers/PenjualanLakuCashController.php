@@ -7,6 +7,7 @@ use App\Models\Penjualan;
 use App\Models\Keterangan;
 use App\Models\Toko;
 use App\Models\Foto;
+use App\Models\Emp;
 use App\Models\CarryProduk;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -35,6 +36,7 @@ class PenjualanLakuCashController extends Controller
         // dd($distrik);
         $storToday = $this->isTodayStorProduk(auth()->user()->id, Carbon::now()->format('Y-m-d'));
         $carryToday = $this->isTodayCarryProduk(auth()->user()->id, Carbon::now()->format('Y-m-d'));
+        $totalCarryProduk = $this->totalCarryProduk(auth()->user()->id, Carbon::now()->format('Y-m-d'));
         $penjualanLk = DB::select("SELECT DISTINCT toko.id_toko, toko.nama_toko, routing.nama_routing, keterangan, p.emp, p.latitude, p.longitude, p.created_at, foto.nama_foto 
                                     FROM penjualan_laku_cash AS p 
                                     JOIN toko ON toko.id_toko = p.id_toko 
@@ -46,7 +48,7 @@ class PenjualanLakuCashController extends Controller
     
         // dd($penjualanLk);
         // return view('pages.karyawan.penjualanLakuCash', compact('distrik', 'penjualanLk', 'routing'));
-        return view('pages.karyawan.penjualanLakuCash', compact('distrik', 'penjualanLk', 'routing', 'storToday', 'carryToday'));
+        return view('pages.karyawan.penjualanLakuCash', compact('distrik', 'penjualanLk', 'routing', 'storToday', 'carryToday', 'totalCarryProduk'));
     }
     public function isTodayStorProduk($id_user, $tanggal) { 
         $cek = DB::select("SELECT * FROM `stor_produk` 
@@ -68,6 +70,16 @@ class PenjualanLakuCashController extends Controller
             return true;
         }
         return false;
+    }
+
+    public function totalCarryProduk($id_user, $tanggal) {
+        $cek = DB::select("SELECT * 
+                            FROM `carry_produk` as c 
+                            JOIN products AS p ON p.id_produk = c.id_produk
+                            WHERE id_user = '$id_user' 
+                            AND tanggal_carry BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59'");
+    
+        return $cek;
     }
 
     public function detailPenjualan($id_toko){
@@ -140,6 +152,13 @@ class PenjualanLakuCashController extends Controller
         // return $query;
     }
 
+    public function getStokCarryProduk($id_produk, $id_user){
+        $query = DB::select("SELECT stok_sekarang
+                            FROM carry_produk
+                            WHERE id_produk = '$id_produk' AND id_user = $id_user");
+        return $query;
+    }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -169,21 +188,43 @@ class PenjualanLakuCashController extends Controller
 
         $id_user = auth()->user()->id;
         $tanggal = Carbon::now()->format('Y-m-d');
-    
         $emp = "";
+        // $jumlahEmp = [];
+        // dd($request->jumlahEmp);
         if (!empty($request->emp)) {
-            foreach ($request->emp as $e) {
-                $emp .= $e . '; ';
+            foreach ($request->emp as $index => $e) {
+                $em = $request->jumlahEmp[$index];
+                    $emp .= $e . '('.$em.')'.'; '; 
+            // Ambil data 'emp' dari tabel berdasarkan kolom 'jenis'
+            $empData = Emp::where('jenis', $e)->first();
+
+            // Lakukan pengurangan pada kolom 'jumlah'
+            $updatedJumlah = $empData->jumlah - $em;
+
+            // Perbarui (update) nilai kolom 'jumlah' dalam tabel 'emp'
+            $empData->update(['jumlah' => $updatedJumlah]);   
             }
+            // dd($emp);
         }
+        // $stokEmp = Emp::where('jenis')
+
+        
         
         // UPDATE STOK
         $barang = $this->getStokUser();
         $data = [];
-        for ($i = 0; $i < 10; $i++) {
-            if ($request->produk[$i] != '0') {
+        for ($i = 0; $i < count($request->id_produk); $i++) {
+            if ($request->jumlah[$i] != '0') {
                 $productId = $request->id_produk[$i];
-                $carryValue = (int) $request->produk[$i];
+                $carryValue = (int) $request->jumlah[$i];
+                $stokCarry = $this->getStokCarryProduk($productId, $id_user);
+                $stokCarryValue = $stokCarry[0]->stok_sekarang;
+                // dd($stokCarryValue);
+
+                if ($carryValue > $stokCarryValue) {
+                    // Stok carry produk yang dibawa kurang, tampilkan pesan kesalahan
+                    return redirect()->back()->with('error', 'Stok carry produk ' . $productId . ' kurang.');
+                }
 
                 $data[$productId] = [
                     'produk' => $productId,
@@ -250,8 +291,8 @@ class PenjualanLakuCashController extends Controller
         }
                             
         $id_toko = $toko[0]->id_toko;
-        for($i = 0; $i < 10; $i++) {
-            if($request->produk[$i] != '0') {
+        for ($i = 0; $i < count($request->id_produk); $i++) {
+            if ($request->jumlah[$i] != '0') {
                 if($request->get('keterangan') != null) {
                     Penjualan::create(
                         [
@@ -261,7 +302,7 @@ class PenjualanLakuCashController extends Controller
                             'id_toko' => $id_toko,
                             'id_kunjungan' => $request->jenis_kunjungan,
                             'id_produk' => $request->id_produk[$i],
-                            'jumlah_produk' => (int) $request->produk[$i],
+                            'jumlah_produk' => (int) $request->jumlah[$i],
                             'id_keterangan' => $keterangan[0]->id_keterangan,
                             'emp' => $emp,
                             'latitude' => $request->latitude,
