@@ -51,18 +51,7 @@
                     <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
                         <a class="nav-link" href="/user/absensi">Absensi</a>
                         <a class="nav-link" href="/user/stok_jalan">Stok Jalan</a>
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
-                            data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
-                            <!-- <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div> -->
-                            Penjualan
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <div class="collapse" id="collapsePages" aria-labelledby="headingTwo"
-                            data-bs-parent="#sidenavAccordion">
-                            <div class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-                                <a class="nav-link" href="penjualan_laku_cash">Penjualan Laku Cash</a>
-                            </div>
-                        </div>
+                        <a class="nav-link" href="penjualan_laku_cash">Penjualan Laku Cash</a>
                         <a class="nav-link" href="/user/stor_produk">Stor Produk</a>
                     </nav>
                 </div>
