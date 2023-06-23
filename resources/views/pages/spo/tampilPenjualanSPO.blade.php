@@ -3,9 +3,9 @@
     <h2 class="mb-4 mt-4">Penjualan</h2>
     <div class="card mb-4 mt-4">
         <div class="card-header">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalPenjualanLakuCash">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalPenjualan">
                 Penjualan
-            </button>            
+            </button>
         </div>
         <div class="card-body">
             <table id="datatablesSimple">
@@ -22,188 +22,274 @@
                     </tr>
                 </thead>
                 <tbody>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>          
-                            </td>
-                            <td></td>
-                        </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                        </td>
+                        <td></td>
+                    </tr>
                 </tbody>
             </table>
         </div>
 
     </div>
     <!-- Modal -->
-    <div class="modal fade" id="modalPenjualanLakuCash" tabindex="-1" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
+    <div class="modal fade" id="modalPenjualan" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <form class="modal-content" action="/admin2/terima_barang" method="post">
+                @csrf
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Penjualan</h5>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Penjualan</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                {{-- @if (session('error'))
-                    <div class="error-message">{{ session('error') }}</div>
-                @endif --}}
-                <form action="/user/penjualan_laku_cash" method="post" class="myForm" enctype="multipart/form-data"
-                    id="formToko">
-                    @csrf
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="distrik" class="form-label">Distrik</label>
-                            {{-- <input type="text" name="distrik" value="{{ $distrik[0]->nama_distrik }}"
-                                class="form-control" readonly>
-                            <input type="hidden" name="id_distrik" value="{{ $distrik[0]->id_distrik }}"> --}}
-                        </div>
-                        <div class="mb-3">
-                            <label for="jKunjungan" class="form-label">Jenis Kunjungan</label><br>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="jenis_kunjungan" id="NEW"
-                                    value="NEW" required>
-                                <label class="form-check-label" for="NEW">SPO NEW</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="jenis_kunjungan" id="CLOSE"
-                                    value="CLOSE">
-                                <label class="form-check-label" for="CLOSE">SPO CLOSE</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="jenis_kunjungan" id="CASH"
-                                    value="CASH">
-                                <label class="form-check-label" for="CASH">CASH</label>
-                            </div>
-                            {{-- <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="jenis_kunjungan" id="R"
-                                    value="R">
-                                <label class="form-check-label" for="R">R</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="jenis_kunjungan" id="STA"
-                                    value="STA">
-                                <label class="form-check-label" for="STA">STA</label>
-                            </div> --}}
-                        </div>
-                        <div class="mb-3 d-none" id="formIO">
-                            <div class="mb-3">
-                                <label class="form-label">Routing</label>
-                                <select class="form-select" aria-label="Default select example" required name="routing">
-                                    <option selected disabled>Pilih Routing</option>
-                                    {{-- @foreach ($routing as $rout)
-                                        <option value="{{ $rout->id_routing }}">{{ $rout->nama_routing }}</option>
-                                    @endforeach --}}
-                                    {{-- <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                    <option value="6">6</option>
-                                    <option value="7">7</option>
-                                    <option value="8">8</option>
-                                    <option value="9">9</option>
-                                    <option value="10">10</option>
-                                    <option value="11">11</option>
-                                    <option value="12">12</option> --}}
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="namaToko" class="form-label">Nama Toko</label>
-                                <input type="text" class="form-control" id="namaToko"
-                                    placeholder="Masukan Nama Toko" name="namaToko">
-                            </div>
-                        </div>
-                        <div class="mb-3 d-none" id="notFormIO">
-                            <div class="mb-3">
-                                <label class="form-label">Routing</label>
-                                <select class="form-select" id="routingDropdown" aria-label="Default select example"
-                                    required name="routing">
-                                    <option selected disabled>Pilih Routing</option>
-                                    {{-- @foreach ($routing as $rout)
-                                        <option value="{{ $rout->id_routing }}">{{ $rout->nama_routing }}</option>
-                                    @endforeach --}}
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="namaToko" class="form-label">Nama Toko</label>
-                                <select class="form-select" id="tokoDropdown" aria-label="Default select example"
-                                    required name="toko">
-                                    <option selected disabled>Pilih Toko</option>
-                                    {{-- <option value="namaToko" name="namaToko">namaToko</option> --}}
-                                </select>
-                            </div>
-                        </div>
-                        {{-- @if (!empty($totalCarryProduk))
-                            @foreach ($totalCarryProduk as $dt)
-                                    <div>
-                                        <label for="{{ $dt->id_produk }}" class="form-label">{{ $dt->nama_produk }}</label>
-                                        <input min="0" value="0" type="number" id="{{ $dt->id_produk }}" name="jumlah[]"
-                                            placeholder="{{ $dt->id_produk }}" class="form-control"><br>
-                                        <input type="hidden" name="id_produk[]" value="{{ $dt->id_produk }}">
-                                    </div>
-                            @endforeach
-                        @else
-                            <!-- Tampilkan pesan jika tidak ada data -->
-                            <div>Data tidak ditemukan.</div>
-                        @endif --}}
-                        <div>
-                            <label for="keterangan" class="form-label">Keterangan</label>
-                            <input id="keterangan" type="text" name="keterangan" placeholder="keterangan"
-                                class="form-control" required><br>
-                        </div>
-                        <div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="emp[]" value="stiker" id="stiker">
-                                <label class="form-check-label" for="stiker">
-                                    Stiker
-                                </label>
-                                <input type="number" id="jumlahStiker" name="jumlahEmp[]" value="0" class="form-control">
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="emp[]" value="plano" id="plano">
-                                <label class="form-check-label" for="plano">
-                                    Plano
-                                </label>
-                                <input type="number" id="jumlahPlano" name="jumlahEmp[]" value="0" class="form-control">
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="emp[]" value="sunscreen" id="sunscreen">
-                                <label class="form-check-label" for="sunscreen">
-                                    Sunscreen
-                                </label>
-                                <input type="number" id="jumlahSunscreen" name="jumlahEmp[]" value="0" class="form-control">
-                            </div>                            
-                        </div>
-                        <div>
-                            <br><label for="foto" class="form-label">Foto Toko</label>
-                            <input type="file" name="foto" id="foto" class="form-control @error('foto') is-invalid @enderror" required
-                            ><br>
-                            {{-- @error('foto')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                            @enderror                  --}}
-                        </div>
-                        <input type="hidden" id="latitudeInput" name="latitude" placeholder="latitude"
-                            class="form-control"><br>
-                        <input type="hidden" id="longitudeInput" name="longitude" placeholder="longitude"
-                            class="form-control"><br>
-                            {{-- @if (session('error'))
-                            <div class="alert alert-danger">
-                                {{ session('error') }}
-                            </div>
-                        @endif --}}
-                        <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="distrik" class="form-label">Distrik</label>
+                        <select class="form-select" aria-label="Default select example" id="dropdownDistrik">
+                            <option selected disabled>Pilih Distrik</option>
+                            {{-- <option value=""></option> --}}
+                        </select>
                     </div>
-                </form>
-            </div>
+                    <div class="mb-3">
+                        <label class="form-label">Jenis Toko</label><br>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="jenisToko" id="radioTokoBaru"
+                                value="tokoBaru">
+                            <label class="form-check-label" for="radioTokoBaru">Toko Baru</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="jenisToko" id="radioTokoLama"
+                                value="tokoLama">
+                            <label class="form-check-label" for="radioTokoLama">Toko Lama</label>
+                        </div>
+                    </div>
+                    <div class="mb-3 d-none" id="inputTokoBaru">
+                        <label for="namaToko" class="form-label">Nama Toko</label>
+                        <input type="text" class="form-control" id="namaToko" placeholder="Masukan Nama Toko" required>
+                    </div>
+                    <div class="mb-3 d-none" id="inputTokoLama">
+                        <label class="form-label">Nama Toko</label>
+                        <select class="form-select" aria-label="Default select example" id="dropdownToko">
+                            <option selected disabled>Pilih Toko</option>
+                        </select>
+                    </div>
+                    <div class="mb-3 d-none" id="divAlamat">
+                        <label for="alamat" class="form-label">Alamat</label>
+                        <input type="text" class="form-control" id="alamat" placeholder="Masukan Alamat" required>
+                    </div>
+                    <div class="mb-3 d-none" id="divTelepon">
+                        <label for="telepon" class="form-label">Telepon</label>
+                        <input type="text" class="form-control" id="telepon" placeholder="Masukan No Telepon"
+                            value="-" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Jenis SPO</label><br>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="jenisSpo" id="inlineRadioSpo1"
+                                value="spoNew">
+                            <label class="form-check-label" for="inlineRadio1">SPO New</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="jenisSpo" id="inlineRadioSpo2"
+                                value="spoClose">
+                            <label class="form-check-label" for="inlineRadio2">SPO Close</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="jenisSpo" id="inlineRadioSpo3"
+                                value="spoCash">
+                            <label class="form-check-label" for="inlineRadio2">Cash</label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="noNota" class="form-label">Nomor Nota</label>
+                        <input type="text" class="form-control" id="noNota" placeholder=""
+                            value="JOG/BTL/001/001" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <div class="mb-2">
+                            <label for="idProduk" class="form-label">Nama Produk</label>
+                            <input min="0" value="0" type="number" id="idProduk" name="jumlah[]"
+                                placeholder="idProduk" class="form-control">
+                            <input type="hidden" name="id_produk[]" value="idProduk">
+                        </div>
+                        <div class="mb-2">
+                            <label for="idProduk" class="form-label">Nama Produk</label>
+                            <input min="0" value="0" type="number" id="idProduk" name="jumlah[]"
+                                placeholder="idProduk" class="form-control">
+                            <input type="hidden" name="id_produk[]" value="idProduk">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">EMP</label><br>
+                        <div class="input-group mb-3">
+                            <div class="input-group-text">
+                                <input class="form-check-input mt-0" type="checkbox" value=""
+                                    aria-label="Checkbox for following text input" id="stiker">
+                                <label for="stiker" class="ms-1">Stiker</label>
+                            </div>
+                            <input type="text" class="form-control" aria-label="Text input with checkbox"
+                                id="stikerInput" disabled>
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-text">
+                                <input class="form-check-input mt-0" type="checkbox" value=""
+                                    aria-label="Checkbox for following text input" id="plano">
+                                <label for="plano" class="ms-1">Plano</label>
+                            </div>
+                            <input type="text" class="form-control" aria-label="Text input with checkbox"
+                                id="planoInput" disabled>
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-text">
+                                <input class="form-check-input mt-0" type="checkbox" value=""
+                                    aria-label="Checkbox for following text input" id="sunscreen">
+                                <label for="sunscreen" class="ms-1">Sunscreen</label>
+                            </div>
+                            <input type="text" class="form-control" aria-label="Text input with checkbox"
+                                id="sunscreenInput" disabled>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="keterangan" class="form-label">Keterangan</label>
+                        <input id="keterangan" type="text" name="keterangan" placeholder="Masukan Keterangan"
+                            class="form-control" required><br>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
+                    {{-- <button type="submit" name="setuju" class="btn btn-success" onclick="return confirm('Terima barang?')">Setuju</button> --}}
+                </div>
+            </form>
         </div>
     </div>
     <!-- End Modal -->
     <script src="{{ asset('js/custom.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            // Dropdown
+            // Populate the first dropdown
+            $.ajax({
+                url: "get_distrik",
+                type: "GET",
+                dataType: "json",
+                success: function(data) {
+                    $.each(data, function(key, value) {
+                        $("#dropdownDistrik").append(
+                            $("<option></option>")
+                            .attr("value", value.id_distrik)
+                            .text(value.nama_distrik)
+                        );
+                    });
+                },
+            });
 
+            // Handle the change event of the first dropdown
+            $("#dropdownDistrik").change(function() {
+                let selectedOption = $(this).val();
+
+                // Clear the options in the second dropdown
+                $("#dropdownToko").empty();
+                $("#dropdownToko").append('<option selected disabled>Pilih Toko</option>');
+
+                // Fetch the dependent options for the selected option
+                $.ajax({
+                    url: "get_toko/" + selectedOption,
+                    type: "GET",
+                    dataType: "json",
+                    success: function(data) {
+                        $.each(data, function(key, value) {
+                            $("#dropdownToko").append(
+                                $("<option></option>")
+                                .attr("value", value.id)
+                                .text(value.nama_toko)
+                            );
+                            // $('#alamat').val(value.nama_toko);
+                        });
+                    },
+                });
+            });
+
+            $("#dropdownToko").change(function() {
+                let idToko = $(this).val();
+
+                // Fetch the dependent options for the selected option
+                $.ajax({
+                    url: "get_alamat/" + idToko,
+                    type: "GET",
+                    dataType: "json",
+                    success: function(data) {
+                        $.each(data, function(key, value) {
+                            $('#alamat').val(value.alamat);
+                            $('#telepon').val(value.telepon);
+                        });
+                    },
+                });
+            });
+            // End Dropdown
+
+            $('#radioTokoBaru').change(function() {
+                if ($(this).is(':checked')) {
+                    $('#inputTokoBaru').removeClass('d-none');
+                    $('#inputTokoLama').addClass('d-none');
+                    $('#divAlamat').removeClass('d-none');
+                    $('#divTelepon').removeClass('d-none');
+                    $('#alamat').val('');
+                    $('#telepon').val('');
+                }
+            });
+            $('#radioTokoLama').change(function() {
+                if ($(this).is(':checked')) {
+                    $('#inputTokoBaru').addClass('d-none');
+                    $('#inputTokoLama').removeClass('d-none');
+                    $('#divAlamat').removeClass('d-none');
+                    $('#divTelepon').removeClass('d-none');
+                }
+            });
+            // Event handler for checkbox change event
+            $('#stiker').change(function() {
+                if ($(this).is(':checked')) {
+                    // Checkbox is checked
+                    $('#stikerInput').prop('disabled', false);
+                    $('#stikerInput').val('0');
+                    // Perform your desired actions here
+                } else {
+                    // Checkbox is unchecked
+                    $('#stikerInput').prop('disabled', true);
+                    $('#stikerInput').val('');
+                    // Perform your desired actions here
+                }
+            });
+            $('#plano').change(function() {
+                if ($(this).is(':checked')) {
+                    // Checkbox is checked
+                    $('#planoInput').prop('disabled', false);
+                    $('#planoInput').val('0');
+                    // Perform your desired actions here
+                } else {
+                    // Checkbox is unchecked
+                    $('#planoInput').prop('disabled', true);
+                    $('#planoInput').val('');
+                    // Perform your desired actions here
+                }
+            });
+            $('#sunscreen').change(function() {
+                if ($(this).is(':checked')) {
+                    // Checkbox is checked
+                    $('#sunscreenInput').prop('disabled', false);
+                    $('#sunscreenInput').val('0');
+                    // Perform your desired actions here
+                } else {
+                    // Checkbox is unchecked
+                    $('#sunscreenInput').prop('disabled', true);
+                    $('#sunscreenInput').val('');
+                    // Perform your desired actions here
+                }
+            });
+        });
+    </script>
 @endsection

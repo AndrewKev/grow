@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\RequestBarang;
 use App\Models\CarryProduk;
+use App\Models\TokoSPO;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -264,50 +265,53 @@ class SPOController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Get distrik SPO.
+     * Distrik yang tidak memiliki id_user. (sementara)
      */
-    public function create()
-    {
-        //
+    public function getDistrik() {
+        $distrik = DB::select("SELECT * FROM distrik WHERE id_user IS NULL");
+
+        return response()->json($distrik);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Get toko SPO berdasatkan id_distrik.
+     * Return JSON response.
      */
-    public function store(Request $request)
-    {
-        //
+    public function getTokoByDistrik($idDistrik) {
+        $toko = $this->getAllToko()->where('id_distrik', $idDistrik);
+        $collection = collect();
+
+        foreach ($toko as $tk) {
+            $collection->push($tk);
+        }
+
+        return response()->json($collection);
     }
 
     /**
-     * Display the specified resource.
+     * Get semua data toko SPO.
+     * Return Collection.
      */
-    public function show(string $id)
-    {
-        //
+    public function getAllToko() {
+        $toko = DB::select("SELECT * FROM toko_spo");
+
+        return collect($toko);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Get alamat dari toko berdasarkan id_toko.
+     * Return Collection.
      */
-    public function edit(string $id)
-    {
-        //
+    public function getAlamatToko($idToko) {
+        $toko = $this->getAllToko()->where('id', $idToko);
+        $collection = collect();
+
+        foreach ($toko as $tk) {
+            $collection->push($tk);
+        }
+
+        return response()->json($collection);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
 }

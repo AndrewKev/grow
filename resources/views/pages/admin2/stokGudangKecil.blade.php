@@ -30,7 +30,7 @@
                 @else
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalRequestStok">
                     Purchasing Order
-                </button>  
+                </button>
                 @endif
                 {{-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalRequestStok">
                     Purchasing Order
@@ -78,7 +78,7 @@
                 <form action="/admin2/request_stok" method="post" class="myForm" enctype="multipart/form-data" id="formToko">
                     @csrf
                     <div class="modal-body">
-                        
+
                         <div>
                             <label for="b20" class="form-label">GROW BOLD 20</label>
                             <input type="number" id="B20" name="produk[]" placeholder="B20" class="form-control"
@@ -162,7 +162,7 @@
             <form class="modal-content" action="/admin2/terima_barang" method="post">
                 @csrf
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Rincian Barang</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
