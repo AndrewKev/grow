@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('id_distrik')->nullable();
             $table->char('ws',3)->nullable();
             $table->string('telepon',20)->nullable();
+            $table->string('latitude')->nullable();
+            $table->string('longitude')->nullable();
             $table->timestamps();
 
             $table->foreign('id_distrik')->references('id_distrik')->on('distrik')->onDelete('cascade');;

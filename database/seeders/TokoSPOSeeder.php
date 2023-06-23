@@ -26,6 +26,8 @@ class TokoSPOSeeder extends Seeder
                     'id_distrik' => $data[2],
                     'ws'=>$data[3],
                     'telepon'=>$data[4],
+                    'latitude'=>$data[5],
+                    'longitude'=>$data[6],
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now()
                 ]);
