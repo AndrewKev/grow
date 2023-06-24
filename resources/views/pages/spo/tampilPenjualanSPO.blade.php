@@ -41,7 +41,7 @@
     <!-- Modal -->
     <div class="modal fade" id="modalPenjualan" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-            <form class="modal-content" action="/admin2/terima_barang" method="post">
+            <form class="modal-content" action="/spo/penjualan_spo" method="post">
                 @csrf
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Penjualan</h1>
@@ -110,48 +110,46 @@
                         <input type="text" class="form-control" id="noNota" placeholder=""
                             value="JOG/BTL/001/001" readonly>
                     </div>
-                    <div class="mb-3">
-                        <div class="mb-2">
-                            <label for="idProduk" class="form-label">Nama Produk</label>
-                            <input min="0" value="0" type="number" id="idProduk" name="jumlah[]"
-                                placeholder="idProduk" class="form-control">
-                            <input type="hidden" name="id_produk[]" value="idProduk">
-                        </div>
-                        <div class="mb-2">
-                            <label for="idProduk" class="form-label">Nama Produk</label>
-                            <input min="0" value="0" type="number" id="idProduk" name="jumlah[]"
-                                placeholder="idProduk" class="form-control">
-                            <input type="hidden" name="id_produk[]" value="idProduk">
-                        </div>
-                    </div>
+                    @if (!empty($totalCarryProduk))
+                            @foreach ($totalCarryProduk as $dt)
+                                    <div>
+                                        <label for="{{ $dt->id_produk }}" class="form-label">{{ $dt->nama_produk }}</label>
+                                        <input min="0" value="0" type="number" id="{{ $dt->id_produk }}" name="jumlah[]"
+                                            placeholder="{{ $dt->id_produk }}" class="form-control"><br>
+                                        <input type="hidden" name="id_produk[]" value="{{ $dt->id_produk }}">
+                                    </div>
+                            @endforeach
+                        @else
+                            <div>Data tidak ditemukan.</div>
+                        @endif
                     <div class="mb-3">
                         <label class="form-label">EMP</label><br>
                         <div class="input-group mb-3">
                             <div class="input-group-text">
-                                <input class="form-check-input mt-0" type="checkbox" value=""
+                                <input class="form-check-input mt-0" type="checkbox" name="emp[]" value="stiker"
                                     aria-label="Checkbox for following text input" id="stiker">
                                 <label for="stiker" class="ms-1">Stiker</label>
                             </div>
                             <input type="text" class="form-control" aria-label="Text input with checkbox"
-                                id="stikerInput" disabled>
+                                id="stikerInput" name="jumlahEmp[]" disabled>
                         </div>
                         <div class="input-group mb-3">
                             <div class="input-group-text">
-                                <input class="form-check-input mt-0" type="checkbox" value=""
+                                <input class="form-check-input mt-0" type="checkbox" name="emp[]" value="plano"
                                     aria-label="Checkbox for following text input" id="plano">
                                 <label for="plano" class="ms-1">Plano</label>
                             </div>
                             <input type="text" class="form-control" aria-label="Text input with checkbox"
-                                id="planoInput" disabled>
+                                id="planoInput" name="jumlahEmp[]" disabled>
                         </div>
                         <div class="input-group mb-3">
                             <div class="input-group-text">
-                                <input class="form-check-input mt-0" type="checkbox" value=""
+                                <input class="form-check-input mt-0" type="checkbox" name="emp[]" value="sunscreen"
                                     aria-label="Checkbox for following text input" id="sunscreen">
                                 <label for="sunscreen" class="ms-1">Sunscreen</label>
                             </div>
                             <input type="text" class="form-control" aria-label="Text input with checkbox"
-                                id="sunscreenInput" disabled>
+                                id="sunscreenInput" name="jumlahEmp[]" disabled>
                         </div>
                     </div>
                     <div>
@@ -291,5 +289,15 @@
                 }
             });
         });
+
+        document.getElementById("dropdownDistrik").addEventListener("change", function() {
+        var selectedDistrik = this.value;
+
+        // Mengubah nilai kedua pada nomor nota sesuai dengan distrik yang dipilih
+        var noNotaElement = document.getElementById("noNota");
+        var noNotaValue = "JOG/" + selectedDistrik + "/001/001";
+        noNotaElement.value = noNotaValue;
+        });
+
     </script>
 @endsection

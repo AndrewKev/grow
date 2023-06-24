@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\RequestBarang;
 use App\Models\CarryProduk;
 use App\Models\TokoSPO;
+use App\Models\Emp;
+use App\Models\Keterangan;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -258,10 +260,191 @@ class SPOController extends Controller
     }
 
     /**
-     * Formulir Penjualan SPO
+     * Mengambil seluruh data carry produk di SPO
+     */
+
+    public function totalCarryProduk($id_user, $tanggal) {
+        $cek = DB::select("SELECT * 
+                            FROM `carry_produk` as c 
+                            JOIN products AS p ON p.id_produk = c.id_produk
+                            WHERE id_user = '$id_user' 
+                            AND tanggal_carry BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59'");
+    
+        return $cek;
+    }
+
+    /**
+     * Halaman Penjualan SPO
      */
     public function penjualanSPO(){
-        return view('pages.spo.tampilPenjualanSPO');
+        $totalCarryProduk = $this->totalCarryProduk(auth()->user()->id, Carbon::now()->format('Y-m-d'));
+        return view('pages.spo.tampilPenjualanSPO', compact('totalCarryProduk'));
+    }
+
+    /**
+     * Mengambil stok user carry_spo untuk diinputkan penjualan_spo
+     */
+    public function getStokUser() {
+        $id_user = auth()->user()->id;
+        $tanggal = Carbon::now()->format('Y-m-d');
+        $barang = DB::select("SELECT id_produk, stok_sekarang
+        FROM carry_produk
+        WHERE id_user = '$id_user' AND tanggal_carry BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59';");
+
+        return $barang;
+    }
+    /**
+     * Mengambil stok carry produk untuk diinputkan penjualan_spo
+     */
+    public function getStokCarryProduk($id_produk, $id_user){
+        $query = DB::select("SELECT stok_sekarang
+                            FROM carry_produk
+                            WHERE id_produk = '$id_produk' AND id_user = $id_user");
+        return $query;
+    }
+
+    /**
+     * Membuat keterangan untuk diinputkan penjualan_spo
+     */
+    public function createKeterangan($keterangan) {
+        Keterangan::create(
+            [
+                'keterangan' =>$keterangan,
+                'id_user' => auth()->user()->id,
+                'tanggal' =>Carbon::now()->format('Y-m-d')
+            ]
+        );
+    }
+
+    /**
+     * Membuat createToko untuk diinputkan penjualan_spo
+     */
+    public function createToko($req) {
+        TokoSPO::create(
+            [
+                'nama_toko' => $req->namaToko,
+                'alamat' => $req->alamat,
+                'id_distrik'=>$req->alamat,
+                'ws'=>$req->ws,
+                'telepon' =>$req->telepon,
+                'latitude' =>$req->latitude,
+                'longitude' =>$req->longitude
+            ]
+        );
+    }
+
+    /**
+     * Formulir Penjualan SPO
+     */
+    public function postPenjualanSPO(Request $request){
+        // dd($request->all());
+        $id_user = auth()->user()->id;
+        $tanggal = Carbon::now()->format('Y-m-d');
+
+        $emp = "";
+        // $jumlahEmp = [];
+        // dd($request->jumlahEmp);
+        if (!empty($request->emp)) {
+            foreach ($request->emp as $index => $e) {
+                $em = $request->jumlahEmp[$index];
+                    $emp .= $e . '('.$em.')'.'; '; 
+            // Ambil data 'emp' dari tabel berdasarkan kolom 'jenis'
+            $empData = Emp::where('jenis', $e)->first();
+
+            // Lakukan pengurangan pada kolom 'jumlah'
+            $updatedJumlah = $empData->jumlah - $em;
+
+            // Perbarui (update) nilai kolom 'jumlah' dalam tabel 'emp'
+            $empData->update(['jumlah' => $updatedJumlah]);   
+            }
+            // dd($emp);
+        }
+
+        // UPDATE STOK
+        $barang = $this->getStokUser();
+        // dd($barang);
+        $data = [];
+        for ($i = 0; $i < count($request->id_produk); $i++) {
+            if ($request->jumlah[$i] != '0') {
+                $productId = $request->id_produk[$i];
+                $carryValue = (int) $request->jumlah[$i];
+                $stokCarry = $this->getStokCarryProduk($productId, $id_user);
+                $stokCarryValue = $stokCarry[0]->stok_sekarang;
+                // dd($stokCarryValue);
+
+                if ($carryValue > $stokCarryValue) {
+                    // Stok carry produk yang dibawa kurang, tampilkan pesan kesalahan
+                    return redirect()->back()->with('error', 'Stok carry produk ' . $productId . ' kurang.');
+                }
+
+                $data[$productId] = [
+                    'produk' => $productId,
+                    'carry' => $carryValue
+                ];
+            }
+        }
+
+        // Mengurangi stok berdasarkan carry yang diinputkan
+        foreach ($data as $productId => $item) {
+            $carryValue = $item['carry'];
+
+            foreach ($barang as $produk) {
+                if ($produk->id_produk === $productId) {
+                    $produk->stok_sekarang -= $carryValue;
+                    break;
+                }
+            }
+            // Lakukan update pada tabel CarryProduk
+            DB::update("UPDATE carry_produk 
+                        SET stok_sekarang = $produk->stok_sekarang 
+                        WHERE id_produk = '$productId'
+                        AND id_user = $id_user
+                        AND tanggal_carry BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59'");
+            // CarryProduk::where('id_produk', $productId)->update(['stok_sekarang' => $produk->stok_sekarang]);
+        }
+
+        // KETERANGAN
+        if($request->get('keterangan') != null) {
+            $this->createKeterangan($request->get('keterangan'));
+        }
+
+        dd($request->all());
+
+        if($request->jenis_kunjungan == 'IO') {
+            $this->createToko($request);
+            
+            $toko = $this->getTokoIO($request);
+        } else {
+            $toko = $this->getToko($request);
+        }
+
+        $id_toko = $toko[0]->id_toko;
+        for ($i = 0; $i < count($request->id_produk); $i++) {
+            if ($request->jumlah[$i] != '0') {
+                if($request->get('keterangan') != null) {
+                    PenjualanSPO::create(
+                        [
+                            'id_user' => auth()->user()->id,
+                            'id_distrik' => $request->id_distrik,
+                            'id_toko' => $id_toko,
+                            'jenis_spo' => $jenis_spo,
+                            'nomor_spo' => $nomor_spo,
+                            'id_kunjungan' => $request->jenis_kunjungan,
+                            'id_produk' => $request->id_produk[$i],
+                            'jumlah_produk' => (int) $request->jumlah[$i],
+                            'id_keterangan' => $keterangan[0]->id_keterangan,
+                            'emp' => $emp,
+                            'latitude' => $request->latitude,
+                            'longitude' => $request->longitude,
+                            'id_foto' => $foto[0]->id_foto,
+    
+                        ]
+                    );
+                }
+            }            
+        }
+        // dd($data);
+        return redirect('/spo/penjualan_spo');
     }
 
     /**
