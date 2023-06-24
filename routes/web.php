@@ -247,6 +247,7 @@ Route::group(
 
         // Penjualan SPO
         Route::get('/penjualan_spo', 'penjualanSPO');
+        Route::post('/penjualan_spo', 'postPenjualanSPO');
         Route::get('/get_distrik', 'getDistrik');
         Route::get('/get_toko/{idDistrik}', 'getTokoByDistrik');
         Route::get('/get_alamat/{idToko}', 'getAlamatToko');

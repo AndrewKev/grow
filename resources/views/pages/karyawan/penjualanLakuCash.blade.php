@@ -177,7 +177,6 @@
                                     </div>
                             @endforeach
                         @else
-                            <!-- Tampilkan pesan jika tidak ada data -->
                             <div>Data tidak ditemukan.</div>
                         @endif
                         <div>

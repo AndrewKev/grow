@@ -17,14 +17,14 @@ return new class extends Migration
             $table->char('id_distrik');
             $table->foreignId('id_toko');
             $table->char('jenis_spo')->nullable();
-            $table->string('nomor_spo');
-            $table->char('id_produk');
-            $table->integer('jumlah_produk');
+            $table->string('nomor_spo')->nullable();
+            $table->char('id_produk')->nullable();
+            $table->integer('jumlah_produk')->nullable();
             $table->foreignId('id_keterangan')->nullable();
             $table->string('emp')->nullable();
             $table->foreignId('id_foto')->nullable();
-            $table->string('latitude');
-            $table->string('longitude');
+            $table->string('latitude')->nullable();
+            $table->string('longitude')->nullable();
             $table->timestamps();
 
             $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');
