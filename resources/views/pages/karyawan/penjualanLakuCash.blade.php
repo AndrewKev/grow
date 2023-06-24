@@ -129,18 +129,6 @@
                                     @foreach ($routing as $rout)
                                         <option value="{{ $rout->id_routing }}">{{ $rout->nama_routing }}</option>
                                     @endforeach
-                                    {{-- <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                    <option value="6">6</option>
-                                    <option value="7">7</option>
-                                    <option value="8">8</option>
-                                    <option value="9">9</option>
-                                    <option value="10">10</option>
-                                    <option value="11">11</option>
-                                    <option value="12">12</option> --}}
                                 </select>
                             </div>
                             <div class="mb-3">
@@ -171,11 +159,20 @@
                         </div>
                         @if (!empty($totalCarryProduk))
                             @foreach ($totalCarryProduk as $dt)
-                                <div>
-                                    <label for="{{ $dt->id_produk }}" class="form-label">{{ $dt->nama_produk }}</label>
-                                    <input min="0" value="0" type="number" id="{{ $dt->id_produk }}"
-                                        name="jumlah[]" placeholder="{{ $dt->id_produk }}" class="form-control"><br>
-                                    <input type="hidden" name="id_produk[]" value="{{ $dt->id_produk }}">
+                                <div class="mb-3">
+                                    <label for="{{ $dt['idProduk'] }}"
+                                        class="form-label">{{ $dt['namaProduk'] }}</label>
+                                    <input min="0" value="0" type="number" id="_{{ $dt['idProduk'] }}"
+                                        name="jumlah[]" placeholder="{{ $dt['idProduk'] }}" class="form-control">
+                                    <div>
+                                        <span class="text-success">Stok produk ini : {{ $dt['stokSekarang'] }}</span>
+                                    </div>
+                                    <div class="d-none" id="valid_{{ $dt['idProduk'] }}">
+                                        <span class="text-danger">Stok tidak cukup</span>
+                                    </div>
+                                    <input type="hidden" data-input-id="stok{{ $dt['idProduk'] }}"
+                                        value="{{ $dt['stokSekarang'] }}">
+                                    <input type="hidden" name="id_produk[]" value="{{ $dt['idProduk'] }}">
                                 </div>
                             @endforeach
                         @else
@@ -216,7 +213,7 @@
                                         aria-label="Checkbox for following text input" id="stiker">
                                     <label for="stiker" class="ms-1">Stiker</label>
                                 </div>
-                                <input type="number" class="form-control" aria-label="Text input with checkbox"
+                                <input type="number" min="0" class="form-control" aria-label="Text input with checkbox"
                                     id="stikerInput" disabled name="jumlahEmp[]">
                             </div>
                             <div class="input-group mb-3">
@@ -225,7 +222,7 @@
                                         aria-label="Checkbox for following text input" id="plano">
                                     <label for="plano" class="ms-1">Plano</label>
                                 </div>
-                                <input type="number" class="form-control" aria-label="Text input with checkbox"
+                                <input type="number" min="0" class="form-control" aria-label="Text input with checkbox"
                                     id="planoInput" disabled name="jumlahEmp[]">
                             </div>
                             <div class="input-group mb-3">
@@ -234,7 +231,7 @@
                                         aria-label="Checkbox for following text input" id="sunscreen">
                                     <label for="sunscreen" class="ms-1">Sunscreen</label>
                                 </div>
-                                <input type="number" class="form-control" aria-label="Text input with checkbox"
+                                <input type="number" min="0" class="form-control" aria-label="Text input with checkbox"
                                     id="sunscreenInput" disabled name="jumlahEmp[]">
                             </div>
                             {{-- <div class="form-check">
@@ -319,18 +316,34 @@
                 console.log(val)
             })
 
+            //produk input
+            $(document).ready(function() {
+                $('input[name="jumlah[]"]').on('input', function() {
+                    var productId = $(this).attr('id').replace('_', '');
+                    var inputVal = $(this).val();
+                    var stokVal = $('input[data-input-id="stok' + productId + '"]').val();
+                    var $validDiv = $('#valid_' + productId);
+
+                    if (parseInt(inputVal) > parseInt(stokVal)) {
+                        $('#submitButton').prop('disabled', true);
+                        $validDiv.removeClass('d-none');
+                    } else {
+                        $('#submitButton').prop('disabled', false);
+                        $validDiv.addClass('d-none');
+                    }
+                });
+            });
+
             // emp input
             $('#stiker').change(function() {
                 if ($(this).is(':checked')) {
                     // Checkbox is checked
                     $('#stikerInput').prop('disabled', false);
                     $('#stikerInput').val('0');
-                    // Perform your desired actions here
                 } else {
                     // Checkbox is unchecked
                     $('#stikerInput').prop('disabled', true);
                     $('#stikerInput').val('');
-                    // Perform your desired actions here
                 }
             });
             $('#plano').change(function() {

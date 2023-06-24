@@ -124,7 +124,8 @@ class SalesController extends Controller
      * Halaman Stok Jalan
      */
     public function stokJalanPage() {
-        dd($this->getStokUser());
+        // dd($this->getCarriedStok());
+        // dd($this->getStokUser());
         $barang = $this->getStokUser();
         $req = $this->isRequest(auth()->user()->id, Carbon::now()->format('Y-m-d'));
         $konfirmasi = $this->isKonfirmasi(auth()->user()->id, Carbon::now()->format('Y-m-d'));
@@ -263,42 +264,15 @@ class SalesController extends Controller
     }
 
     public function postJualLakuCash(Request $request) {
-        // dd($request->all());
-        // $collectReq = collect($request);
-
-        // $distrik = $collectReq->get('id_distrik');
-        // $jumlahProduk = collect($collectReq->get('produk'));
-        // $idProduk = collect($collectReq->get('id_produk'));
-
-        // $att = collect(['id_produk', 'jumlah']);
-        // $produk = $idProduk->combine($jumlahProduk->all());
-
-        // $products = collect([]);
-        // $products->push($att->all());
-
-        // foreach($produk as $p) {
-
-        // }
-
-        // $singleProd = $prod->combine([$idProduk->all(), $jumlahProduk->all()]);
-
-        // dd($products->all());
-
         return app('App\Http\Controllers\PenjualanLakuCashController')->store($request);
-        // return redirect('/user/stok_jalan');
-        // return redirect()->back('App\Http\Controllers\PenjualanLakuCashController')->index();
-
     }
     public function detailJualLakuCash($id_toko) {
         return app('App\Http\Controllers\PenjualanLakuCashController')->detailPenjualan($id_toko);
-        // return redirect('/user/stok_jalan');
-        // return redirect()->back('App\Http\Controllers\PenjualanLakuCashController')->index();
     }
 
     /**
     * Stor Produk
     */
-
     public function requestStorBarang(Request $request) {
         // dd($request->all());
         $user = auth()->user()->id;
@@ -366,6 +340,27 @@ class SalesController extends Controller
 
         return collect($barang);
     }
+
+    /**
+     * Get barang yang dibawa oleh user berdasarkan id_produk
+     * Return Collection.
+     */
+    public function getCarriedStok() {
+        $stocks = $this->getStokUser();
+
+        $keys = collect(['idProduk', 'namaProduk', 'stokSekarang']);
+        $barangDibawa = collect();
+
+        foreach($stocks as $stock) {
+            $temp = $keys->combine(collect([$stock->id_produk, $stock->nama_produk, $stock->stok_sekarang]));
+            $barangDibawa->push($temp->all());
+        }
+
+        return $barangDibawa;
+        // $stocks = app('App\Http\Controllers\PenjualanLakuCashController')->totalCarryProduk(auth()->user()->id, Carbon::now()->format('Y-m-d'));
+        // return collect($stocks);
+    }
+
     public function getStorProduk(){
         $id_user = auth()->user()->id;
         $tanggal = Carbon::now()->format('Y-m-d');
