@@ -3,20 +3,21 @@
     <h2 class="mb-4 mt-4">Penjualan</h2>
     <div class="card mb-4 mt-4">
         <div class="card-header">
-                    @if(!$carryToday)
-                    <button class="btn btn-outline-secondary mb-2" data-bs-toggle="modal" data-bs-target="">
-                        Penjualan
-                    </button>
-                    Ambil stok barang terlebih dahulu!
-                    @elseif($storToday)
-                    <div class="alert alert-info" style="width: fit-content;" role="alert">
-                        Anda sudah melakukan stor hari ini!
-                    </div>
-                    @else
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalPenjualanLakuCash">
-                        Penjualan
-                    </button>
-                    @endif
+            @if (!$carryToday)
+                <button class="btn btn-outline-secondary mb-2" data-bs-toggle="modal" data-bs-target="">
+                    Penjualan
+                </button>
+                Ambil stok barang terlebih dahulu!
+            @elseif($storToday)
+                <div class="alert alert-info" style="width: fit-content;" role="alert">
+                    Anda sudah melakukan stor hari ini!
+                </div>
+            @else
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                    data-bs-target="#modalPenjualanLakuCash">
+                    Penjualan
+                </button>
+            @endif
             <!-- Button trigger modal -->
             {{-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalPenjualanLakuCash">
                 Penjualan
@@ -53,10 +54,11 @@
                             <td>{{ $plk->emp }}</td>
                             <td>
                                 @if ($plk->nama_foto)
-                                    <img src="{{ asset('storage/' . $plk->nama_foto) }}" alt="Foto Absen" style="max-height: 350px; max-width: 200px; width: auto; height: auto;">
+                                    <img src="{{ asset('storage/' . $plk->nama_foto) }}" alt="Foto Absen"
+                                        style="max-height: 350px; max-width: 200px; width: auto; height: auto;">
                                 @else
                                     No Foto
-                                @endif            
+                                @endif
                             </td>
                             <td>{{ $plk->latitude . ',' . $plk->longitude }}</td>
                         </tr>
@@ -143,8 +145,8 @@
                             </div>
                             <div class="mb-3">
                                 <label for="namaToko" class="form-label">Nama Toko</label>
-                                <input type="text" class="form-control" id="namaToko"
-                                    placeholder="Masukan Nama Toko" name="namaToko">
+                                <input type="text" class="form-control" id="namaToko" placeholder="Masukan Nama Toko"
+                                    name="namaToko">
                             </div>
                         </div>
                         <div class="mb-3 d-none" id="notFormIO">
@@ -169,12 +171,12 @@
                         </div>
                         @if (!empty($totalCarryProduk))
                             @foreach ($totalCarryProduk as $dt)
-                                    <div>
-                                        <label for="{{ $dt->id_produk }}" class="form-label">{{ $dt->nama_produk }}</label>
-                                        <input min="0" value="0" type="number" id="{{ $dt->id_produk }}" name="jumlah[]"
-                                            placeholder="{{ $dt->id_produk }}" class="form-control"><br>
-                                        <input type="hidden" name="id_produk[]" value="{{ $dt->id_produk }}">
-                                    </div>
+                                <div>
+                                    <label for="{{ $dt->id_produk }}" class="form-label">{{ $dt->nama_produk }}</label>
+                                    <input min="0" value="0" type="number" id="{{ $dt->id_produk }}"
+                                        name="jumlah[]" placeholder="{{ $dt->id_produk }}" class="form-control"><br>
+                                    <input type="hidden" name="id_produk[]" value="{{ $dt->id_produk }}">
+                                </div>
                             @endforeach
                         @else
                             <!-- Tampilkan pesan jika tidak ada data -->
@@ -208,7 +210,35 @@
                                     Sunscreen
                                 </label>
                             </div> --}}
-                            <div class="form-check">
+                            <label class="form-label">EMP</label><br>
+                            <div class="input-group mb-3">
+                                <div class="input-group-text">
+                                    <input class="form-check-input mt-0" type="checkbox" value=""
+                                        aria-label="Checkbox for following text input" id="stiker">
+                                    <label for="stiker" class="ms-1">Stiker</label>
+                                </div>
+                                <input type="number" class="form-control" aria-label="Text input with checkbox"
+                                    id="stikerInput" disabled name="jumlahEmp[]">
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-text">
+                                    <input class="form-check-input mt-0" type="checkbox" value=""
+                                        aria-label="Checkbox for following text input" id="plano">
+                                    <label for="plano" class="ms-1">Plano</label>
+                                </div>
+                                <input type="number" class="form-control" aria-label="Text input with checkbox"
+                                    id="planoInput" disabled name="jumlahEmp[]">
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-text">
+                                    <input class="form-check-input mt-0" type="checkbox" value=""
+                                        aria-label="Checkbox for following text input" id="sunscreen">
+                                    <label for="sunscreen" class="ms-1">Sunscreen</label>
+                                </div>
+                                <input type="number" class="form-control" aria-label="Text input with checkbox"
+                                    id="sunscreenInput" disabled name="jumlahEmp[]">
+                            </div>
+                            {{-- <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="emp[]" value="stiker" id="stiker">
                                 <label class="form-check-label" for="stiker">
                                     Stiker
@@ -228,23 +258,23 @@
                                     Sunscreen
                                 </label>
                                 <input type="number" id="jumlahSunscreen" name="jumlahEmp[]" value="0" class="form-control">
-                            </div>                            
+                            </div>                             --}}
                         </div>
                         <div>
                             <br><label for="foto" class="form-label">Foto Toko</label>
-                            <input type="file" name="foto" id="foto" class="form-control @error('foto') is-invalid @enderror" required
-                            ><br>
+                            <input type="file" name="foto" id="foto"
+                                class="form-control @error('foto') is-invalid @enderror" required><br>
                             @error('foto')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                            @enderror                 
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
                         <input type="hidden" id="latitudeInput" name="latitude" placeholder="latitude"
                             class="form-control"><br>
                         <input type="hidden" id="longitudeInput" name="longitude" placeholder="longitude"
                             class="form-control"><br>
-                            @if (session('error'))
+                        @if (session('error'))
                             <div class="alert alert-danger">
                                 {{ session('error') }}
                             </div>
@@ -289,6 +319,47 @@
                 let val = $(this).val()
                 console.log(val)
             })
+
+            // emp input
+            $('#stiker').change(function() {
+                if ($(this).is(':checked')) {
+                    // Checkbox is checked
+                    $('#stikerInput').prop('disabled', false);
+                    $('#stikerInput').val('0');
+                    // Perform your desired actions here
+                } else {
+                    // Checkbox is unchecked
+                    $('#stikerInput').prop('disabled', true);
+                    $('#stikerInput').val('');
+                    // Perform your desired actions here
+                }
+            });
+            $('#plano').change(function() {
+                if ($(this).is(':checked')) {
+                    // Checkbox is checked
+                    $('#planoInput').prop('disabled', false);
+                    $('#planoInput').val('0');
+                    // Perform your desired actions here
+                } else {
+                    // Checkbox is unchecked
+                    $('#planoInput').prop('disabled', true);
+                    $('#planoInput').val('');
+                    // Perform your desired actions here
+                }
+            });
+            $('#sunscreen').change(function() {
+                if ($(this).is(':checked')) {
+                    // Checkbox is checked
+                    $('#sunscreenInput').prop('disabled', false);
+                    $('#sunscreenInput').val('0');
+                    // Perform your desired actions here
+                } else {
+                    // Checkbox is unchecked
+                    $('#sunscreenInput').prop('disabled', true);
+                    $('#sunscreenInput').val('');
+                    // Perform your desired actions here
+                }
+            });
         });
-    </script> 
+    </script>
 @endsection

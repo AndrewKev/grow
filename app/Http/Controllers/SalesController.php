@@ -124,6 +124,7 @@ class SalesController extends Controller
      * Halaman Stok Jalan
      */
     public function stokJalanPage() {
+        dd($this->getStokUser());
         $barang = $this->getStokUser();
         $req = $this->isRequest(auth()->user()->id, Carbon::now()->format('Y-m-d'));
         $konfirmasi = $this->isKonfirmasi(auth()->user()->id, Carbon::now()->format('Y-m-d'));
@@ -201,7 +202,7 @@ class SalesController extends Controller
                 $jumlah = $request->jumlah[$i];
                 // dd($id_produk);
                 // Mendapatkan stok awal di gudang kecil
-                $stokAwal = DB::select("SELECT stok FROM gudang_kecil WHERE id_produk = '$id_produk'")[0]->stok;  
+                $stokAwal = DB::select("SELECT stok FROM gudang_kecil WHERE id_produk = '$id_produk'")[0]->stok;
                 // dd($stokAwal);
 
                 // Menghitung stok setelah pengembalian
@@ -209,7 +210,7 @@ class SalesController extends Controller
                 // dd($stokSekarang);
 
                 // Update stok di gudang kecil
-                DB::update("UPDATE `gudang_kecil` 
+                DB::update("UPDATE `gudang_kecil`
                         SET `stok` = $stokSekarang
                         WHERE `id_produk` = '$id_produk'");
                 app('App\Http\Controllers\HistoryRequestSalesController')->konfirmasiSales($request, 'sales tolak', $i);
@@ -318,7 +319,7 @@ class SalesController extends Controller
                     ]
                 );
 
-                DB::update("UPDATE `gudang_kecil` 
+                DB::update("UPDATE `gudang_kecil`
                         SET `stok` = `stok` + :stok
                         WHERE `id_produk` = :id_produk", [
                             'stok' => (int) $request->stok_sekarang[$i],
@@ -363,7 +364,7 @@ class SalesController extends Controller
         JOIN users ON c.id_user = users.id
         WHERE c.id_user = '$id_user' AND c.tanggal_carry BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59';");
 
-        return $barang;
+        return collect($barang);
     }
     public function getStorProduk(){
         $id_user = auth()->user()->id;

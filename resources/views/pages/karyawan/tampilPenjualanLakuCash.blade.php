@@ -6,7 +6,7 @@
             Kembali
         </a>
     </div>
-    
+
     <div class="card mb-4 mt-4">
         <div class="card-header">
             <h2>Detail Penjualan</h2>
@@ -38,34 +38,35 @@
                         </tr>
                         @php
                             $no++;
-                            $total += ($dt->jumlah_produk * $dt->harga_toko);
-                            $totalbeli += ($dt->jumlah_produk);
+                            $total += $dt->jumlah_produk * $dt->harga_toko;
+                            $totalbeli += $dt->jumlah_produk;
                         @endphp
-                    @endforeach     
+                    @endforeach
                 </tbody>
                 <tfoot>
                     <tr>
                         <th colspan="4">Total</th>
                         <th>{{ $total }}</th>
                     </tr>
-                </tfoot>     
+                </tfoot>
             </table>
         </div>
-        
+
 
     </div>
 
     <div style="text-align: right;">
         <label style="display: inline-block; width: 150px; font-weight: bold; text-align: left;"><b>Total Beli</b></label>
         <input type="text" style="text-align: left;" value="{{ $totalbeli }}" disabled>
-      </div>
-      <br>
-      <div style="text-align: right;">
+    </div>
+    <br>
+    <div style="text-align: right;">
         <label style="display: inline-block; width: 150px; font-weight: bold; text-align: left;"><b>Total Harga</b></label>
-        <input type="text" style="text-align: left;" value="Rp {{ number_format($total, 0, ',', '.') }}" disabled><br><br>
-      </div>
-      
-          
+        <input type="text" style="text-align: left;" value="Rp {{ number_format($total, 0, ',', '.') }}"
+            disabled><br><br>
+    </div>
+
+
 
     <script src="{{ asset('js/custom.js') }}"></script>
     {{-- <script type="text/javascript">
