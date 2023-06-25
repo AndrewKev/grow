@@ -86,6 +86,7 @@
                         <label for="telepon" class="form-label">Telepon</label>
                         <input type="text" class="form-control" id="telepon" placeholder="Masukan No Telepon"
                             value="-" required>
+                        <input type="hidden" id="wsCode" name="wsCode">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Jenis SPO</label><br>
@@ -107,21 +108,29 @@
                     </div>
                     <div class="mb-3">
                         <label for="noNota" class="form-label">Nomor Nota</label>
-                        <input type="text" class="form-control" id="noNota" placeholder=""
-                            value="JOG/BTL/001/001" readonly>
+                        <input type="text" class="form-control" id="noNota" placeholder="" value="-"
+                            readonly>
                     </div>
                     @if (!empty($totalCarryProduk))
-                            @foreach ($totalCarryProduk as $dt)
-                                    <div>
-                                        <label for="{{ $dt->id_produk }}" class="form-label">{{ $dt->nama_produk }}</label>
-                                        <input min="0" value="0" type="number" id="{{ $dt->id_produk }}" name="jumlah[]"
-                                            placeholder="{{ $dt->id_produk }}" class="form-control"><br>
-                                        <input type="hidden" name="id_produk[]" value="{{ $dt->id_produk }}">
-                                    </div>
-                            @endforeach
-                        @else
-                            <div>Data tidak ditemukan.</div>
-                        @endif
+                        @foreach ($totalCarryProduk as $dt)
+                            <div class="mb-3">
+                                <label for="{{ $dt['idProduk'] }}" class="form-label">{{ $dt['namaProduk'] }}</label>
+                                <input min="0" value="0" type="number" id="_{{ $dt['idProduk'] }}"
+                                    name="jumlah[]" placeholder="{{ $dt['idProduk'] }}" class="form-control">
+                                <div>
+                                    <span class="text-success">Stok produk ini : {{ $dt['stokSekarang'] }}</span>
+                                </div>
+                                <div class="d-none" id="valid_{{ $dt['idProduk'] }}">
+                                    <span class="text-danger">Stok tidak cukup</span>
+                                </div>
+                                <input type="hidden" data-input-id="stok{{ $dt['idProduk'] }}"
+                                    value="{{ $dt['stokSekarang'] }}">
+                                <input type="hidden" name="id_produk[]" value="{{ $dt['idProduk'] }}">
+                            </div>
+                        @endforeach
+                    @else
+                        <div>Data tidak ditemukan.</div>
+                    @endif
                     <div class="mb-3">
                         <label class="form-label">EMP</label><br>
                         <div class="input-group mb-3">
@@ -169,6 +178,9 @@
     <script src="{{ asset('js/custom.js') }}"></script>
     <script>
         $(document).ready(function() {
+            let distrik = '';
+            let noNota = '';
+            let wsCode = '000';
             // Dropdown
             // Populate the first dropdown
             $.ajax({
@@ -189,10 +201,15 @@
             // Handle the change event of the first dropdown
             $("#dropdownDistrik").change(function() {
                 let selectedOption = $(this).val();
+                distrik = selectedOption;
 
                 // Clear the options in the second dropdown
                 $("#dropdownToko").empty();
                 $("#dropdownToko").append('<option selected disabled>Pilih Toko</option>');
+                $('#radioTokoBaru').prop('checked', false);
+
+                noNota = `JOG/${distrik}/000/000`;
+                $('#noNota').val(noNota);
 
                 // Fetch the dependent options for the selected option
                 $.ajax({
@@ -212,7 +229,7 @@
                 });
             });
 
-            $("#dropdownToko").change(function() {
+            $("#dropdownToko").on('change', function() {
                 let idToko = $(this).val();
 
                 // Fetch the dependent options for the selected option
@@ -224,13 +241,40 @@
                         $.each(data, function(key, value) {
                             $('#alamat').val(value.alamat);
                             $('#telepon').val(value.telepon);
+                            wsCode = value.ws;
+                            // wsCode = $('#wsCode').val(value.ws);
+                            noNota = `JOG/${distrik}/${wsCode}/${value.aktivasi}`;
+                            $('#noNota').val(noNota);
                         });
                     },
                 });
+
+                // wsCode = $('#wsCode').val();
+                // $('#wsCode').on('input', function() {
+                // })
             });
             // End Dropdown
 
+            //produk input
+            // $(document).ready(function() {
+            $('input[name="jumlah[]"]').on('input', function() {
+                var productId = $(this).attr('id').replace('_', '');
+                var inputVal = $(this).val();
+                var stokVal = $('input[data-input-id="stok' + productId + '"]').val();
+                var $validDiv = $('#valid_' + productId);
+
+                if (parseInt(inputVal) > parseInt(stokVal)) {
+                    $('#submitButton').prop('disabled', true);
+                    $validDiv.removeClass('d-none');
+                } else {
+                    $('#submitButton').prop('disabled', false);
+                    $validDiv.addClass('d-none');
+                }
+            });
+            // });
+
             $('#radioTokoBaru').change(function() {
+                let lastWs = '000';
                 if ($(this).is(':checked')) {
                     $('#inputTokoBaru').removeClass('d-none');
                     $('#inputTokoLama').addClass('d-none');
@@ -238,6 +282,18 @@
                     $('#divTelepon').removeClass('d-none');
                     $('#alamat').val('');
                     $('#telepon').val('');
+
+                    $.ajax({
+                        url: "get_last_ws/" + distrik,
+                        type: "GET",
+                        dataType: "json",
+                        success: function(data) {
+                            lastWs = data;
+                            noNota = `JOG/${distrik}/${lastWs}/001`;
+                            $('#noNota').val(noNota);
+                        },
+                    });
+
                 }
             });
             $('#radioTokoLama').change(function() {
@@ -290,14 +346,13 @@
             });
         });
 
-        document.getElementById("dropdownDistrik").addEventListener("change", function() {
-        var selectedDistrik = this.value;
+        // document.getElementById("dropdownDistrik").addEventListener("change", function() {
+        //     var selectedDistrik = this.value;
 
-        // Mengubah nilai kedua pada nomor nota sesuai dengan distrik yang dipilih
-        var noNotaElement = document.getElementById("noNota");
-        var noNotaValue = "JOG/" + selectedDistrik + "/001/001";
-        noNotaElement.value = noNotaValue;
-        });
-
+        //     // Mengubah nilai kedua pada nomor nota sesuai dengan distrik yang dipilih
+        //     var noNotaElement = document.getElementById("noNota");
+        //     var noNotaValue = "JOG/" + selectedDistrik + "/001/001";
+        //     noNotaElement.value = noNotaValue;
+        // });
     </script>
 @endsection

@@ -264,12 +264,12 @@ class SPOController extends Controller
      */
 
     public function totalCarryProduk($id_user, $tanggal) {
-        $cek = DB::select("SELECT * 
-                            FROM `carry_produk` as c 
+        $cek = DB::select("SELECT *
+                            FROM `carry_produk` as c
                             JOIN products AS p ON p.id_produk = c.id_produk
-                            WHERE id_user = '$id_user' 
+                            WHERE id_user = '$id_user'
                             AND tanggal_carry BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59'");
-    
+
         return $cek;
     }
 
@@ -277,7 +277,10 @@ class SPOController extends Controller
      * Halaman Penjualan SPO
      */
     public function penjualanSPO(){
-        $totalCarryProduk = $this->totalCarryProduk(auth()->user()->id, Carbon::now()->format('Y-m-d'));
+        // $totalCarryProduk = $this->totalCarryProduk(auth()->user()->id, Carbon::now()->format('Y-m-d'));
+        $totalCarryProduk = app('App\Http\Controllers\SalesController')->getCarriedStok();
+        // dd($this->getAlamatToko(4));
+        // dd($this->getLastWsCode('BTL'));
         return view('pages.spo.tampilPenjualanSPO', compact('totalCarryProduk'));
     }
 
@@ -347,7 +350,7 @@ class SPOController extends Controller
         if (!empty($request->emp)) {
             foreach ($request->emp as $index => $e) {
                 $em = $request->jumlahEmp[$index];
-                    $emp .= $e . '('.$em.')'.'; '; 
+                    $emp .= $e . '('.$em.')'.'; ';
             // Ambil data 'emp' dari tabel berdasarkan kolom 'jenis'
             $empData = Emp::where('jenis', $e)->first();
 
@@ -355,7 +358,7 @@ class SPOController extends Controller
             $updatedJumlah = $empData->jumlah - $em;
 
             // Perbarui (update) nilai kolom 'jumlah' dalam tabel 'emp'
-            $empData->update(['jumlah' => $updatedJumlah]);   
+            $empData->update(['jumlah' => $updatedJumlah]);
             }
             // dd($emp);
         }
@@ -395,8 +398,8 @@ class SPOController extends Controller
                 }
             }
             // Lakukan update pada tabel CarryProduk
-            DB::update("UPDATE carry_produk 
-                        SET stok_sekarang = $produk->stok_sekarang 
+            DB::update("UPDATE carry_produk
+                        SET stok_sekarang = $produk->stok_sekarang
                         WHERE id_produk = '$productId'
                         AND id_user = $id_user
                         AND tanggal_carry BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59'");
@@ -412,7 +415,7 @@ class SPOController extends Controller
 
         if($request->jenis_kunjungan == 'IO') {
             $this->createToko($request);
-            
+
             $toko = $this->getTokoIO($request);
         } else {
             $toko = $this->getToko($request);
@@ -437,11 +440,11 @@ class SPOController extends Controller
                             'latitude' => $request->latitude,
                             'longitude' => $request->longitude,
                             'id_foto' => $foto[0]->id_foto,
-    
+
                         ]
                     );
                 }
-            }            
+            }
         }
         // dd($data);
         return redirect('/spo/penjualan_spo');
@@ -450,6 +453,7 @@ class SPOController extends Controller
     /**
      * Get distrik SPO.
      * Distrik yang tidak memiliki id_user. (sementara)
+     * Return JSON response.
      */
     public function getDistrik() {
         $distrik = DB::select("SELECT * FROM distrik WHERE id_user IS NULL");
@@ -483,18 +487,47 @@ class SPOController extends Controller
     }
 
     /**
+     * Get nomor aktivasi SPO sesuai id_toko.
+     * Return last value aktivasi dari toko tersebut.
+     */
+    public function getLastAktivasi($idToko) {
+        $data = DB::select("SELECT * FROM aktivasi_spo WHERE id_toko = $idToko");
+
+        $aktivasi = collect($data);
+
+        $sortedAktivasi = $aktivasi->sortBy('aktivasi', SORT_NATURAL);
+        return $sortedAktivasi->values()->last()->aktivasi;
+    }
+
+    /**
+     * Get WS code pada distrik tertentu.
+     * Return JSON response last value WS code dari distrik tersebut.
+     */
+    public function getLastWsCode($distrik) {
+        $data = DB::select("SELECT aspo.*, ts.*
+            FROM aktivasi_spo aspo
+            JOIN toko_spo ts ON aspo.id_toko = ts.id
+            WHERE ts.id_distrik = '$distrik'");
+
+        $sortedWs = collect($data)->sortBy('ws', SORT_NATURAL)->values();
+        $result = $sortedWs->last()->ws;
+        return response()->json($result);
+        // return $result;
+    }
+
+    /**
      * Get alamat dari toko berdasarkan id_toko.
-     * Return Collection.
+     * Return JSON response.
      */
     public function getAlamatToko($idToko) {
         $toko = $this->getAllToko()->where('id', $idToko);
-        $collection = collect();
+        $aktivasi = $this->getLastAktivasi($idToko);
+        $value = $toko->values();
 
-        foreach ($toko as $tk) {
-            $collection->push($tk);
-        }
+        $data = collect($value->get(0));
+        $data->put('aktivasi', $aktivasi);
 
-        return response()->json($collection);
+        return response()->json([$data]);
     }
 
 }

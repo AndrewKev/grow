@@ -251,6 +251,7 @@ Route::group(
         Route::get('/get_distrik', 'getDistrik');
         Route::get('/get_toko/{idDistrik}', 'getTokoByDistrik');
         Route::get('/get_alamat/{idToko}', 'getAlamatToko');
+        Route::get('/get_last_ws/{idDistrik}', 'getLastWsCode');
 
     }
 );
