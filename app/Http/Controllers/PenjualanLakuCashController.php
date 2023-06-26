@@ -193,7 +193,7 @@ class PenjualanLakuCashController extends Controller
                     $emp .= $e . '('.$em.')'.'; ';
             // Ambil data 'emp' dari tabel berdasarkan kolom 'jenis'
             $empData = Emp::where('jenis', $e)->first();
-
+            // dd($empData);
             // Lakukan pengurangan pada kolom 'jumlah'
             $updatedJumlah = $empData->jumlah - $em;
 
@@ -338,11 +338,21 @@ class PenjualanLakuCashController extends Controller
     }
 
     public function createToko($req) {
+        $id_routing = $req->routing;
+        // dd($id_routing);
+        $lastMapping = Toko::where('id_routing', $id_routing)->max('mapping');
+        // dd($lastMapping);
+        $mapping = $lastMapping ? $lastMapping + 1 : 1;
+        // dd($mapping);
+         // dd($req->all());
         Toko::create(
             [
                 'id_routing' => $req->routing,
                 'id_kunjungan' => $req->jenis_kunjungan,
-                'nama_toko' => $req->namaToko
+                'nama_toko' => $req->namaToko,
+                'latitude' =>$req->latitude,
+                'longitude' =>$req->longitude,
+                'mapping' =>$mapping
             ]
         );
     }

@@ -14,24 +14,27 @@ class TokoSeeder extends Seeder
      */
     public function run(): void
     {
-        // DB::table('toko')->delete();
-        // $csvData = fopen(base_path('database/csv/namaToko.csv'), 'r');
-        // $transRaw = true;
+        DB::table('toko')->delete();
+        $csvData = fopen(base_path('database/csv/namaTokoMapping.csv'), 'r');
+        $transRaw = true;
 
-        // while (($data = fgetcsv($csvData, 555, ',')) !== false) {
-        //     if (! $transRaw) {
-        //         DB::table('toko')->insert([
-        //             'id_routing' => $data[0],
-        //             'nama_toko' => $data[1],
-        //             'id_kunjungan' => $data[2],
-        //             'created_at' => Carbon::now(),
-        //             'updated_at' => Carbon::now()
-        //         ]);
-        //     }
-        //     $transRaw = false;
-        // }
+        while (($data = fgetcsv($csvData, 555, ',')) !== false) {
+            if (! $transRaw) {
+                DB::table('toko')->insert([
+                    'id_routing' => $data[0],
+                    'nama_toko' => (!empty($data[1]) ? $data[1] : null),
+                    'id_kunjungan' => (!empty($data[2]) ? $data[2] : null),
+                    'latitude' => (!empty($data[3]) ? $data[3] : null),
+                    'longitude' => (!empty($data[4]) ? $data[4] : null),
+                    'mapping' => (!empty($data[5]) ? $data[5] : null),
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now()
+                ]);
+            }
+            $transRaw = false;
+        }
 
-        // fclose($csvData);
+        fclose($csvData);
 
         // DB::table('toko')->insert(
         //     [

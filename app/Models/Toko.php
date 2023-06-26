@@ -12,7 +12,10 @@ class Toko extends Model
     protected $fillable = [
         'id_routing',
         'id_kunjungan',
-        'nama_toko'
+        'nama_toko',
+        'latitude',
+        'longitude',
+        'mapping'
 
     ];
 }

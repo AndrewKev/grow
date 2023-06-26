@@ -209,7 +209,7 @@
                             <label class="form-label">EMP</label><br>
                             <div class="input-group mb-3">
                                 <div class="input-group-text">
-                                    <input class="form-check-input mt-0" type="checkbox" value=""
+                                    <input class="form-check-input mt-0" type="checkbox" name="emp[]" value="stiker"
                                         aria-label="Checkbox for following text input" id="stiker">
                                     <label for="stiker" class="ms-1">Stiker</label>
                                 </div>
@@ -218,7 +218,7 @@
                             </div>
                             <div class="input-group mb-3">
                                 <div class="input-group-text">
-                                    <input class="form-check-input mt-0" type="checkbox" value=""
+                                    <input class="form-check-input mt-0" type="checkbox" name="emp[]" value="plano"
                                         aria-label="Checkbox for following text input" id="plano">
                                     <label for="plano" class="ms-1">Plano</label>
                                 </div>
@@ -227,7 +227,7 @@
                             </div>
                             <div class="input-group mb-3">
                                 <div class="input-group-text">
-                                    <input class="form-check-input mt-0" type="checkbox" value=""
+                                    <input class="form-check-input mt-0" type="checkbox" name="emp[]" value="sunscreen"
                                         aria-label="Checkbox for following text input" id="sunscreen">
                                     <label for="sunscreen" class="ms-1">Sunscreen</label>
                                 </div>
