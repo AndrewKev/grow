@@ -15,7 +15,7 @@ class TokoSPOSeeder extends Seeder
      */
     public function run(): void
     {
-        $csvData = fopen(base_path('database/csv/namaTokoSPO.csv'), 'r');
+        $csvData = fopen(base_path('database/csv/NamaTokoRevisi.csv'), 'r');
         $transRaw = true;
 
         while (($data = fgetcsv($csvData, 555, ',')) !== false) {
