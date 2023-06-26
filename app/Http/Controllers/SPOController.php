@@ -13,6 +13,7 @@ use App\Models\StorProduk;
 use App\Models\RequestStorBarang;
 use App\Models\RincianUang;
 use App\Models\GudangKecil;
+use App\Models\AktivasiSPO;
 use App\Http\Controllers\SalesController;
 
 use Illuminate\Http\Request;
@@ -373,6 +374,23 @@ class SPOController extends Controller
         );
     }
 
+    public function getLastToko(){
+        $toko = DB::select("SELECT * FROM `toko_spo` ORDER BY created_at DESC LIMIT 1");
+        $collectToko = collect($toko);
+        return $collectToko;}
+
+    public function createAktivasi($req) {
+        // dd($req->all());
+        $toko = $this->getLastToko()->first();
+        // dd($toko);
+        AktivasiSPO::create(
+            [
+                'id_toko' => $toko->id,
+                'aktivasi' => $req->nomorAktivasi,
+            ]
+        );
+    }
+
     /**
      * Mengambil Data Toko Baru
      */
@@ -391,7 +409,7 @@ class SPOController extends Controller
      * Mengambil Data Toko Lama
      */
     public function getTokoLama($req) {
-        dd($request->all());
+        // dd($request->all());
         $toko = DB::select("SELECT * FROM `toko_spo`
                             WHERE id_distrik = '$req->distrik_spo'
                             AND nama_toko = '$req->inputTokoLama'
@@ -505,12 +523,15 @@ class SPOController extends Controller
         if($request->jenisToko == 'TokoBaru') {
             $this->createToko($request);
 
+            $this->createAktivasi($request);
+
             $toko = $this->getTokoBaru($request);
+            $id_toko = $toko[0]->id;
         } else {
-            $toko = $this->getTokoLama($request);
+            $id_toko = $request->inputTokoLama;
         }
 
-        $id_toko = $toko[0]->id;
+        
         // dd($request->all());
         for ($i = 0; $i < count($request->id_produk); $i++) {
             if ($request->jumlah[$i] != '0') {
@@ -780,8 +801,11 @@ class SPOController extends Controller
 
         $sortedWs = collect($data)->sortBy('ws', SORT_NATURAL)->values();
         $result = $sortedWs->last()->ws;
-        return response()->json($result);
-        // return $result;
+
+        $inc = (int)$result + 1;
+        $incResult = sprintf('%03d', $inc);
+        return response()->json($incResult);
+        // return $data;
     }
 
     /**

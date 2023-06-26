@@ -3,7 +3,7 @@
     <h2 class="mb-4 mt-4">Penjualan</h2>
     <div class="card mb-4 mt-4">
         <div class="card-header">
-            @if (!$carryToday)
+            {{-- @if (!$carryToday)
                 <button class="btn btn-outline-secondary mb-2" data-bs-toggle="modal" data-bs-target="">
                     Penjualan
                 </button>
@@ -12,11 +12,11 @@
                 <div class="alert alert-info" style="width: fit-content;" role="alert">
                     Anda sudah melakukan stor hari ini!
                 </div>
-            @else
+            @else --}}
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalPenjualan">
                     Penjualan
                 </button>
-            @endif
+            {{-- @endif --}}
         </div>
         <div class="card-body">
             <table id="datatablesSimple">
@@ -113,7 +113,6 @@
                         <label for="telepon" class="form-label">Telepon</label>
                         <input type="text" class="form-control" id="telepon" name="telepon" placeholder="Masukan No Telepon"
                             value="-" required>
-                        <input type="hidden" id="wsCode" name="wsCode">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Jenis SPO</label><br>
@@ -207,6 +206,8 @@
                             class="form-control"><br>
                     <input type="hidden" id="longitudeInput" name="longitude" placeholder="longitude"
                             class="form-control"><br>
+                    <input type="hidden" id="wsCode" name="wsCode">
+                    <input type="hidden" id="nomorAktivasi" name="nomorAktivasi">
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
@@ -282,6 +283,8 @@
                         $.each(data, function(key, value) {
                             $('#alamat').val(value.alamat);
                             $('#telepon').val(value.telepon);
+                            $('#wsCode').val(value.ws);
+                            $('#nomorAktivasi').val(value.aktivasi);
                             wsCode = value.ws;
                             // wsCode = $('#wsCode').val(value.ws);
                             noNota = `JOG/${distrik}/${wsCode}/${value.aktivasi}`;
@@ -332,7 +335,9 @@
                         success: function(data) {
                             lastWs = data;
                             noNota = `JOG/${distrik}/${lastWs}/001`;
+                            $('#wsCode').val(lastWs);
                             $('#noNota').val(noNota);
+                            $('#nomorAktivasi').val('001');
                         },
                     });
 
