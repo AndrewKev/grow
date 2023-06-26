@@ -248,10 +248,21 @@ Route::group(
         // Penjualan SPO
         Route::get('/penjualan_spo', 'penjualanSPO');
         Route::post('/penjualan_spo', 'postPenjualanSPO');
+        Route::get('/penjualan_spo/{id_toko}', 'detailJualSPO');
         Route::get('/get_distrik', 'getDistrik');
         Route::get('/get_toko/{idDistrik}', 'getTokoByDistrik');
         Route::get('/get_alamat/{idToko}', 'getAlamatToko');
         Route::get('/get_last_ws/{idDistrik}', 'getLastWsCode');
+
+        // Stor Produk ke admin 2
+        Route::get('/stor_produk', 'tampilStorProduk');
+        Route::post('/request_stor_barang', 'requestStorBarang');
+
+        // Stor Keuangan ke admin 1
+        Route::post('/request_stor_uang', 'requestStorUang');
+
+        // Selesai stor produk
+        Route::post('/insert_produk', 'insertStorProduk');
 
     }
 );

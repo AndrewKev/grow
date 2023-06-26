@@ -13,8 +13,10 @@
                     <tr>
                         <th>No</th>
                         <th>Tanggal</th>
-                        <th>Routing</th>
+                        <th>Distrik</th>
                         <th>Nama Toko</th>
+                        <th>Nomor Nota</th>
+                        <th>Jenis Spo</th>
                         <th>Keterangan</th>
                         <th>Emp</th>
                         <th>Foto</th>
@@ -22,17 +24,31 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @php
+                        $no = 1;
+                    @endphp
+                    @foreach ($getPenjualanSPO as $item)
                     <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td>{{ $no }}</td>
+                        <td>{{ $item->created_at }}</td>
+                        <td>{{ $item->id_distrik }}</td>
+                        <td><a href="penjualan_spo/{{ $item->id }}">{{ $item->nama_toko }}</a></td>
+                        <td>{{ $item->nomor_spo }}</td>
+                        <td>{{ $item->jenis_spo }}</td>
+                        <td>{{ $item->keterangan }}</td>
+                        <td>{{ $item->emp }}</td>
                         <td>
+                            @if ($item->nama_foto)
+                                <img src="{{ asset('storage/' . $item->nama_foto) }}" alt="Foto SPO"
+                                    style="max-height: 350px; max-width: 200px; width: auto; height: auto;">
+                            @else
+                                No Foto
+                            @endif
                         </td>
-                        <td></td>
+                        <td>{{ $item->latitude . ',' . $item->longitude }}</td>
                     </tr>
+
+                    @endforeach
                 </tbody>
             </table>
         </div>
@@ -41,7 +57,7 @@
     <!-- Modal -->
     <div class="modal fade" id="modalPenjualan" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-            <form class="modal-content" action="/spo/penjualan_spo" method="post">
+            <form class="modal-content" action="/spo/penjualan_spo" enctype="multipart/form-data" method="post">
                 @csrf
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Penjualan</h1>
@@ -50,7 +66,7 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="distrik" class="form-label">Distrik</label>
-                        <select class="form-select" aria-label="Default select example" id="dropdownDistrik">
+                        <select class="form-select" aria-label="Default select example" id="dropdownDistrik" name="distrik_spo">
                             <option selected disabled>Pilih Distrik</option>
                             {{-- <option value=""></option> --}}
                         </select>
@@ -58,33 +74,33 @@
                     <div class="mb-3">
                         <label class="form-label">Jenis Toko</label><br>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="jenisToko" id="radioTokoBaru"
+                            <input class="form-check-input" type="radio" name="jenisToko" value="TokoBaru" id="radioTokoBaru"
                                 value="tokoBaru">
                             <label class="form-check-label" for="radioTokoBaru">Toko Baru</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="jenisToko" id="radioTokoLama"
+                            <input class="form-check-input" type="radio" name="jenisToko" value="TokoLama" id="radioTokoLama"
                                 value="tokoLama">
                             <label class="form-check-label" for="radioTokoLama">Toko Lama</label>
                         </div>
                     </div>
                     <div class="mb-3 d-none" id="inputTokoBaru">
                         <label for="namaToko" class="form-label">Nama Toko</label>
-                        <input type="text" class="form-control" id="namaToko" placeholder="Masukan Nama Toko" required>
+                        <input type="text" class="form-control" name = "inputTokoBaru" id="namaToko" placeholder="Masukan Nama Toko" required>
                     </div>
                     <div class="mb-3 d-none" id="inputTokoLama">
                         <label class="form-label">Nama Toko</label>
-                        <select class="form-select" aria-label="Default select example" id="dropdownToko">
+                        <select class="form-select" aria-label="Default select example" name = "inputTokoLama" id="dropdownToko">
                             <option selected disabled>Pilih Toko</option>
                         </select>
                     </div>
                     <div class="mb-3 d-none" id="divAlamat">
                         <label for="alamat" class="form-label">Alamat</label>
-                        <input type="text" class="form-control" id="alamat" placeholder="Masukan Alamat" required>
+                        <input type="text" class="form-control" id="alamat" name="alamat_spo" placeholder="Masukan Alamat" required>
                     </div>
                     <div class="mb-3 d-none" id="divTelepon">
                         <label for="telepon" class="form-label">Telepon</label>
-                        <input type="text" class="form-control" id="telepon" placeholder="Masukan No Telepon"
+                        <input type="text" class="form-control" id="telepon" name="telepon" placeholder="Masukan No Telepon"
                             value="-" required>
                         <input type="hidden" id="wsCode" name="wsCode">
                     </div>
@@ -108,7 +124,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="noNota" class="form-label">Nomor Nota</label>
-                        <input type="text" class="form-control" id="noNota" placeholder="" value="-"
+                        <input type="text" class="form-control" id="noNota" placeholder="" name="nomor_nota" value="-"
                             readonly>
                     </div>
                     @if (!empty($totalCarryProduk))
@@ -164,8 +180,22 @@
                     <div>
                         <label for="keterangan" class="form-label">Keterangan</label>
                         <input id="keterangan" type="text" name="keterangan" placeholder="Masukan Keterangan"
-                            class="form-control" required><br>
+                            class="form-control" required>
                     </div>
+                    <div>
+                        <br><label for="foto" class="form-label">Foto Toko</label>
+                        <input type="file" name="foto" id="foto"
+                            class="form-control @error('foto') is-invalid @enderror" required>
+                        @error('foto')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    <input type="hidden" id="latitudeInput" name="latitude" placeholder="latitude"
+                            class="form-control"><br>
+                    <input type="hidden" id="longitudeInput" name="longitude" placeholder="longitude"
+                            class="form-control"><br>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
