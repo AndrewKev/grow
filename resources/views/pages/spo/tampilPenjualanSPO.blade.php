@@ -312,6 +312,7 @@
                     $('#divTelepon').removeClass('d-none');
                     $('#alamat').val('');
                     $('#telepon').val('');
+                    $('#namaToko').attr('required', 'required');
 
                     $.ajax({
                         url: "get_last_ws/" + distrik,
@@ -329,6 +330,8 @@
             $('#radioTokoLama').change(function() {
                 if ($(this).is(':checked')) {
                     $('#inputTokoBaru').addClass('d-none');
+                    $('#namaToko').removeAttr('required');
+                    // $('#inputTokoBaru').prop('disabled', true);
                     $('#inputTokoLama').removeClass('d-none');
                     $('#divAlamat').removeClass('d-none');
                     $('#divTelepon').removeClass('d-none');
