@@ -239,6 +239,7 @@ Route::group(
         // Absensi
         Route::get('/absensi', 'pageAbsensiSPO');
         Route::post('/absensi', 'postAbsensi');
+        Route::post('/absensi_keluar', 'absensiKeluar');
 
         // Stok Jalan
         Route::get('/stok_jalan', 'stokJalanPage');

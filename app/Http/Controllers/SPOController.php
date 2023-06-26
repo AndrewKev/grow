@@ -13,6 +13,7 @@ use App\Models\StorProduk;
 use App\Models\RequestStorBarang;
 use App\Models\RincianUang;
 use App\Models\GudangKecil;
+use App\Http\Controllers\SalesController;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -67,6 +68,20 @@ class SPOController extends Controller
      */
     public function postAbsensi(Request $request) {
         return app('App\Http\Controllers\AbsensiController')->store($request);
+    }
+
+    public function absensiKeluar() {
+        $timeNow = Carbon::now();
+        $lastIdAbsen = $this->getLastAbsen();
+        $target = DB::update("UPDATE `absensi`
+                              SET `waktu_keluar` = '$timeNow'
+                              WHERE `absensi`.`id_absensi` = $lastIdAbsen;");
+
+        return redirect('/spo/absensi');
+    }
+
+    public function getLastAbsen() {
+        return app('App\Http\Controllers\SalesController')->getLastAbsen();
     }
 
     /**
@@ -196,7 +211,7 @@ class SPOController extends Controller
      * Request barang ke admin.
      */
     public function requestBarangStokJalan(Request $request) {
-        dd($request->all());
+        // dd($request->all());
         $keys = collect(['idProduk', 'namaProduk', 'jumlah']);
         $products = collect();
 
@@ -547,8 +562,8 @@ class SPOController extends Controller
         $konfirmasi = app('App\Http\Controllers\SalesController')->isKonfirmasiStorBarang(auth()->user()->id, Carbon::now()->format('Y-m-d'));
         $konfirmasiUang = app('App\Http\Controllers\SalesController')->isKonfirmasiStorUang(auth()->user()->id, Carbon::now()->format('Y-m-d'));
         $storToday = app('App\Http\Controllers\SalesController')->isTodayStorProduk(auth()->user()->id, Carbon::now()->format('Y-m-d'));
-        $carryToday = app('App\Http\Controllers\SalesController')->isCarry(auth()->user()->id, Carbon::now()->format('Y-m-d'));
-        // dd($storproduk);
+        $carryToday = app('App\Http\Controllers\SalesController')->isCarry();
+        // dd($carryToday);
         return view('pages.spo.storprodukspo', compact('storproduk','storPenjualan', 'req', 'reqUang', 'konfirmasi', 'konfirmasiUang', 'storToday', 'carryToday'));
     }
 
