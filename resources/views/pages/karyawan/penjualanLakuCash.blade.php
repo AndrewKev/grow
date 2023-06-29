@@ -30,6 +30,7 @@
                         <th>No</th>
                         <th>Tanggal</th>
                         <th>Routing</th>
+                        <th>Mapping</th>
                         <th>Nama Toko</th>
                         <th>Keterangan</th>
                         <th>Emp</th>
@@ -49,6 +50,7 @@
                             <td>{{ $no }}</td>
                             <td>{{ $plk->created_at }}</td>
                             <td>{{ $plk->nama_routing }}</td>
+                            <td>{{ $plk->mapping }}</td>
                             <td><a href="penjualan_laku_cash/{{ $plk->id_toko }}">{{ $plk->nama_toko }}</a></td>
                             <td>{{ $plk->keterangan }}</td>
                             <td>{{ $plk->emp }}</td>
@@ -155,6 +157,7 @@
                                     <option selected disabled>Pilih Toko</option>
                                     {{-- <option value="namaToko" name="namaToko">namaToko</option> --}}
                                 </select>
+                                <input type="hidden" id="tokoMappingInput" name="toko_mapping">
                             </div>
                         </div>
                         @if (!empty($totalCarryProduk))
@@ -289,6 +292,7 @@
             // Handle the change event of the first dropdown
             $("#routingDropdown").change(function() {
                 var selectedOption = $(this).val();
+
                 console.log(selectedOption)
                 // Clear the options in the second dropdown
                 $("#tokoDropdown").empty();
@@ -304,7 +308,9 @@
                             $("#tokoDropdown").append(
                                 $("<option></option>")
                                 .attr("value", value.id_toko)
-                                .text(value.nama_toko)
+                                // .attr("mapping", value.mapping)
+                                .data("mapping", value.mapping)
+                                .text(value.mapping + ". " + value.nama_toko)
                             );
                         });
                     },
@@ -314,6 +320,11 @@
             $("#tokoDropdown").change(function() {
                 let val = $(this).val()
                 console.log(val)
+
+                let mapping = $(this).find('option:selected').data('mapping');
+                console.log(mapping);
+
+                $("#tokoMappingInput").val(mapping);
             })
 
             //produk input

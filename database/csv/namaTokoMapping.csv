@@ -42,7 +42,7 @@
 1,Irma,R,-7.767609,110.421508,42
 1,Monic,R,-7.769375,110.425978,43
 1,Fitri,R,-7.769962,110.428464,44
-1,Pak badirun,"",-7.776677,110.42962,45
+1,Pak badirun,,-7.776677,110.42962,45
 1,Bu nik,R,-7.777513,110.429475,46
 1,Kayla,R,-7.781365,110.428472,47
 1,Bu ngadiyem,RO,-7.780946,110.424507,48
@@ -944,3 +944,494 @@
 24,Alsa,,"7°48'19""S","110°25'38""E",23
 24,Lancar Jaya,,"7°48'15""S","110°25'28""E",24
 24,Tama,,"7°47'07""S","110°24'36""E",25
+25,Toko siti,,,,1
+25,Toko Sarwiji,,,,2
+25,Toko biaz mart,,,,3
+25,Toko Puja kusuma,,,,4
+25,Toko Karyadi,,,,5
+25,Toko Asnawi,,,,6
+25,Toko restu ibu,,,,7
+25,Toko parman,,,,8
+25,Toko Amanda,,,,9
+25,Toko lestari,,,,10
+25,Antika Mart,,,,11
+25,Toko suparmiyati,,,,12
+25,Via wijaya,,,,13
+25,Ari,,,,14
+26,Toko nenden,,,,1
+26,Toko fortuna�,,,,2
+26,Toko Wiwoho,,,,3
+26,Toko simanjutak 97,,,,4
+26,Toko supiyati,,,,5
+26,Toko shinta,,,,6
+26,Toko Ubaidillah,,,,7
+26,Toko Istiqomah,,,,8
+26,Toko Bekti,,,,9
+26,Toko Jajanan cell,,,,10
+26,Toko ponira,,,,11
+26,Toko Rara cell,,,,12
+26,Toko sumaryanto,,,,13
+26,Toko heri,,,,14
+26,Toko Supardi,,,,15
+26,Toko ijo,,,,16
+26,Soim,,,,17
+26,Toko leo,,,,18
+26,tk 19,,,,19
+26,mitra cell,,,,20
+26,mutiara,,,,21
+26,yanto,,,,22
+26,pak agus,,,,23
+26,edy,,,,24
+27,Toko Restu ibu 2,,,,1
+27,Toko kuncen jaya,,,,2
+27,Toko Remujung,,,,3
+27,Toko marcopolo,,,,4
+27,Toko budikarya,,,,5
+27,Toko Jagat,,,,6
+27,Toko Dolano,,,,7
+27,Toko berkah shofia,,,,8
+27,Toko 289,,,,9
+27,Toko Bu Rita,,,,10
+27,Toko safana,,,,11
+27,Toko anum 3,,,,12
+27,Toko Ngaderi,,,,13
+27,Toko umar,,,,14
+27,Toko firman,,,,15
+27,Toko Nunung,,,,16
+27,Toko untung,,,,17
+27,Toko karunia,,,,18
+27,Toko Dalyadi,,,,19
+27,Toko pak bin,,,,20
+27,Toko budi,,,,21
+27,Toko wikan,,,,22
+27,Toko Wandi,,,,23
+27,Toko bu mur,,,,24
+27,Toko rian,,,,25
+27,Toko Tita jaya,,,,26
+27,Toko migunani,,,,27
+27,Toko Tari,,,,28
+27,Toko Rini,,,,29
+27,barokah,,,,30
+27,madura,,,,31
+27,eli,,,,32
+27,restu ibu 1,,,,33
+27,remujung,,,,34
+27,kembar,,,,35
+27,riro,,,,36
+28,Toko Sedulur�,,,,1
+28,Toko Sinar Barokah,,,,2
+28,Toko pojok,,,,3
+28,Toko srikaton,,,,4
+28,Toko 62�,,,,5
+28,Toko hidup,,,,6
+28,Tomo wiji,,,,7
+28,Toko marman,,,,8
+28,Toko bu sri,,,,9
+28,Toko SPM,,,,10
+28,Toko Agus,,,,11
+28,Toko sinar jaya,,,,12
+28,Toko berkah jaya,,,,13
+28,Toko Gama cell,,,,14
+28,Toko erey,,,,15
+28,Toko sariwangi,,,,16
+28,kurnia,,,,17
+28,Toko sana cell,,,,18
+28,Toko modang jaya,,,,19
+28,Toko Rajawali,,,,20
+28,Toko mario,,,,21
+28,Toko Soi,,,,22
+28,Toko Anugrah,,,,23
+28,Toko tama,,,,24
+28,Toko Rama jaya 3,,,,25
+28,Toko sumber sempurna,,,,26
+28,Toko Pak eko,,,,27
+28,Toko 46,,,,28
+28,Toko Paidi,,,,29
+28,KOPEKA,,,,30
+28,Toko surya inindah,,,,31
+28,Toko Anton,,,,32
+28,jago,,,,33
+28,dharma tirta,,,,34
+28,hengky,,,,35
+28,fera,,,,36
+28,asli,,,,37
+28,asifa,,,,38
+28,waserda54,,,,39
+28,sari binangun,,,,40
+28,rama 6,,,,41
+28,anam,,,,42
+28,sudarman,,,,43
+28,sri rejeki,,,,44
+28,sufyan,,,,45
+28,mangun,,,,46
+28,mujiman,,,,47
+28,tama cell,,,,48
+28,burhan,,,,49
+28,fina,,,,50
+28,riski,,,,51
+28,bu war,,,,52
+28,alfa jaya,,,,53
+28,fahril,,,,54
+28,barokah,,,,55
+28,riska ,,,,56
+28,pojok,,,,57
+29,Toko mimi,,,,1
+29,Toko indo aban,,,,2
+29,Toko selin,,,,3
+29,Toko Silah,,,,4
+29,Tk Syifais,,,,5
+29,Toko Pojok,,,,6
+29,Toko Bintang laundri,,,,7
+29,Toko Cimok,,,,8
+29,Toko SM,,,,9
+29,Toko Lestari,,,,10
+29,Toko kelik,,,,11
+29,Toko Kartika,,,,12
+29,Toko Astuti,,,,13
+29,Toko windy madura,,,,14
+29,Toko damai,,,,15
+29,Toko al faruq,,,,16
+29,Toko akbar,,,,17
+29,Toko Dewi,,,,18
+29,Toko pakde,,,,19
+29,Toko vie cell,,,,20
+29,Toko atun,,,,21
+29,Toko suci,,,,22
+29,Toko Anwar 2,,,,23
+29,Toko andra,,,,24
+29,Toko Mayo,,,,25
+29,Toko rizky,,,,26
+30,Sumarjo,,,,1
+30,Rizky,,,,2
+30,Toko 45,,,,3
+30,Atira 2,,,,4
+30,Bu yani,,,,5
+30,Sekarbima,,,,6
+30,Sumber rezeki,,,,7
+30,Delima,,,,8
+30,Bima sakti Tobecco,,,,9
+30,Toko Rizki,,,,10
+30,Jaelani,,,,11
+30,Teh yuli,,,,12
+30,Toko Rama,,,,13
+30,Ruri,,,,14
+30,Bu rika,,,,15
+30,Al Kausar,,,,16
+30,Borneo Jaya,,,,17
+30,Pengok Jaya,,,,18
+30,Kurnia,,,,19
+30,Jihan,,,,20
+30,Fauzy,,,,21
+30,Rizal,,,,22
+30,Jumadi,,,,23
+30,Mandala,,,,24
+30,Anjar,,,,25
+30,Toko aisyah,,,,26
+30,Mak pon,,,,27
+30,Siti,,,,28
+30,Toko Anugrah,,,,29
+30,Toko Raihan ( MT ),,,,30
+30,Toko Athira�,,,,31
+30,Toko sapen Mart,,,,32
+30,Toko Rahmad,,,,33
+30,Toko hadir�,,,,34
+30,Toko wahyu,,,,35
+30,Toko Verena,,,,36
+30,Toko Luna,,,,37
+30,Toko Endang�,,,,38
+30,Toko arini,,,,39
+30,Toko anik,,,,40
+30,Toko parti,,,,41
+30,yuli,,,,42
+30,risti,,,,43
+30,rika,,,,44
+30,dewi ,,,,45
+30,tolak faizin,,,,46
+30,endro,,,,47
+30,yudi,,,,48
+30,ry saputra,,,,49
+30,hadi,,,,50
+30,pilutas,,,,51
+30,tk 89,,,,52
+30,nurul ,,,,53
+30,kembar,,,,54
+30,pantes baru,,,,55
+30,adil jaya,,,,56
+30,abi,,,,57
+30,srikandi,,,,58
+31,Toko mbak lis,,,,1
+31,Toko widya usaha,,,,2
+31,Aurel 4,,,,3
+31,Toko Sajari,,,,4
+31,Toko berkah rahayu,,,,5
+31,Toko safira,,,,6
+31,Toko Dua Putri,,,,7
+31,Toko 69,,,,8
+31,Toko burhan,,,,9
+31,Toko Tari,,,,10
+31,Toko prapanca,,,,11
+31,Toko guntur syifa,,,,12
+31,Toko arif,,,,13
+31,Toko Al Rahman,,,,14
+31,Toko Maulana Jaya,,,,15
+31,Toko taman Sari,,,,16
+31,Toko bu partinah,,,,17
+31,Toko ramaayang,,,,18
+31,Warung 85,,,,19
+31,Surya abadi,,,,20
+31,Toko Al Madid,,,,21
+31,Toko weny,,,,22
+31,Toko Dahlan,,,,23
+31,harti,,,,24
+31,darno,,,,25
+31,candra,,,,26
+31,wiyos,,,,27
+31,lestari,,,,28
+31,bu wiyono,,,,29
+31,muji,,,,30
+31,rama mart 5,,,,31
+31,rika,,,,32
+31,angk mba win,,,,33
+31,irawan,,,,34
+31,almadid 2,,,,35
+31,alrahman,,,,36
+31,rinjani,,,,37
+31,bangun,,,,38
+31,jaya,,,,39
+31,kita cell,,,,40
+31,hastiyah,,,,41
+31,budi,,,,42
+31,linmi,,,,43
+31,suharti,,,,44
+31,rama jaya 4,,,,45
+31,mini mart,,,,46
+31,bu is,,,,47
+31,lestari,,,,48
+31,tk 11,,,,49
+31,tk 40,,,,50
+31,rama 1,,,,51
+31,bu harjo,,,,52
+31,dariman,,,,53
+31,rama jaya 8,,,,54
+31,sonar,,,,55
+32,Toko kandar,,,,1
+32,Toko Mitra Karya,,,,2
+32,Toko bu atun,,,,3
+32,Toko Lia,,,,4
+32,Toko Nugroho,,,,5
+32,Toko winarti,,,,6
+32,Toko Barokkah Mart,,,,7
+32,Toko Nabila,,,,8
+32,Toko Leo 4b,,,,9
+32,Toko Barokah 99,,,,10
+32,Toko Manggarai,,,,11
+32,Toko Kamto,,,,12
+32,Toko Rizky ruqi,,,,13
+32,Toko Athira,,,,14
+32,Toko Rasty,,,,15
+32,Toko Ayu,,,,16
+32,Toko MYM,,,,17
+32,Toko Kandar,,,,18
+32,SRC Delima,,,,19
+32,Toko putra pojok jaya,,,,20
+32,Toko tolak faizin,,,,21
+32,Happy dafa 2,,,,22
+32,Toko Silva,,,,23
+32,Toko 99,,,,24
+32,Toko Jamila mart 3,,,,25
+32,Toko Prasetyo,,,,26
+32,Toko Sumber rizky,,,,27
+32,Toko adirasa,,,,28
+32,Toko kalimanis,,,,29
+32,Toko barokah,,,,30
+32,Toko sofia,,,,31
+32,Toko nuryati,,,,32
+32,Toko nurul fajri,,,,33
+32,Toko kios cilik,,,,34
+32,Toko azam,,,,35
+32,Toko barokah,,,,36
+32,Toko DK,,,,37
+32,Toko Zaini,,,,38
+32,Toko Harjono,,,,39
+32,Toko asijo,,,,40
+32,Toko Ani,,,,41
+32,Toko wijaya,,,,42
+32,Toko Garda,,,,43
+32,Toko Suwarno,,,,44
+32,Toko Biru,,,,45
+32,Toko Milah,,,,46
+32,Pagi hari Cell,,,,47
+32,anda cell,,,,48
+32,marto,,,,49
+32,tk 91,,,,50
+32,kamto,,,,51
+32,petrus,,,,52
+32,barokah madura,,,,53
+32,lia,,,,54
+32,alifah,,,,55
+32,soponyono,,,,56
+32,ika cell,,,,57
+32,madura,,,,58
+32,rejeki abadi,,,,59
+32,barokah 2,,,,60
+32,putra pojur jaya,,,,61
+32,putra faiz barokah,,,,62
+32,podo rukun,,,,63
+33,Toko barokah 3,,,,1
+33,Toko bu Siti,,,,2
+33,Toko Dilan 1,,,,3
+33,Toko Nikimura,,,,4
+33,Toko ACS,,,,5
+33,Toko bu siti,,,,6
+33,Indah sembako,,,,7
+33,Toko Darno,,,,8
+33,Toko D'Joyos,,,,9
+33,Toko Sekawan,,,,10
+33,Toko Nafa,,,,11
+33,Toko Iskandar,,,,12
+33,Toko Zeera,,,,13
+33,Toko Milik kita,,,,14
+33,Toko Rosyid,,,,15
+33,Toko Iskandar 2,,,,16
+33,Toko Basuki,,,,17
+33,Toko Daud,,,,18
+33,Warung mamake / amin,,,,19
+33,Toko 46,,,,20
+33,Toko dalwan,,,,21
+33,Toko Pujo Mulyono,,,,22
+33,Toko brica,,,,23
+33,Toko prima sehat,,,,24
+33,Toko putra fais barokah,,,,25
+33,Toko karunia,,,,26
+33,Toko libra,,,,27
+33,Damar Wulan,,,,28
+33,Figo,,,,29
+33,bu jami,,,,30
+33,yayan,,,,31
+33,olive,,,,32
+33,beca,,,,33
+33,amin,,,,34
+33,tami,,,,35
+33,karunia,,,,36
+33,dilan 2,,,,37
+33,rejeki abadi,,,,38
+33,milik kita,,,,39
+34,Mbako 88,,,,1
+34,Toko Bu suti,,,,2
+34,Toko guntur syifa 2,,,,3
+34,Toko Fatmah,,,,4
+34,Toko puas,,,,5
+34,Toko Bu tatik,,,,6
+34,Toko bu arum,,,,7
+34,Toko istijaya,,,,8
+34,Warung Yani,,,,9
+34,Harmony minimarket,,,,10
+34,Toko Rama Jaya 5,,,,11
+34,Toko irma,,,,12
+34,Toko S.rahman,,,,13
+34,Toko esti,,,,14
+34,Toko Pojok A5,,,,15
+34,Barokah,,,,16
+34,Toko fani,,,,17
+34,Toko joyo,,,,18
+34,Toko Suharno 2,,,,19
+34,Toko Sudaryanto,,,,20
+34,Toko bu Ida,,,,21
+34,Toko sinmi,,,,22
+34,Anugrah,,,,23
+34,yana,,,,24
+34,darmo,,,,25
+34,puas,,,,26
+34,halima,,,,27
+34,bani,,,,28
+34,barokah madura,,,,29
+34,shonar,,,,30
+35,Toko cahaya pesan,,,,1
+35,Toko fitri,,,,2
+35,Toko Pawiro,,,,3
+35,Toko Zuhra,,,,4
+35,Toko sumber jaya,,,,5
+35,Toko Restu Ibu,,,,6
+35,Toko WARKO,,,,7
+35,Toko shonar,,,,8
+35,Rizky makmur,,,,9
+35,Toko Tukiman,,,,10
+35,Toko Linmy madura,,,,11
+35,Toko Suharno 1,,,,12
+35,Toko Tami,,,,13
+35,Toko Dirjo,,,,14
+35,Toko Madura muhamad halik,,,,15
+35,Toko SRC Pak Tri,,,,16
+35,Toko Anwar 1,,,,17
+35,Toko Sari,,,,18
+35,Toko mutiara pesan,,,,19
+35,Toko Hita,,,,20
+35,Toko 99,,,,21
+35,Toko arba,,,,22
+35,Warung ery,,,,23
+35,Toko Hasanah,,,,24
+35,Warung Madura,,,,25
+35,Warung rahayu,,,,26
+35,Warung pesan jaya Madura,,,,27
+35,Toko iwan,,,,28
+35,Toko cantika,,,,29
+35,Warung sembako berkat ilahi,,,,30
+35,Cahaya baru,,,,31
+35,mbak win,,,,32
+35,praktis,,,,33
+35,tk 89,,,,34
+36,Toko Nur rofid,,,,1
+36,Rokhmi,,,,2
+36,Al barokah,,,,3
+36,Ar rohman,,,,4
+36,Al fahri,,,,5
+36,Bu atun,,,,6
+36,Toko Berkat,,,,7
+36,Toko Soleh,,,,8
+36,Toko Tanti,,,,9
+36,Toko Isna,,,,10
+36,Toko fahmi,,,,11
+36,Toko Naya Cell,,,,12
+36,Toko Aurel 1,,,,13
+36,Toko Nanda,,,,14
+36,Toko wasmi,,,,15
+36,Toko Sumadi,,,,16
+36,Toko barokah 3,,,,17
+36,Toko Yamtinah,,,,18
+36,Toko bu erwe,,,,19
+36,Toko Bu Nur,,,,20
+36,Toko surono,,,,21
+36,Toko Al- barokah,,,,22
+36,Toko widodo,,,,23
+36,Toko madina,,,,24
+36,Toko gatot,,,,25
+36,Toko Rizki,,,,26
+36,Toko pojok 89,,,,27
+36,Toko devi,,,,28
+36,Toko ebes,,,,29
+36,Toko familly,,,,30
+36,Toko bu puji,,,,31
+36,Toko dosis,,,,32
+36,Toko No bond cell,,,,33
+36,murtini,,,,34
+36,dafa,,,,35
+36,fitri,,,,36
+36,tk 53,,,,37
+36,dini,,,,38
+36,panorama,,,,39
+36,adijaya 1,,,,40
+36,bunda yani 2,,,,41
+36,harapan jaya,,,,42
+36,santri mart,,,,43
+36,albarokah 2,,,,44
+36,pojok,,,,45
+36,bu sis,,,,46
+36,darno,,,,47
+36,devi,,,,48
+36,rr kios,,,,49
+36,mini mart,,,,50
+36,rahayu,,,,51
+36,harti,,,,52
+36,pakde menot,,,,53
+36,berkah jaya,,,,54
+36,putra sa,,,,55

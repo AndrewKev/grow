@@ -134,7 +134,31 @@ class UserSeeder extends Seeder
                 'updated_at' => Carbon::now()
             ]
         );
-
+        
+        // Jogja 1
+        DB::table('users')->insert(
+            [
+                'nama' => 'Antok',
+                'username' => 'Antok',
+                'password' => Hash::make('sls005'),
+                'level' => 0, // sales
+                'no_telp' => '123',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ]
+        );
+        // Jogja2
+        DB::table('users')->insert(
+            [
+                'nama' => 'Jaka',
+                'username' => 'Jaka',
+                'password' => Hash::make('sls004'),
+                'level' => 0, // sales
+                'no_telp' => '123',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ]
+        );
         DB::table('users')->insert(
             [
                 'nama' => 'HeadAcc',

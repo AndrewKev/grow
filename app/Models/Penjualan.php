@@ -17,6 +17,7 @@ class Penjualan extends Model
         'id_toko',
         'id_kunjungan',
         'jumlah_produk',
+        'mapping',
         'emp',
         'id_keterangan',
         'id_foto',
