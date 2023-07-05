@@ -19,7 +19,7 @@ class EmpSeeder extends Seeder
         DB::table('emp')->insert(
             [
                 'jenis' => 'stiker',
-                'jumlah' => 0,
+                'jumlah' => 99,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ]
@@ -28,7 +28,7 @@ class EmpSeeder extends Seeder
         DB::table('emp')->insert(
             [
                 'jenis' => 'plano',
-                'jumlah' => 0,
+                'jumlah' => 99,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ]
@@ -37,7 +37,61 @@ class EmpSeeder extends Seeder
         DB::table('emp')->insert(
             [
                 'jenis' => 'sunscreen',
-                'jumlah' => 0,
+                'jumlah' => 99,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ]
+        );
+
+        DB::table('emp')->insert(
+            [
+                'jenis' => 'gelas230ml',
+                'jumlah' => 99,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ]
+        );
+
+        DB::table('emp')->insert(
+            [
+                'jenis' => 'gelas400ml',
+                'jumlah' => 99,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ]
+        );
+
+        DB::table('emp')->insert(
+            [
+                'jenis' => 'tumblr',
+                'jumlah' => 99,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ]
+        );
+
+        DB::table('emp')->insert(
+            [
+                'jenis' => 'kaos',
+                'jumlah' => 99,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ]
+        );
+
+        DB::table('emp')->insert(
+            [
+                'jenis' => 'kelender',
+                'jumlah' => 99,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ]
+        );
+
+        DB::table('emp')->insert(
+            [
+                'jenis' => 'lighter',
+                'jumlah' => 99,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ]

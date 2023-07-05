@@ -14,7 +14,7 @@ use App\Models\RequestStorBarang;
 use App\Models\RincianUang;
 use App\Models\GudangKecil;
 use App\Models\AktivasiSPO;
-use App\Http\Controllers\SalesController;
+// use App\Http\Controllers\SalesController;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -23,18 +23,42 @@ use Carbon\Carbon;
 
 class SPOController extends Controller
 {
+    private $salesController;
+    private $empController;
+
+    public function __construct(SalesController $salesController, EmpController $empController)
+    {
+        $this->salesController = $salesController;
+        $this->empController = $empController;
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        // dd($this->getAllToko()->where('id_distrik', 'BTL'));
+        // dd(Carbon::now()->addDays(30)->format('Y-m-d'));
+        // dd($this->getAllToko());
+        // dd($this->getLastToko());
+        // dd($this->getPenjualanSPO(auth()->user()->id));
+        // $tanggal1 = Carbon::parse($this->getPenjualanSPO(auth()->user()->id)->get(0)->tanggal_masuk);
+        // $tanggal2 = Carbon::parse($this->getPenjualanSPO(auth()->user()->id)->get(0)->tanggal_jatuh_tempo);
+        // dd($tanggal1->diff($tanggal2)->days);
+        // dd($this->getTokoByDistrik('KOT'));
+        // dd($this->getAktivasi('109', '001'));
+        // dd($this->salesController->tes(90));
+        // dd($this->getTokoById(110));
+        // dd($this->detailJualSPO(110));
+        // dd($this->getPenjualanSPO(auth()->user()->id));
         return view('pages.spo.dashboard');
     }
 
     /**
      * Menampilkan halaman absensi SPO.
      */
-    public function pageAbsensiSPO() {
+    public function pageAbsensiSPO()
+    {
         $username = auth()->user()->username;
         $finishStor = $this->isFinishStor(auth()->user()->id, Carbon::now()->format('Y-m-d'));
         $isAbsensi = $this->isAbsensi(auth()->user()->id, Carbon::now()->format('Y-m-d'));
@@ -51,14 +75,15 @@ class SPOController extends Controller
      * Cek apakah user sudah melakukan stor.
      * Return boolean.
      */
-    protected function isFinishStor($id_user, $tanggal) {
+    protected function isFinishStor($id_user, $tanggal)
+    {
         $tanggal = Carbon::now()->format('Y-m-d');
         $cek = DB::select("SELECT * FROM stor_produk
             WHERE id_user = '$id_user'
             AND created_at BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59'");
 
         $collection = collect($cek);
-        if($collection->count() > 0) {
+        if ($collection->count() > 0) {
             return true;
         }
         return false;
@@ -67,11 +92,13 @@ class SPOController extends Controller
     /**
      * Absensi untuk SPO.
      */
-    public function postAbsensi(Request $request) {
+    public function postAbsensi(Request $request)
+    {
         return app('App\Http\Controllers\AbsensiController')->store($request);
     }
 
-    public function absensiKeluar() {
+    public function absensiKeluar()
+    {
         $timeNow = Carbon::now();
         $lastIdAbsen = $this->getLastAbsen();
         $target = DB::update("UPDATE `absensi`
@@ -81,7 +108,8 @@ class SPOController extends Controller
         return redirect('/spo/absensi');
     }
 
-    public function getLastAbsen() {
+    public function getLastAbsen()
+    {
         return app('App\Http\Controllers\SalesController')->getLastAbsen();
     }
 
@@ -89,13 +117,14 @@ class SPOController extends Controller
      * Cek apakah user sudah melakukan absensi.
      * Return boolean.
      */
-    protected function isAbsensi($id_user, $tanggal) {
+    protected function isAbsensi($id_user, $tanggal)
+    {
         $cek = DB::select("SELECT * FROM `absensi`
             WHERE id_user = '$id_user'
             AND waktu_keluar BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59'");
 
         // dd($cek);
-        if(sizeof($cek) > 0) {
+        if (sizeof($cek) > 0) {
             return true;
         }
         return false;
@@ -105,12 +134,13 @@ class SPOController extends Controller
      * Cek apakah user sudah melakukan absensi.
      * Return boolean.
      */
-    public function isAbsenMasuk($id_user, $tanggal) {
+    public function isAbsenMasuk($id_user, $tanggal)
+    {
         $cek = DB::select("SELECT * FROM `absensi`
                            WHERE id_user = '$id_user'
                            AND waktu_masuk BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59'");
         // dd($cek);
-        if(sizeof($cek) > 0) {
+        if (sizeof($cek) > 0) {
             return true;
         }
         return false;
@@ -120,7 +150,8 @@ class SPOController extends Controller
      * Mendapatkan stok yang dibawah oleh sales SPO.
      * Return Collection.
      */
-    public function getStokSPO() {
+    public function getStokSPO()
+    {
         $id_user = auth()->user()->id;
         $tanggal = Carbon::now()->format('Y-m-d');
         $barang = DB::select("SELECT u.nama, c.*, p.nama_produk
@@ -137,8 +168,9 @@ class SPOController extends Controller
      * Cek apakah sales sudah membawa barang.
      * Return boolean.
      */
-    public function isCarry() {
-        if($this->getStokSPO()->count() > 0) {
+    public function isCarry()
+    {
+        if ($this->getStokSPO()->count() > 0) {
             return true;
         }
         return false;
@@ -148,13 +180,14 @@ class SPOController extends Controller
      * Cek apakah user sudah melakukan request barang ke admin.
      * Return boolean.
      */
-    public function isRequest($id_user, $tanggal) {
+    public function isRequest($id_user, $tanggal)
+    {
         $cek = DB::select("SELECT * FROM `request_sales`
                            WHERE id_user = '$id_user'
                            AND tanggal_request BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59'");
 
         $collection = collect($cek);
-        if($collection->count() > 0) {
+        if ($collection->count() > 0) {
             return true;
         }
         return false;
@@ -164,14 +197,15 @@ class SPOController extends Controller
      * Cek apakah admin sudah melakukan konfirmasi terhadap request barang.
      * Return boolean.
      */
-    public function isKonfirmasi($id_user, $tanggal) {
+    public function isKonfirmasi($id_user, $tanggal)
+    {
         $cek = DB::select("SELECT * FROM `request_sales`
                            WHERE id_user = '$id_user'
                            AND tanggal_request BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59'
                            AND konfirmasi = 1;");
 
         $collection = collect($cek);
-        if($collection->count() > 0) {
+        if ($collection->count() > 0) {
             return true;
         }
         return false;
@@ -181,7 +215,8 @@ class SPOController extends Controller
      * Get barang yg sudah dikonfirmasi oleh admin.
      * Return Collection.
      */
-    public function getBarangKonfirmasi() {
+    public function getBarangKonfirmasi()
+    {
         $user = auth()->user()->id;
         $barangKonfirmasi = DB::select("SELECT p.id_produk, p.nama_produk, r.jumlah FROM request_sales r
                     JOIN products p ON r.id_produk = p.id_produk
@@ -196,7 +231,8 @@ class SPOController extends Controller
     /**
      * Menampilkan halaman stok jalan.
      */
-    public function stokJalanPage() {
+    public function stokJalanPage()
+    {
         $barang = $this->getStokSPO();
         $req = $this->isRequest(auth()->user()->id, Carbon::now()->format('Y-m-d'));
         $konfirmasi = $this->isKonfirmasi(auth()->user()->id, Carbon::now()->format('Y-m-d'));
@@ -211,19 +247,20 @@ class SPOController extends Controller
     /**
      * Request barang ke admin.
      */
-    public function requestBarangStokJalan(Request $request) {
+    public function requestBarangStokJalan(Request $request)
+    {
         // dd($request->all());
         $keys = collect(['idProduk', 'namaProduk', 'jumlah']);
         $products = collect();
 
-        for ($i=0; $i < sizeof($request->id_produk); $i++) {
-            $combined = $keys->combine([$request->id_produk[$i], $request->nama_produk[$i], (int)$request->produk[$i]]);
+        for ($i = 0; $i < sizeof($request->id_produk); $i++) {
+            $combined = $keys->combine([$request->id_produk[$i], $request->nama_produk[$i], (int) $request->produk[$i]]);
             $products->push($combined->all());
         }
 
         $filteredProduct = $products->where('jumlah', '!=', 0);
 
-        foreach($filteredProduct as $inp) {
+        foreach ($filteredProduct as $inp) {
             RequestBarang::create(
                 [
                     'id_user' => auth()->user()->id,
@@ -243,24 +280,25 @@ class SPOController extends Controller
     /**
      * Terima barang yang sudah diberikan admin.
      */
-    public function terimaBarang(Request $request) {
+    public function terimaBarang(Request $request)
+    {
         $user = auth()->user()->id;
-        if($request->has('setuju')) {
-            for($i = 0; $i < sizeof($request->id_produk); $i++) {
+        if ($request->has('setuju')) {
+            for ($i = 0; $i < sizeof($request->id_produk); $i++) {
                 CarryProduk::create(
                     [
                         'id_user' => auth()->user()->id,
                         'id_produk' => $request->id_produk[$i],
                         'tanggal_carry' => Carbon::now(),
                         'stok_awal' => (int) $request->jumlah[$i],
-                        'stok_sekarang' =>(int) $request->jumlah[$i],
+                        'stok_sekarang' => (int) $request->jumlah[$i],
                     ]
                 );
 
                 app('App\Http\Controllers\HistoryRequestSalesController')->konfirmasiSales($request, 'sales terima', $i);
             }
-        }else {
-            for($i = 0; $i < sizeof($request->id_produk); $i++) {
+        } else {
+            for ($i = 0; $i < sizeof($request->id_produk); $i++) {
                 // melakukan pengembalian barang ke gudang kecil
                 $id_produk = $request->id_produk[$i];
                 $jumlah = $request->jumlah[$i];
@@ -285,8 +323,8 @@ class SPOController extends Controller
     /**
      * Mengambil seluruh data carry produk di SPO
      */
-
-    public function totalCarryProduk($id_user, $tanggal) {
+    public function totalCarryProduk($id_user, $tanggal)
+    {
         $cek = DB::select("SELECT *
                             FROM `carry_produk` as c
                             JOIN products AS p ON p.id_produk = c.id_produk
@@ -299,32 +337,66 @@ class SPOController extends Controller
     /**
      * Halaman Penjualan SPO
      */
-    public function penjualanSPO(){
-        // $totalCarryProduk = $this->totalCarryProduk(auth()->user()->id, Carbon::now()->format('Y-m-d'));
+    public function penjualanSPO()
+    {
         $totalCarryProduk = app('App\Http\Controllers\SalesController')->getCarriedStok();
-        // dd($this->getAlamatToko(4));
-        // dd($this->getLastWsCode('BTL'));
-        $getPenjualanSPO = $this->getPenjualanSPO(auth()->user()->id, Carbon::now()->format('Y-m-d'));
+
+        // $getPenjualanSPO = $this->getPenjualanSPO(auth()->user()->id, Carbon::now()->format('Y-m-d'));
+        $getPenjualanSPO = $this->getPenjualanSPO(auth()->user()->id);
         return view('pages.spo.tampilPenjualanSPO', compact('totalCarryProduk', 'getPenjualanSPO'));
     }
 
-    public function getPenjualanSPO($id_user, $tanggal){
-        $penjualanSPO = DB::select("SELECT DISTINCT toko_spo.id, toko_spo.nama_toko, p.id_distrik, p.jenis_spo, p.nomor_spo, keterangan, p.emp, p.latitude, p.longitude, p.created_at, foto.nama_foto 
-                FROM penjualan_spo AS p 
-                JOIN toko_spo ON toko_spo.id = p.id_toko 
-                JOIN foto ON foto.id_foto = p.id_foto 
-                JOIN keterangan ON keterangan.id_keterangan = p.id_keterangan 
-                WHERE p.id_user = '$id_user' 
-                AND p.created_at 
-                BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59';");
-        $collection = collect($penjualanSPO);
+
+    /**
+     * Data yang tampil di penjualan_spo.
+     * Sudah beserta sisa hari menuju jatuh tempo.
+     * Return Collection.
+     */
+    public function getPenjualanSPO($idUser)
+    {
+        // $penjualanSPO = DB::select("SELECT DISTINCT toko_spo.id AS 'id_toko', toko_spo.nama_toko, p.id_distrik, p.jenis_spo, aspo.is_close, p.nomor_spo, p.tanggal_masuk,p.tanggal_jatuh_tempo, keterangan, p.emp, p.latitude, p.longitude, foto.nama_foto
+        //     FROM penjualan_spo AS p
+        //     JOIN aktivasi_spo AS aspo
+        //     JOIN toko_spo ON toko_spo.id = p.id_toko
+        //     JOIN foto ON foto.id_foto = p.id_foto
+        //     JOIN keterangan ON keterangan.id_keterangan = p.id_keterangan
+        //     WHERE p.id_user = '$idUser'");
+        $penjualanSPO = DB::select("SELECT DISTINCT pspo.id_toko, t.nama_toko, pspo.id_distrik, pspo.nomor_spo, pspo.tanggal_masuk, pspo.tanggal_jatuh_tempo, k.keterangan, pspo.emp, f.nama_foto, aspo.aktivasi, aspo.is_close, aspo.is_cash
+        FROM toko_spo t
+        JOIN penjualan_spo pspo ON pspo.id_toko = t.id
+        JOIN keterangan k ON k.id_keterangan = pspo.id_keterangan
+        JOIN foto f ON f.id_foto = pspo.id_foto
+        JOIN aktivasi_spo aspo ON aspo.id_toko = t.id
+        WHERE pspo.id_user = ?", [$idUser]);
+
+        // menghilangkan simbol +
+        // contoh : +"id_toko": 110
+        // sehingga menjadi 'key' => 'value'
+        $collection = collect($penjualanSPO)->map(function ($item) {
+            return collect($item)->mapWithKeys(function ($value, $key) {
+                $cleanedKey = ltrim($key, '+');
+                return [$cleanedKey => $value];
+            });
+        });
+
+        // menghitung sisa hari menuju jatuh tempo
+        $collection->map(function ($item) {
+            $tgl1 = Carbon::now();
+            $tgl2 = Carbon::parse($item->get('tanggal_jatuh_tempo'));
+            $sisa_jatuh_tempo = $tgl1->diff($tgl2)->days;
+
+            $item['sisa_jatuh_tempo'] = $sisa_jatuh_tempo;
+            return $item;
+        });
+
         return $collection;
     }
 
     /**
      * Mengambil stok user carry_spo untuk diinputkan penjualan_spo
      */
-    public function getStokUser() {
+    public function getStokUser()
+    {
         $id_user = auth()->user()->id;
         $tanggal = Carbon::now()->format('Y-m-d');
         $barang = DB::select("SELECT id_produk, stok_sekarang
@@ -333,10 +405,12 @@ class SPOController extends Controller
 
         return $barang;
     }
+
     /**
      * Mengambil stok carry produk untuk diinputkan penjualan_spo
      */
-    public function getStokCarryProduk($id_produk, $id_user){
+    public function getStokCarryProduk($id_produk, $id_user)
+    {
         $query = DB::select("SELECT stok_sekarang
                             FROM carry_produk
                             WHERE id_produk = '$id_produk' AND id_user = $id_user");
@@ -346,12 +420,13 @@ class SPOController extends Controller
     /**
      * Membuat keterangan untuk diinputkan penjualan_spo
      */
-    public function createKeterangan($keterangan) {
+    public function createKeterangan($keterangan)
+    {
         Keterangan::create(
             [
-                'keterangan' =>$keterangan,
+                'keterangan' => $keterangan,
                 'id_user' => auth()->user()->id,
-                'tanggal' =>Carbon::now()->format('Y-m-d')
+                'tanggal' => Carbon::now()->format('Y-m-d')
             ]
         );
     }
@@ -359,56 +434,51 @@ class SPOController extends Controller
     /**
      * Membuat createToko untuk diinputkan penjualan_spo
      */
-    public function createToko($req) {
+    public function createToko($req)
+    {
         // dd($req->all());
         TokoSPO::create(
             [
                 'nama_toko' => $req->inputTokoBaru,
                 'alamat' => $req->alamat_spo,
-                'id_distrik'=>$req->distrik_spo,
-                'ws'=>$req->wsCode,
-                'telepon' =>$req->telepon,
-                'latitude' =>$req->latitude,
-                'longitude' =>$req->longitude
+                'id_distrik' => $req->distrik_spo,
+                'ws' => $req->wsCode,
+                'telepon' => $req->telepon,
+                'latitude' => $req->latitude,
+                'longitude' => $req->longitude
             ]
         );
     }
 
-    public function getLastToko(){
+    public function getLastToko()
+    {
         $toko = DB::select("SELECT * FROM `toko_spo` ORDER BY created_at DESC LIMIT 1");
-        $collectToko = collect($toko);
-        return $collectToko;}
-
-    public function createAktivasi($req) {
-        // dd($req->all());
-        $toko = $this->getLastToko()->first();
-        // dd($toko);
-        AktivasiSPO::create(
-            [
-                'id_toko' => $toko->id,
-                'aktivasi' => $req->nomorAktivasi,
-            ]
-        );
-    }
-
-    /**
-     * Mengambil Data Toko Baru
-     */
-    public function getTokoBaru($req) {
-
-        $toko = DB::select("SELECT * FROM `toko_spo`
-                            WHERE id_distrik = '$req->distrik_spo'
-                            AND nama_toko = '$req->inputTokoBaru'
-                            ORDER BY created_at DESC
-                            LIMIT 1");
         $collectToko = collect($toko);
         return $collectToko;
     }
 
     /**
+     * Mengambil Data Toko Baru
+     */
+    public function getTokoBaru(Request $request): Collection
+    {
+        // $toko = DB::select("SELECT * FROM `toko_spo`
+        //                     WHERE id_distrik = '$req->distrik_spo'
+        //                     AND nama_toko = '$req->inputTokoBaru'
+        //                     ORDER BY created_at DESC
+        //                     LIMIT 1");
+        $toko = DB::select("SELECT * FROM `toko_spo`
+                            WHERE id_distrik = '$request->distrik_spo'
+                            AND nama_toko = '$request->inputTokoBaru'");
+        // $collectToko = collect($toko);s
+        return new Collection($toko);
+    }
+
+    /**
      * Mengambil Data Toko Lama
      */
-    public function getTokoLama($req) {
+    public function getTokoLama($req)
+    {
         // dd($request->all());
         $toko = DB::select("SELECT * FROM `toko_spo`
                             WHERE id_distrik = '$req->distrik_spo'
@@ -422,33 +492,21 @@ class SPOController extends Controller
     /**
      * Formulir Penjualan SPO
      */
-    public function postPenjualanSPO(Request $request){
+    public function postPenjualanSPO(Request $request)
+    {
+        // dd($this->getTokoBaru($request));
+        $requestToCollection = collect($request);
+        // dd($requestToCollection->all());
+        // dd(empty($requestToCollection->get('emp')));
         // dd($request->all());
+        // dd($this->empController->proccessEmp($request));
         $id_user = auth()->user()->id;
         $tanggal = Carbon::now()->format('Y-m-d');
 
-        $emp = "";
-        // $jumlahEmp = [];
-        // dd($request->jumlahEmp);
-        if (!empty($request->emp)) {
-            foreach ($request->emp as $index => $e) {
-                $em = $request->jumlahEmp[$index];
-                    $emp .= $e . '('.$em.')'.'; ';
-            // Ambil data 'emp' dari tabel berdasarkan kolom 'jenis'
-            $empData = Emp::where('jenis', $e)->first();
-
-            // Lakukan pengurangan pada kolom 'jumlah'
-            $updatedJumlah = $empData->jumlah - $em;
-
-            // Perbarui (update) nilai kolom 'jumlah' dalam tabel 'emp'
-            $empData->update(['jumlah' => $updatedJumlah]);
-            }
-            // dd($emp);
-        }
+        $emp = (!empty($requestToCollection->has('emp'))) ? $this->empController->proccessEmp($request) : "";
 
         // UPDATE STOK
         $barang = $this->getStokUser();
-        // dd($barang);
         $data = [];
         for ($i = 0; $i < count($request->id_produk); $i++) {
             if ($request->jumlah[$i] != '0') {
@@ -456,7 +514,6 @@ class SPOController extends Controller
                 $carryValue = (int) $request->jumlah[$i];
                 $stokCarry = $this->getStokCarryProduk($productId, $id_user);
                 $stokCarryValue = $stokCarry[0]->stok_sekarang;
-                // dd($stokCarryValue);
 
                 if ($carryValue > $stokCarryValue) {
                     // Stok carry produk yang dibawa kurang, tampilkan pesan kesalahan
@@ -486,11 +543,9 @@ class SPOController extends Controller
                         WHERE id_produk = '$productId'
                         AND id_user = $id_user
                         AND tanggal_carry BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59'");
-            // CarryProduk::where('id_produk', $productId)->update(['stok_sekarang' => $produk->stok_sekarang]);
         }
-        // dd($request->all());
+
         // FOTO
-        $tanggal = Carbon::now()->format('Y-m-d');
         $validatedData = $request->validate([
             'foto' => 'image'
         ]);
@@ -498,18 +553,17 @@ class SPOController extends Controller
         $fotoPath = $request->file('foto')->store('public/fotoTokoSpo'); // Simpan file gambar ke direktori penyimpanan
         Foto::create([
             'nama_foto' => $fotoPath,
-            'id_user' =>auth()->user()->id,
-            'tanggal' =>$tanggal
+            'id_user' => auth()->user()->id,
+            'tanggal' => $tanggal
         ]);
         $id_user = auth()->user()->id;
         $foto = DB::select("SELECT * FROM `foto`
                        WHERE id_user = '$id_user'
                        AND tanggal = '$tanggal'
                        ORDER BY created_at DESC");
-        // dd($foto);
 
         // KETERANGAN
-        if($request->get('keterangan') != null) {
+        if ($request->get('keterangan') != null) {
             $this->createKeterangan($request->get('keterangan'));
         }
 
@@ -518,30 +572,26 @@ class SPOController extends Controller
                        AND tanggal = '$tanggal'
                        ORDER BY created_at DESC");
 
-        // dd($request->all());
-
-        if($request->jenisToko == 'TokoBaru') {
+        if ($request->jenisToko == 'TokoBaru') {
             $this->createToko($request);
-
-            $this->createAktivasi($request);
-
             $toko = $this->getTokoBaru($request);
-            $id_toko = $toko[0]->id;
+            $id_toko = $toko->get(0)->id;
+            $this->createAktivasi($request, $id_toko);
         } else {
-            $id_toko = $request->inputTokoLama;
+            $idToko = $request->inputTokoLama;
+            $this->createAktivasi($request, $idToko);
         }
 
-        
-        // dd($request->all());
         for ($i = 0; $i < count($request->id_produk); $i++) {
             if ($request->jumlah[$i] != '0') {
-                if($request->get('keterangan') != null) {
-                    // dd($request->all());
+                if ($request->get('keterangan') != null) {
                     PenjualanSPO::create(
                         [
                             'id_user' => auth()->user()->id,
                             'id_distrik' => $request->distrik_spo,
                             'id_toko' => $id_toko,
+                            'tanggal_masuk' => $tanggal,
+                            'tanggal_jatuh_tempo' => Carbon::now()->addDays(30)->format('Y-m-d'),
                             'jenis_spo' => $request->jenisSpo,
                             'nomor_spo' => $request->nomor_nota,
                             'id_produk' => $request->id_produk[$i],
@@ -557,25 +607,26 @@ class SPOController extends Controller
                 }
             }
         }
-        // dd($data);
+
         return redirect('/spo/penjualan_spo');
     }
 
     /**
      * Mengambil Detail Penjualan SPO.
      */
-    public function detailJualSPO($id_toko){
-        $data = DB::select("SELECT p.*, products.harga_toko, products.nama_produk, toko_spo.id 
-        FROM penjualan_spo AS p 
-        JOIN toko_spo ON toko_spo.id = p.id_toko 
-        JOIN products ON products.id_produk = p.id_produk 
+    public function detailJualSPO($id_toko)
+    {
+        $toko = $this->getTokoById($id_toko);
+        $data = DB::select("SELECT p.id_penjualan_spo, p.id_toko, p.tanggal_masuk, p.tanggal_jatuh_tempo, p.jenis_spo, p.nomor_spo, p.emp, p.latitude, p.longitude, products.id_produk, products.nama_produk, p.jumlah_produk, products.harga_toko
+        FROM penjualan_spo AS p
+        JOIN products ON products.id_produk = p.id_produk
         WHERE p.id_toko = $id_toko;");
-        // dd($data);
 
-        return view('pages.spo.tampilDetailPenjualanSPO', compact('data'));
+        return view('pages.spo.tampilDetailPenjualanSPO', compact('data', 'toko'));
     }
 
-    public function tampilStorProduk() {
+    public function tampilStorProduk()
+    {
         $storproduk = app('App\Http\Controllers\SalesController')->getStorProduk();
         $storPenjualan = app('App\Http\Controllers\SalesController')->getStorPenjualan();
         $req = app('App\Http\Controllers\SalesController')->isRequestStorBarang(auth()->user()->id, Carbon::now()->format('Y-m-d'));
@@ -585,47 +636,47 @@ class SPOController extends Controller
         $storToday = app('App\Http\Controllers\SalesController')->isTodayStorProduk(auth()->user()->id, Carbon::now()->format('Y-m-d'));
         $carryToday = app('App\Http\Controllers\SalesController')->isCarry();
         // dd($carryToday);
-        return view('pages.spo.storprodukspo', compact('storproduk','storPenjualan', 'req', 'reqUang', 'konfirmasi', 'konfirmasiUang', 'storToday', 'carryToday'));
+        return view('pages.spo.storprodukspo', compact('storproduk', 'storPenjualan', 'req', 'reqUang', 'konfirmasi', 'konfirmasiUang', 'storToday', 'carryToday'));
     }
 
-    public function requestStorBarang(Request $request) {
+    public function requestStorBarang(Request $request)
+    {
         // dd($request->all());
         $user = auth()->user()->id;
-        if($request->has('setujuStorProduk')) {
+        if ($request->has('setujuStorProduk')) {
             // dd($request->all());
-            for($i = 0; $i < sizeof($request->id_produk); $i++) {
+            for ($i = 0; $i < sizeof($request->id_produk); $i++) {
                 RequestStorBarang::create(
                     [
-                    'id_user'=> auth()->user()->id,
-                    'id_produk'=> $request->id_produk[$i],
-                    'tanggal_stor_barang'=>Carbon::now(),
-                    'stok_awal'=>(int) $request->stok_awal[$i],
-                    'sisa_stok'=>(int) $request->stok_sekarang[$i],
-                    'terjual'=>(int) $request->terjual[$i],
-                    'harga_produk'=>(int) $request->harga_toko[$i],
-                    'total_harga'=>(int) $request->total_harga[$i],
-                    'konfirmasi' => 0,
+                        'id_user' => auth()->user()->id,
+                        'id_produk' => $request->id_produk[$i],
+                        'tanggal_stor_barang' => Carbon::now(),
+                        'stok_awal' => (int) $request->stok_awal[$i],
+                        'sisa_stok' => (int) $request->stok_sekarang[$i],
+                        'terjual' => (int) $request->terjual[$i],
+                        'harga_produk' => (int) $request->harga_toko[$i],
+                        'total_harga' => (int) $request->total_harga[$i],
+                        'konfirmasi' => 0,
                     ]
                 );
 
                 DB::update("UPDATE `gudang_kecil`
                         SET `stok` = `stok` + :stok
                         WHERE `id_produk` = :id_produk", [
-                            'stok' => (int) $request->stok_sekarang[$i],
-                            'id_produk' => $request->id_produk[$i]
-                        ]);
+                    'stok' => (int) $request->stok_sekarang[$i],
+                    'id_produk' => $request->id_produk[$i]
+                ]);
             }
         }
         app('App\Http\Controllers\HistoryRequestSalesController')->salesRequestStorBarang($request, 0);
         return redirect('/spo/stor_produk');
     }
 
-    public function requestStorUang(Request $request){
-        // dd($request->all());
+    public function requestStorUang(Request $request)
+    {
         $user = auth()->user()->id;
         $today = Carbon::now()->format('Y-m-d');
-        if($request->has('setujuStorUang')) {
-            // dd($request->all());
+        if ($request->has('setujuStorUang')) {
             $request->validate([
                 'seratusribu.*' => 'nullable|numeric|min:0',
                 'limapuluhribu.*' => 'nullable|numeric|min:0',
@@ -641,17 +692,17 @@ class SPOController extends Controller
             ]);
 
             $totalUang = 100000 * $request->input('seratusribu', 0)
-                 + 50000 * $request->input('limapuluhribu', 0)
-                 + 20000 * $request->input('duapuluhribu', 0)
-                 + 10000 * $request->input('sepuluhribu', 0)
-                 + 5000 * $request->input('limaribu', 0)
-                 + 2000 * $request->input('duaribu', 0)
-                 + 1000 * $request->input('seribu', 0)
-                 + 1000 * $request->input('seribukoin', 0)
-                 + 500 * $request->input('limaratuskoin', 0)
-                 + 200 * $request->input('duaratuskoin', 0)
-                 + 100 * $request->input('seratuskoin', 0);
-            // dd($totalUang);
+                + 50000 * $request->input('limapuluhribu', 0)
+                + 20000 * $request->input('duapuluhribu', 0)
+                + 10000 * $request->input('sepuluhribu', 0)
+                + 5000 * $request->input('limaribu', 0)
+                + 2000 * $request->input('duaribu', 0)
+                + 1000 * $request->input('seribu', 0)
+                + 1000 * $request->input('seribukoin', 0)
+                + 500 * $request->input('limaratuskoin', 0)
+                + 200 * $request->input('duaratuskoin', 0)
+                + 100 * $request->input('seratuskoin', 0);
+
             $result = DB::select("SELECT total_harga FROM `request_stor_barang`
                                         WHERE id_user = '$user'
                                         AND tanggal_stor_barang BETWEEN '$today 00:00:00' AND '$today 23:59:59'
@@ -661,18 +712,16 @@ class SPOController extends Controller
                 $totalHarga += $item->total_harga;
             }
 
-            // dd($totalHarga);
             if ($totalUang != $totalHarga) {
                 // $errorMessage = 'Jumlah uang yang Anda masukkan (' . $totalUang . ') tidak sesuai dengan total harga (' . $totalHarga . ').';
                 // return back()->with('error', $errorMessage);
-            }else{
+            } else {
                 $user = auth()->user()->id;
                 $today = Carbon::now()->format('Y-m-d');
-                // dd($request->all());
                 RincianUang::create(
                     [
                         'id_user' => auth()->user()->id,
-                        'tanggal_masuk'=>$today,
+                        'tanggal_masuk' => $today,
                         'seratus_ribu' => $request->input('seratusribu'),
                         'lima_puluh_ribu' => $request->input('limapuluhribu'),
                         'dua_puluh_ribu' => $request->input('duapuluhribu'),
@@ -691,11 +740,11 @@ class SPOController extends Controller
                        AND tanggal_masuk = '$today'
                        ORDER BY created_at DESC
                        LIMIT 1");
-                // dd($ambilUang);
+
                 $record = RequestStorBarang::where('id_user', $user)
                     ->whereBetween('tanggal_stor_barang', [$today . ' 00:00:00', $today . ' 23:59:59'])
                     ->first();
-                // dd($record);
+
                 if ($record) {
                     $record->where('id_user', $user)->update([
                         'tanggal_stor_uang' => Carbon::now(),
@@ -705,28 +754,29 @@ class SPOController extends Controller
                 }
             }
         }
-        // DB::delete("DELETE FROM stor_produk WHERE id_user = $user");
+
         app('App\Http\Controllers\HistoryRequestSalesController')->salesRequestStorPenjualan($request, 0);
         return redirect('/spo/stor_produk');
     }
 
-    public function insertStorProduk(Request $request) {
+    public function insertStorProduk(Request $request)
+    {
         $user = auth()->user()->id;
-        if($request->has('setujuinsert')) {
-        // dd($request->all());
-            for($i = 0; $i < sizeof($request->id_produk); $i++) {
+        if ($request->has('setujuinsert')) {
+            // dd($request->all());
+            for ($i = 0; $i < sizeof($request->id_produk); $i++) {
                 StorProduk::create(
                     [
-                    'id_user'=> auth()->user()->id,
-                    'id_produk'=> $request->id_produk[$i],
-                    'tanggal_stor_barang'=>$request->tanggal_stor_barang[$i],
-                    'tanggal_stor_uang'=>$request->tanggal_stor_uang[$i],
-                    'stok_awal'=>(int) $request->stok_awal[$i],
-                    'terjual'=>(int)$request->terjual[$i],
-                    'sisa_stok'=>(int) $request->sisa_stok[$i],
-                    'harga_produk'=>(int) $request->harga_produk[$i],
-                    'total_harga'=>(int) $request->total_harga[$i],
-                    'id_rincian_uang'=>(int) $request->id_rincian_uang[$i]
+                        'id_user' => auth()->user()->id,
+                        'id_produk' => $request->id_produk[$i],
+                        'tanggal_stor_barang' => $request->tanggal_stor_barang[$i],
+                        'tanggal_stor_uang' => $request->tanggal_stor_uang[$i],
+                        'stok_awal' => (int) $request->stok_awal[$i],
+                        'terjual' => (int) $request->terjual[$i],
+                        'sisa_stok' => (int) $request->sisa_stok[$i],
+                        'harga_produk' => (int) $request->harga_produk[$i],
+                        'total_harga' => (int) $request->total_harga[$i],
+                        'id_rincian_uang' => (int) $request->id_rincian_uang[$i]
                     ]
                 );
             }
@@ -745,7 +795,8 @@ class SPOController extends Controller
      * Distrik yang tidak memiliki id_user. (sementara)
      * Return JSON response.
      */
-    public function getDistrik() {
+    public function getDistrik()
+    {
         $distrik = DB::select("SELECT * FROM distrik WHERE id_user IS NULL");
 
         return response()->json($distrik);
@@ -755,45 +806,98 @@ class SPOController extends Controller
      * Get toko SPO berdasatkan id_distrik.
      * Return JSON response.
      */
-    public function getTokoByDistrik($idDistrik) {
-        $toko = $this->getAllToko()->where('id_distrik', $idDistrik);
-        $collection = collect();
+    public function getTokoByDistrik($idDistrik)
+    {
+        $toko = $this->getAllToko()->where('id_distrik', $idDistrik)->values();
 
-        foreach ($toko as $tk) {
-            $collection->push($tk);
-        }
+        return response()->json($toko);
+    }
 
-        return response()->json($collection);
+    public function getTokoById($idToko): TokoSPO
+    {
+        $toko = TokoSPO::find($idToko);
+
+        return $toko;
     }
 
     /**
      * Get semua data toko SPO.
      * Return Collection.
      */
-    public function getAllToko() {
-        $toko = DB::select("SELECT * FROM toko_spo");
+    public function getAllToko()
+    {
+        // $toko = DB::select("SELECT * FROM toko_spo");
+        $toko = DB::select("SELECT t.*, aspo.aktivasi, aspo.is_close, aspo.is_cash
+        FROM aktivasi_spo AS aspo
+        JOIN toko_spo AS t ON t.id = aspo.id_toko;");
 
-        return collect($toko);
+        return collect($toko)->lazy();
     }
 
     /**
-     * Get nomor aktivasi SPO sesuai id_toko.
-     * Return last value aktivasi dari toko tersebut.
+     * insert data tabel aktivasi
      */
-    public function getLastAktivasi($idToko) {
+    public function createAktivasi($request, $idToko)
+    {
+        AktivasiSPO::create(
+            [
+                // 'id_toko' => $toko->id,
+                'id_toko' => $idToko,
+                'aktivasi' => $request->nomorAktivasi,
+                'id_close' => 0,
+                'is_cash' => 0,
+            ]
+        );
+    }
+
+    /**
+     * Get data dari berdasarkan id_toko dan nomor aktivasi data tabel aktivasi
+     */
+    public function getAktivasi($idToko, $aktivasi)
+    {
+        $data = DB::select("SELECT *
+        FROM aktivasi_spo
+        WHERE id_toko = $idToko
+        AND aktivasi = '$aktivasi'");
+
+        return collect($data);
+    }
+
+    // public function getLastAktivasi()
+    // {
+    //     $data = DB::select("SELECT * FROM aktivasi_spo ORDER BY id DESC LIMIT 1;");
+
+    //     return $data;
+    // }
+
+    /**
+     * Get nomor aktivasi SPO sesuai id_toko.
+     * Misal 001 + 1 = 002.
+     * Return last value aktivasi + 1 dari toko tertentu.
+     */
+    public function getIncLastAktivasi($idToko)
+    {
         $data = DB::select("SELECT * FROM aktivasi_spo WHERE id_toko = $idToko");
 
         $aktivasi = collect($data);
 
-        $sortedAktivasi = $aktivasi->sortBy('aktivasi', SORT_NATURAL);
-        return $sortedAktivasi->values()->last()->aktivasi;
+        $sortedAktivasi = $aktivasi->sortBy('aktivasi', SORT_NATURAL)->values();
+        $result = $sortedAktivasi->last()->aktivasi;
+
+        $inc = (int) $result + 1;
+        $incResult = sprintf('%03d', $inc);
+
+        return $incResult;
+        // return $sortedAktivasi->values()->last()->aktivasi;
     }
 
     /**
-     * Get WS code pada distrik tertentu.
-     * Return JSON response last value WS code dari distrik tersebut.
+     * Get WS code + 1 pada distrik tertentu.
+     * Misal 039 + 1 = 040.
+     * Return JSON response last value WS code + 1 dari distrik tertentu.
      */
-    public function getLastWsCode($distrik) {
+    public function getLastWsCode($distrik)
+    {
         $data = DB::select("SELECT aspo.*, ts.*
             FROM aktivasi_spo aspo
             JOIN toko_spo ts ON aspo.id_toko = ts.id
@@ -802,7 +906,7 @@ class SPOController extends Controller
         $sortedWs = collect($data)->sortBy('ws', SORT_NATURAL)->values();
         $result = $sortedWs->last()->ws;
 
-        $inc = (int)$result + 1;
+        $inc = (int) $result + 1;
         $incResult = sprintf('%03d', $inc);
         return response()->json($incResult);
         // return $data;
@@ -812,15 +916,21 @@ class SPOController extends Controller
      * Get alamat dari toko berdasarkan id_toko.
      * Return JSON response.
      */
-    public function getAlamatToko($idToko) {
+    public function getAlamatToko($idToko)
+    {
         $toko = $this->getAllToko()->where('id', $idToko);
-        $aktivasi = $this->getLastAktivasi($idToko);
+        $aktivasi = $this->getIncLastAktivasi($idToko);
         $value = $toko->values();
 
         $data = collect($value->get(0));
         $data->put('aktivasi', $aktivasi);
 
         return response()->json([$data]);
+    }
+
+    public function closeSpo()
+    {
+
     }
 
 }

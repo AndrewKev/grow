@@ -6,16 +6,23 @@ let radioButtons = document.querySelectorAll('input[type="radio"][name="jenis_ku
 // var pilihRoutingDiv = document.querySelector(".pilih-nama-routing-div");
 
 // // Menambahkan event listener pada setiap radio button
-radioButtons.forEach(function(radioButton) {
-  radioButton.addEventListener("change", function() {
-    if (this.value === "IO") {
-      // Jika radio button "IO" terpilih, tampilkan div "Nama Toko"
-      document.getElementById('formIO').classList.remove('d-none')
-      document.getElementById('notFormIO').classList.add('d-none')
-    } else {
-      // Jika radio button lain terpilih
-      document.getElementById('formIO').classList.add('d-none')
-      document.getElementById('notFormIO').classList.remove('d-none')
-    }
-  });
+radioButtons.forEach(function (radioButton) {
+    radioButton.addEventListener("change", function () {
+        if (this.value === "IO") {
+            // Jika radio button "IO" terpilih, tampilkan div "Nama Toko"
+            document.getElementById('formIO').classList.remove('d-none')
+            document.getElementById('notFormIO').classList.add('d-none')
+        } else {
+            // Jika radio button lain terpilih
+            document.getElementById('formIO').classList.add('d-none')
+            document.getElementById('notFormIO').classList.remove('d-none')
+        }
+    });
 });
+
+
+
+// $(document).ready(function () {
+//     // $('#datatableSpoClose').DataTable();
+//     $('#spoNew').DataTable();
+// });

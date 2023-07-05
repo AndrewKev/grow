@@ -12,5 +12,7 @@ class AktivasiSPO extends Model
     protected $fillable = [
         'id_toko',
         'aktivasi',
+        'is_close',
+        'is_cash',
     ];
 }

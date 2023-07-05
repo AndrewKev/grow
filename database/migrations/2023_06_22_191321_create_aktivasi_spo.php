@@ -15,8 +15,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('id_toko');
             $table->char('aktivasi',3);
+            $table->boolean('is_close')->default(0);
+            $table->boolean('is_cash')->default(0);
             $table->timestamps();
 
+            // $table->renameColumn('isClose', 'is_close');
             $table->foreign('id_toko')->references('id')->on('toko_spo')->onDelete('cascade');;
         });
     }

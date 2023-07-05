@@ -14,8 +14,7 @@
                             Absen Keluar
                         </button>
                     @else
-                        <form onsubmit="return confirm('Konfirmasi Absen Keluar')" action="/spo/absensi_keluar"
-                            method="post">
+                        <form onsubmit="return confirm('Konfirmasi Absen Keluar')" action="/spo/absensi_keluar" method="post">
                             @csrf
                             <button type="submit" class="btn btn-danger focus-ring">
                                 <i class="fa-solid fa-right-from-bracket" style="color: #ffffff;"></i>
@@ -82,7 +81,7 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                             aria-label="Close"></button>
                                     </div>
-                                    <form method="POST" action="/spo/absensi" class="myForm" enctype="multipart/form-data"
+                                    <form method="POST" action="/spo/absensi" class="myForm" id="formAbsenMasuk" enctype="multipart/form-data"
                                         action="">
                                         @csrf
                                         <div class="modal-body">
@@ -100,8 +99,8 @@
                                                 class="form-control" /><br>
                                             <input type="hidden" id="longitudeInput" name="longitude"
                                                 placeholder="longitude" class="form-control" /><br>
-                                            <button type="submit" class="btn btn-primary"
-                                                name="addAbsenMasuk">Submit</button>
+                                            <button type="submit" class="btn btn-primary" name="addAbsenMasuk"
+                                                id="btnSubmit">Submit</button>
                                             <button type="button" class="btn btn-secondary"
                                                 data-bs-dismiss="modal">Close</button>
                                         </div>
@@ -110,36 +109,28 @@
                             </div>
                         </div>
                         <!-- Modal -->
-                        {{-- <div class="modal fade" id="absenKeluar" tabindex="-1" aria-labelledby="exampleModalLabel"
-                        aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Absen Masuk</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                                </div>
-                                <form method="POST" class="myForm" enctype="multipart/form-data">
-                                    <div class="modal-body">
-                                        <input type="file" name="foto" class="form-control"><br>
-                                        <input type="text" name="keterangan" placeholder="keterangan"
-                                            class="form-control"><br>
-                                        <input type="hidden" id="latitudeInput" name="latitude" placeholder="latitude"
-                                            class="form-control"><br>
-                                        <input type="hidden" id="longitudeInput" name="longitude"
-                                            placeholder="longitude" class="form-control"><br>
-                                        <button type="submit" class="btn btn-primary"
-                                            name="addAbsenKeluar">Submit</button>
-                                        <button type="button" class="btn btn-secondary"
-                                            data-bs-dismiss="modal">Close</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div> --}}
                     </tbody>
                 </table>
             </div>
         </div>
     </main>
+    <script>
+        $(document).ready(function() {
+            if($('#foto').get(0).files.length === 0) {
+                $('#btnSubmit').prop('disabled', true);
+            }
+            $('#foto').change(function() {
+                // if($(this).get(0).files[0]) {
+                //     $('#btnSubmit').prop('disabled', true);
+                // } else {
+                    $('#btnSubmit').prop('disabled', false);
+                // }
+            });
+            $('#btnSubmit').click(function() {
+                // event.preventDefault();
+                $(this).prop('disabled', true);
+                $('#formAbsenMasuk').submit();
+            });
+        });
+    </script>
 @endsection

@@ -14,15 +14,16 @@ class PenjualanSPO extends Model
         'id_produk',
         'id_distrik',
         'id_toko',
+        'tanggal_masuk',
+        'tanggal_jatuh_tempo',
         'jenis_spo',
         'nomor_spo',
-        'id_kunjungan',
+        // 'id_kunjungan',
         'jumlah_produk',
         'emp',
         'id_keterangan',
         'id_foto',
         'latitude',
         'longitude',
-        'created_at',
     ];
 }

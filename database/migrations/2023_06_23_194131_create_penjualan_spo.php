@@ -16,6 +16,8 @@ return new class extends Migration
             $table->foreignId('id_user');
             $table->char('id_distrik');
             $table->foreignId('id_toko');
+            $table->date('tanggal_masuk');
+            $table->date('tanggal_jatuh_tempo');
             $table->char('jenis_spo')->nullable();
             $table->string('nomor_spo')->nullable();
             $table->char('id_produk')->nullable();
@@ -27,6 +29,7 @@ return new class extends Migration
             $table->string('longitude')->nullable();
             $table->timestamps();
 
+            // tanggal spo, jatuh tempo, jenis spo, distrik, nama toko, no nota, emp, foto, lokasi
             $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('id_distrik')->references('id_distrik')->on('distrik')->onDelete('cascade');
             $table->foreign('id_toko')->references('id')->on('toko_spo')->onDelete('cascade');

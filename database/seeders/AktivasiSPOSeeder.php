@@ -22,6 +22,8 @@ class AktivasiSPOSeeder extends Seeder
                 DB::table('aktivasi_spo')->insert([
                     'id_toko' => $data[0],
                     'aktivasi' => $data[1],
+                    'is_close' => 1,
+                    'is_cash' => 0,
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now()
                 ]);
