@@ -47,33 +47,17 @@ class SalesController extends Controller
         $username = auth()->user()->username;
         $finishStor = $this->isFinishStor(auth()->user()->id, Carbon::now()->format('Y-m-d'));
         $finishAbsensi = $this->isAbsensiFinish(auth()->user()->id, Carbon::now()->format('Y-m-d'));
-        $listAbsenUser = DB::select("SELECT u.nama, u.no_telp, a.waktu_masuk, a.waktu_keluar, a.keterangan, a.latitude, a.longitude, a.foto
-                                     FROM absensi as a
-                                     JOIN users as u ON a.id_user = u.id
-                                     WHERE u.username = '$username'
-                                     ORDER BY a.waktu_masuk DESC");
+        $listAbsenUser = $this->listAbsenUser(auth()->user()->username, Carbon::now()->format('Y-m-d'));
+        $listAbsenUserAll = $this->listAbsenUserAll(auth()->user()->username);
+
+
         // dd(sizeof($listAbsenUser));
-        return view('pages.karyawan.absensi', compact('listAbsenUser', 'finishStor', 'finishAbsensi'));
+        return view('pages.karyawan.absensi', compact('listAbsenUser', 'finishStor', 'finishAbsensi','listAbsenUserAll'));
     }
 
     public function postAbsensi(Request $request) {
         // ddd($request);
-        $validatedData = $request->validate([
-            'foto' => 'image'
-        ]);
-
-        $fotoPath = $request->file('foto')->store('public/images'); // Simpan file gambar ke direktori penyimpanan
-
-        Absensi::create([
-            'id_user' => auth()->user()->id,
-            'keterangan' => $request->keterangan,
-            'waktu_masuk' => Carbon::now(),
-            'foto' => $fotoPath, // Simpan path atau nama file gambar ke kolom 'foto'
-            'latitude' => $request->latitude,
-            'longitude' => $request->longitude,
-        ]);
-
-        return redirect('/user/absensi');
+        return app('App\Http\Controllers\AbsensiController')->store($request);
     }
 
     public function absensiKeluar() {
@@ -118,6 +102,34 @@ class SalesController extends Controller
             return true;
         }
         return false;
+    }
+
+    public function listAbsenUser($username, $tanggal) {
+        $username = auth()->user()->username;
+        $tanggal = Carbon::now()->format('Y-m-d');
+
+        $listAbsenUser = DB::select("SELECT u.nama, u.no_telp, a.waktu_masuk, a.waktu_keluar, a.keterangan, a.latitude, a.longitude, a.foto
+                                    FROM absensi as a
+                                    JOIN users as u ON a.id_user = u.id
+                                    WHERE u.username = '$username'
+                                    AND DATE(a.waktu_masuk) = '$tanggal'
+                                    AND a.waktu_keluar IS NULL
+                                    ORDER BY a.waktu_masuk DESC");
+
+        return $listAbsenUser;
+    }
+
+    public function listAbsenUserAll($username) {
+        $username = auth()->user()->username;
+        $tanggal = Carbon::now()->format('Y-m-d');
+
+        $listAbsenUser = DB::select("SELECT u.nama, u.no_telp, a.waktu_masuk, a.waktu_keluar, a.keterangan, a.latitude, a.longitude, a.foto
+                                    FROM absensi as a
+                                    JOIN users as u ON a.id_user = u.id
+                                    WHERE u.username = '$username'
+                                    ORDER BY a.waktu_masuk DESC");
+
+        return $listAbsenUser;
     }
 
     /**

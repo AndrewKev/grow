@@ -57,7 +57,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($listAbsenUser as $list)
+                        @foreach ($listAbsenUserAll as $list)
                             <tr>
                                 <td>{{ $list->nama }}</td>
                                 <td>{{ $list->no_telp }}</td>
