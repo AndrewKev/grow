@@ -40,4 +40,15 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    use HasFactory;
+    protected $table = 'users';
+    protected $fillable = [
+        'nama',
+        'username',
+        'password',
+        'level',
+        'no_telp',
+
+    ];
 }

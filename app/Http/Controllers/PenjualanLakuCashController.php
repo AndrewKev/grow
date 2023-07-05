@@ -33,7 +33,7 @@ class PenjualanLakuCashController extends Controller
         $carryToday = $this->isTodayCarryProduk(auth()->user()->id, Carbon::now()->format('Y-m-d'));
         $totalCarryProduk = app('App\Http\Controllers\SalesController')->getCarriedStok();
         // $totalCarryProduk = $this->totalCarryProduk(auth()->user()->id, Carbon::now()->format('Y-m-d'));
-        $penjualanLk = DB::select("SELECT DISTINCT toko.id_toko, toko.nama_toko, routing.nama_routing, keterangan, p.emp, p.latitude, p.longitude, p.created_at, foto.nama_foto
+        $penjualanLk = DB::select("SELECT DISTINCT toko.id_toko, toko.nama_toko, routing.nama_routing, keterangan, p.emp, p.mapping, p.latitude, p.longitude, p.created_at, foto.nama_foto
                                     FROM penjualan_laku_cash AS p
                                     JOIN toko ON toko.id_toko = p.id_toko
                                     JOIN routing ON routing.id_routing = p.id_routing
@@ -138,7 +138,7 @@ class PenjualanLakuCashController extends Controller
 
     public function getTokoDariRouting($id_routing) {
         $id_user = auth()->user()->id;
-        $query = DB::select("SELECT DISTINCT d.id_distrik, r.id_routing, r.nama_routing, t.id_toko, t.nama_toko
+        $query = DB::select("SELECT DISTINCT d.id_distrik, r.id_routing, r.nama_routing, t.mapping, t.id_toko, t.nama_toko
                 FROM distrik d
                 JOIN routing r ON r.id_distrik = d.id_distrik
                 JOIN toko t ON t.id_routing = r.id_routing
@@ -299,6 +299,7 @@ class PenjualanLakuCashController extends Controller
                             'id_kunjungan' => $request->jenis_kunjungan,
                             'id_produk' => $request->id_produk[$i],
                             'jumlah_produk' => (int) $request->jumlah[$i],
+                            'mapping'=>$request->toko_mapping,
                             'id_keterangan' => $keterangan[0]->id_keterangan,
                             'emp' => $emp,
                             'latitude' => $request->latitude,

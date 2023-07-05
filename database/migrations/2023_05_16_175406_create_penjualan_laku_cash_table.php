@@ -21,6 +21,7 @@ return new class extends Migration
             $table->char('id_produk');
             $table->integer('jumlah_produk');
             $table->foreignId('id_keterangan')->nullable();
+            $table->integer('mapping')->nullable();
             $table->string('emp')->nullable();
             $table->foreignId('id_foto')->nullable();
             $table->string('latitude')->nullable();
