@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ClosedSPO;
 use App\Models\RequestBarang;
 use App\Models\CarryProduk;
 use App\Models\TokoSPO;
@@ -15,8 +16,10 @@ use App\Models\RincianUang;
 use App\Models\GudangKecil;
 use App\Models\AktivasiSPO;
 // use App\Http\Controllers\SalesController;
+use App\Http\Controllers\FormProdukController;
 
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
 use Carbon\Carbon;
@@ -25,11 +28,13 @@ class SPOController extends Controller
 {
     private $salesController;
     private $empController;
+    private $formProdukController;
 
-    public function __construct(SalesController $salesController, EmpController $empController)
+    public function __construct(SalesController $salesController, EmpController $empController, FormProdukController $formProdukController)
     {
         $this->salesController = $salesController;
         $this->empController = $empController;
+        $this->formProdukController = $formProdukController;
     }
 
     /**
@@ -343,6 +348,7 @@ class SPOController extends Controller
 
         // $getPenjualanSPO = $this->getPenjualanSPO(auth()->user()->id, Carbon::now()->format('Y-m-d'));
         $getPenjualanSPO = $this->getPenjualanSPO(auth()->user()->id);
+        // dd($getPenjualanSPO);
         return view('pages.spo.tampilPenjualanSPO', compact('totalCarryProduk', 'getPenjualanSPO'));
     }
 
@@ -494,12 +500,7 @@ class SPOController extends Controller
      */
     public function postPenjualanSPO(Request $request)
     {
-        // dd($this->getTokoBaru($request));
         $requestToCollection = collect($request);
-        // dd($requestToCollection->all());
-        // dd(empty($requestToCollection->get('emp')));
-        // dd($request->all());
-        // dd($this->empController->proccessEmp($request));
         $id_user = auth()->user()->id;
         $tanggal = Carbon::now()->format('Y-m-d');
 
@@ -622,7 +623,10 @@ class SPOController extends Controller
         JOIN products ON products.id_produk = p.id_produk
         WHERE p.id_toko = $id_toko;");
 
-        return view('pages.spo.tampilDetailPenjualanSPO', compact('data', 'toko'));
+        $closed = $this->getClosedSpo($id_toko);
+        // dd($closed->get(0));
+
+        return view('pages.spo.tampilDetailPenjualanSPO', compact('data', 'toko', 'closed'));
     }
 
     public function tampilStorProduk()
@@ -853,12 +857,11 @@ class SPOController extends Controller
     /**
      * Get data dari berdasarkan id_toko dan nomor aktivasi data tabel aktivasi
      */
-    public function getAktivasi($idToko, $aktivasi)
+    public function getAktivasi($idToko)
     {
         $data = DB::select("SELECT *
         FROM aktivasi_spo
-        WHERE id_toko = $idToko
-        AND aktivasi = '$aktivasi'");
+        WHERE id_toko = $idToko");
 
         return collect($data);
     }
@@ -928,9 +931,49 @@ class SPOController extends Controller
         return response()->json([$data]);
     }
 
-    public function closeSpo()
+    /**
+     * Close SPO.
+     */
+    public function closeSpo(Request $request, $idToko): \Illuminate\Http\RedirectResponse
     {
+        $produk = $this->formProdukController->collectProduk($request);
+        // $produk = FormProdukController::collectProduk($request);
+        $produk->map(function ($item) use ($idToko) {
+            if ($item['jumlah'] > 0) {
+                return ClosedSPO::create(
+                    [
+                        'id_user' => auth()->user()->id,
+                        'id_produk' => $item['idProduk'],
+                        'id_aktivasi' => $this->getAktivasi($idToko)->last()->id,
+                        'tanggal_close_spo' => Carbon::now()->format('Y-m-d'),
+                        'jumlah_produk' => $item['jumlah'],
+                    ]
+                );
+            }
+        });
 
+        AktivasiSPO::where('id_toko', $this->getAktivasi($idToko)->last()->id)->update(['is_close' => 1]);
+
+        return redirect('/spo/penjualan_spo/' . $idToko);
+    }
+
+    public function getClosedSpo(int $idToko): Collection
+    {
+        $closed = DB::select("SELECT c.tanggal_close_spo, c.id_produk, p.nama_produk, c.jumlah_produk, aspo.aktivasi, aspo.is_close, aspo.is_cash, t.id 'id_toko', t.nama_toko
+        FROM closed_spo c
+        JOIN aktivasi_spo aspo ON aspo.id = c.id_aktivasi
+        JOIN products p ON p.id_produk = c.id_produk
+        JOIN toko_spo t ON t.id = aspo.id_toko
+        WHERE t.id = ?", [$idToko]);
+
+        $cleanedData = collect($closed)->map(function ($item) {
+            return collect($item)->mapWithKeys(function ($value, $key) {
+                $cleanedKey = ltrim($key, '+');
+                return [$cleanedKey => $value];
+            })->all();
+        });
+
+        return new Collection($cleanedData);
     }
 
 }

@@ -61,7 +61,7 @@
                             </td>
                             <td>{{ $item->get('latitude') . ',' . $item->get('longitude') }}</td>
                             <td>
-                                @if ($item->get('isClose') == 0)
+                                @if ($item->get('is_close') == 0)
                                     <div class="alert alert-success d-flex flex-column" role="alert">
                                         SPO Berjalan
                                         <span class="fw-bold">
