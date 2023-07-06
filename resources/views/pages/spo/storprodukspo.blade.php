@@ -50,8 +50,6 @@
                             <th>No</th>
                             <th>Tanggal</th>
                             <th>Nama Produk</th>
-                            <th>Stok Awal</th>
-                            <th>Sisa Stok</th>
                             <th>Terjual</th>
                             <th>Harga Produk</th>
                             <th>Total Harga</th>
@@ -66,17 +64,15 @@
                         @foreach ($storproduk as $sp)
                             <tr>
                                 <td>{{ $no }}</td>
-                                <td>{{ $sp->tanggal_carry }}</td>
+                                <td>{{ $sp->tanggal_close_spo }}</td>
                                 <td>{{ $sp->nama_produk }}</td>
-                                <td>{{ $sp->stok_awal }}</td>
-                                <td>{{ $sp->stok_sekarang }}</td>
-                                <td>{{ $sp->terjual }}</td>
-                                <td>{{ $sp->harga_toko }}</td>
+                                <td>{{ $sp->jumlah_produk }}</td>
+                                <td>{{ $sp->total_harga }}</td>
                                 <td>{{ $sp->total_harga }}</td>
                             </tr>
                             @php
                                 $no++;
-                                $totaljual += $sp->terjual;
+                                $totaljual += $sp->jumlah_produk;
                                 $totalharga += $sp->total_harga;
                             @endphp
                         @endforeach
@@ -111,12 +107,10 @@
                     <div class="modal-body">
                         @foreach ($storproduk as $sp)
                             <div>
-                                <input type="hidden" name="tanggal_carry[]" value="{{ $sp->tanggal_carry }}">
+                                <input type="hidden" name="tanggal_close_spo[]" value="{{ $sp->tanggal_close_spo }}">
                                 <input type="hidden" name="id_produk[]" value="{{ $sp->id_produk }}">
                                 <input type="hidden" name="nama_produk[]" value="{{ $sp->nama_produk }}">
-                                <input type="hidden" name="stok_awal[]" value="{{ $sp->stok_awal }}">
-                                <input type="hidden" name="stok_sekarang[]" value="{{ $sp->stok_sekarang }}">
-                                <input type="hidden" name="terjual[]" value="{{ $sp->terjual }}">
+                                <input type="hidden" name="jumlah_produk[]" value="{{ $sp->jumlah_produk }}">
                                 <input type="hidden" name="harga_toko[]" value="{{ $sp->harga_toko }}">
                                 <input type="hidden" name="total_harga[]" value="{{ $sp->total_harga }}">
 
@@ -142,15 +136,13 @@
                     <div class="modal-body">
                         @foreach ($storproduk as $sp)
                             <div>
-                                <input type="hidden" name="tanggal_carry[]" value="{{ $sp->tanggal_carry }}">
+                                <input type="hidden" name="tanggal_close_spo[]" value="{{ $sp->tanggal_close_spo }}">
                                 <input type="hidden" name="id_produk[]" value="{{ $sp->id_produk }}">
                                 <input type="hidden" name="nama_produk[]" value="{{ $sp->nama_produk }}">
-                                <input type="hidden" name="stok_awal[]" value="{{ $sp->stok_awal }}">
-                                <input type="hidden" name="stok_sekarang[]" value="{{ $sp->stok_sekarang }}">
-                                <input type="hidden" name="terjual[]" value="{{ $sp->terjual }}">
+                                <input type="hidden" name="jumlah_produk[]" value="{{ $sp->jumlah_produk }}">
                                 <input type="hidden" name="harga_toko[]" value="{{ $sp->harga_toko }}">
-                                <input type="hidden" name="total_harga[]" id="total_harga"
-                                    value="{{ $sp->total_harga }}">
+                                <input type="hidden" name="total_harga[]" value="{{ $sp->total_harga }}">
+
                             </div>
                         @endforeach
                         {{-- <label for="totalStor" class="form-label">Total uang yang harus di stor <b>Rp

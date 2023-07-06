@@ -506,6 +506,7 @@ class SPOController extends Controller
 
         $emp = (!empty($requestToCollection->has('emp'))) ? $this->empController->proccessEmp($request) : "";
 
+        // dd($request->all());
         // UPDATE STOK
         $barang = $this->getStokUser();
         $data = [];
@@ -579,8 +580,8 @@ class SPOController extends Controller
             $id_toko = $toko->get(0)->id;
             $this->createAktivasi($request, $id_toko);
         } else {
-            $idToko = $request->inputTokoLama;
-            $this->createAktivasi($request, $idToko);
+            $id_toko = $request->inputTokoLama;
+            $this->createAktivasi($request, $id_toko);
         }
 
         for ($i = 0; $i < count($request->id_produk); $i++) {
@@ -631,21 +632,55 @@ class SPOController extends Controller
 
     public function tampilStorProduk()
     {
-        $storproduk = app('App\Http\Controllers\SalesController')->getStorProduk();
+        $storproduk = $this->getStorProduk();
         $storPenjualan = app('App\Http\Controllers\SalesController')->getStorPenjualan();
         $req = app('App\Http\Controllers\SalesController')->isRequestStorBarang(auth()->user()->id, Carbon::now()->format('Y-m-d'));
         $reqUang = app('App\Http\Controllers\SalesController')->isRequestStorUang(auth()->user()->id, Carbon::now()->format('Y-m-d'));
         $konfirmasi = app('App\Http\Controllers\SalesController')->isKonfirmasiStorBarang(auth()->user()->id, Carbon::now()->format('Y-m-d'));
         $konfirmasiUang = app('App\Http\Controllers\SalesController')->isKonfirmasiStorUang(auth()->user()->id, Carbon::now()->format('Y-m-d'));
         $storToday = app('App\Http\Controllers\SalesController')->isTodayStorProduk(auth()->user()->id, Carbon::now()->format('Y-m-d'));
-        $carryToday = app('App\Http\Controllers\SalesController')->isCarry();
+        $closeToday = $this->isCloseSPO();
+        $carryToday = $this->isCarry();
         // dd($carryToday);
-        return view('pages.spo.storprodukspo', compact('storproduk', 'storPenjualan', 'req', 'reqUang', 'konfirmasi', 'konfirmasiUang', 'storToday', 'carryToday'));
+        return view('pages.spo.storprodukspo', compact('storproduk', 'storPenjualan', 'req', 'reqUang', 'konfirmasi', 'konfirmasiUang', 'storToday', 'closeToday', 'carryToday'));
+    }
+
+    public function getStorProduk(){
+        $id_user = auth()->user()->id;
+        $tanggal = Carbon::now()->format('Y-m-d');
+        $barang = DB::select("SELECT users.nama, c.*,
+         products.nama_produk,
+         products.harga_toko,c.jumlah_produk,
+         c.jumlah_produk * products.harga_toko as total_harga
+        FROM closed_spo AS c
+        JOIN products ON products.id_produk = c.id_produk
+        JOIN users ON c.id_user = users.id
+        WHERE c.id_user = '$id_user' AND c.tanggal_close_spo BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59';");
+        return $barang;
+    }
+
+    public function getStokUserClose() {
+        $id_user = auth()->user()->id;
+        $tanggal = Carbon::now()->format('Y-m-d');
+        $barang = DB::select("SELECT users.nama, c.*, products.nama_produk
+        FROM closed_spo AS c
+        JOIN products ON products.id_produk = c.id_produk
+        JOIN users ON c.id_user = users.id
+        WHERE c.id_user = '$id_user' AND c.tanggal_close_spo BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59';");
+
+        return collect($barang);
+    }
+
+    public function isCloseSPO() { // cek apakah sales sudah bawa barang
+        if(sizeof($this->getStokUserClose()) > 0) {
+            return true;
+        }
+        return false;
     }
 
     public function requestStorBarang(Request $request)
     {
-        // dd($request->all());
+        //  dd($request->all());
         $user = auth()->user()->id;
         if ($request->has('setujuStorProduk')) {
             // dd($request->all());
@@ -655,9 +690,9 @@ class SPOController extends Controller
                         'id_user' => auth()->user()->id,
                         'id_produk' => $request->id_produk[$i],
                         'tanggal_stor_barang' => Carbon::now(),
-                        'stok_awal' => (int) $request->stok_awal[$i],
-                        'sisa_stok' => (int) $request->stok_sekarang[$i],
-                        'terjual' => (int) $request->terjual[$i],
+                        'stok_awal' => 0,
+                        'sisa_stok' => 0,
+                        'terjual' => (int) $request->jumlah_produk[$i],
                         'harga_produk' => (int) $request->harga_toko[$i],
                         'total_harga' => (int) $request->total_harga[$i],
                         'konfirmasi' => 0,
@@ -667,17 +702,18 @@ class SPOController extends Controller
                 DB::update("UPDATE `gudang_kecil`
                         SET `stok` = `stok` + :stok
                         WHERE `id_produk` = :id_produk", [
-                    'stok' => (int) $request->stok_sekarang[$i],
+                    'stok' => (int) $request->jumlah_produk[$i],
                     'id_produk' => $request->id_produk[$i]
                 ]);
             }
         }
-        app('App\Http\Controllers\HistoryRequestSalesController')->salesRequestStorBarang($request, 0);
+        app('App\Http\Controllers\HistoryRequestSalesController')->salesRequestStorBarangSPO($request, 0);
         return redirect('/spo/stor_produk');
     }
 
     public function requestStorUang(Request $request)
     {
+        // dd($request->all());
         $user = auth()->user()->id;
         $today = Carbon::now()->format('Y-m-d');
         if ($request->has('setujuStorUang')) {
@@ -706,7 +742,7 @@ class SPOController extends Controller
                 + 500 * $request->input('limaratuskoin', 0)
                 + 200 * $request->input('duaratuskoin', 0)
                 + 100 * $request->input('seratuskoin', 0);
-
+            // dd($totalUang);
             $result = DB::select("SELECT total_harga FROM `request_stor_barang`
                                         WHERE id_user = '$user'
                                         AND tanggal_stor_barang BETWEEN '$today 00:00:00' AND '$today 23:59:59'
@@ -715,7 +751,7 @@ class SPOController extends Controller
             foreach ($result as $item) {
                 $totalHarga += $item->total_harga;
             }
-
+            // dd($totalHarga);
             if ($totalUang != $totalHarga) {
                 // $errorMessage = 'Jumlah uang yang Anda masukkan (' . $totalUang . ') tidak sesuai dengan total harga (' . $totalHarga . ').';
                 // return back()->with('error', $errorMessage);
@@ -744,7 +780,7 @@ class SPOController extends Controller
                        AND tanggal_masuk = '$today'
                        ORDER BY created_at DESC
                        LIMIT 1");
-
+                // dd($ambilUang);
                 $record = RequestStorBarang::where('id_user', $user)
                     ->whereBetween('tanggal_stor_barang', [$today . ' 00:00:00', $today . ' 23:59:59'])
                     ->first();
@@ -759,7 +795,7 @@ class SPOController extends Controller
             }
         }
 
-        app('App\Http\Controllers\HistoryRequestSalesController')->salesRequestStorPenjualan($request, 0);
+        app('App\Http\Controllers\HistoryRequestSalesController')->salesRequestStorPenjualanSPO($request, 0);
         return redirect('/spo/stor_produk');
     }
 

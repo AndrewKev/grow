@@ -121,6 +121,27 @@ class HistoryRequestSalesController extends Controller
         return $history;
     }
 
+    public function salesRequestStorBarangSPO(Request $request, $konfirmasiAdmin)
+    {
+        for($i = 0; $i < sizeof($request->id_produk); $i++) {
+                $history = HistoryRequestBarang::create(
+                    [
+                        'tanggal' => Carbon::now(),
+                        'nama_sales' => auth()->user()->nama,
+                        'nama_produk'=> $request->nama_produk[$i],
+                        'terjual'=>(int) $request->jumlah_produk[$i],
+                        'konfirmasi_admin' => $konfirmasiAdmin,
+                        'keterangan' => 'sales request',
+                        'stok_awal'=>0,
+                        'sisa_stok'=>0,
+                        
+                    ]
+                );
+        }
+
+        return $history;
+    }
+
     public function getReqKonfirmasiStorBarang($id_user) {
         $data = DB::select("SELECT r.id_user, u.nama, r.id_produk, p.nama_produk, r.stok_awal, r.terjual, r.sisa_stok, r.konfirmasi 
                             FROM request_stor_barang r 
@@ -155,6 +176,7 @@ class HistoryRequestSalesController extends Controller
     // HISTORY REQUEST STOR PENJUALAN
     public function salesRequestStorPenjualan(Request $request, $konfirmasiAdmin)
     {
+        // dd($request->all());
         for($i = 0; $i < sizeof($request->id_produk); $i++) {
                 $history = HistoryRequestPenjualan::create(
                     [
@@ -162,6 +184,29 @@ class HistoryRequestSalesController extends Controller
                         'nama_sales' => auth()->user()->nama,
                         'nama_produk'=> $request->nama_produk[$i],
                         'terjual'=>(int)$request->terjual[$i],
+                        'total_harga'=>(int) $request->total_harga[$i],
+                        'konfirmasi_admin' => $konfirmasiAdmin,
+                        'keterangan' => 'sales request penjualan',
+                    ]
+                );
+        }
+
+        return $history;
+    }
+
+    
+
+    // HISTORY REQUEST STOR PENJUALAN
+    public function salesRequestStorPenjualanSPO(Request $request, $konfirmasiAdmin)
+    {
+        // dd($request->all());
+        for($i = 0; $i < sizeof($request->id_produk); $i++) {
+                $history = HistoryRequestPenjualan::create(
+                    [
+                        'tanggal' => Carbon::now(),
+                        'nama_sales' => auth()->user()->nama,
+                        'nama_produk'=> $request->nama_produk[$i],
+                        'terjual'=>(int)$request->jumlah_produk[$i],
                         'total_harga'=>(int) $request->total_harga[$i],
                         'konfirmasi_admin' => $konfirmasiAdmin,
                         'keterangan' => 'sales request penjualan',
@@ -182,6 +227,7 @@ class HistoryRequestSalesController extends Controller
     }
 
     public function konfirmasiAdminStorPenjualan($id_user){
+        // dd($request->all());
         $dataKonfirmasi = $this->getReqKonfirmasiStorPenjualan($id_user);
 
         foreach ($dataKonfirmasi as $data) {

@@ -22,9 +22,7 @@
                             <th>No</th>
                             <th>Tanggal</th>
                             <th>Nama Produk</th>
-                            <th>Stok Awal</th>
                             <th>Terjual</th>
-                            <th>Sisa Stok</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -38,9 +36,8 @@
                                 <td>{{ $no }}</td>
                                 <td>{{ $dt->tanggal_stor_barang }}</td>
                                 <td>{{ $dt->nama_produk }}</td>
-                                <td>{{ $dt->stok_awal }}</td>
                                 <td>{{ $dt->terjual }}</td>
-                                <td>{{ $dt->sisa_stok }}</td>
+                                
                             </tr>
                             @php
                                 $no++;

@@ -13,15 +13,15 @@ return new class extends Migration
     {
         Schema::create('stor_produk', function (Blueprint $table) {
             $table->foreignId('id_user');
-            $table->char('id_produk');
-            $table->datetime('tanggal_stor_barang');
-            $table->datetime('tanggal_stor_uang');
-            $table->integer('stok_awal');
-            $table->integer('terjual');
-            $table->integer('sisa_stok');
-            $table->integer('harga_produk');
-            $table->integer('total_harga');
-            $table->foreignId('id_rincian_uang');
+            $table->char('id_produk')->nullable();
+            $table->datetime('tanggal_stor_barang')->nullable();
+            $table->datetime('tanggal_stor_uang')->nullable();
+            $table->integer('stok_awal')->nullable();
+            $table->integer('terjual')->nullable();
+            $table->integer('sisa_stok')->nullable();
+            $table->integer('harga_produk')->nullable();
+            $table->integer('total_harga')->nullable();
+            $table->foreignId('id_rincian_uang')->nullable();
             // $table->int('stok_kembali');
             $table->timestamps();
 
