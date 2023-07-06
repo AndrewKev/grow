@@ -18,6 +18,7 @@ use App\Models\AktivasiSPO;
 // use App\Http\Controllers\SalesController;
 use App\Http\Controllers\FormProdukController;
 
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\DB;
@@ -347,8 +348,9 @@ class SPOController extends Controller
         $totalCarryProduk = app('App\Http\Controllers\SalesController')->getCarriedStok();
 
         // $getPenjualanSPO = $this->getPenjualanSPO(auth()->user()->id, Carbon::now()->format('Y-m-d'));
+        // $getPenjualanSPO = $this->getPenjualanSPO(auth()->user()->id)->where('is_close', 0)->values();
         $getPenjualanSPO = $this->getPenjualanSPO(auth()->user()->id);
-        // dd($getPenjualanSPO);
+        // dd($getPenjualanSPO->where('is_close', 0)->values());
         return view('pages.spo.tampilPenjualanSPO', compact('totalCarryProduk', 'getPenjualanSPO'));
     }
 
@@ -645,7 +647,8 @@ class SPOController extends Controller
         return view('pages.spo.storprodukspo', compact('storproduk', 'storPenjualan', 'req', 'reqUang', 'konfirmasi', 'konfirmasiUang', 'storToday', 'closeToday', 'carryToday'));
     }
 
-    public function getStorProduk(){
+    public function getStorProduk()
+    {
         $id_user = auth()->user()->id;
         $tanggal = Carbon::now()->format('Y-m-d');
         $barang = DB::select("SELECT users.nama, c.*,
@@ -659,7 +662,8 @@ class SPOController extends Controller
         return $barang;
     }
 
-    public function getStokUserClose() {
+    public function getStokUserClose()
+    {
         $id_user = auth()->user()->id;
         $tanggal = Carbon::now()->format('Y-m-d');
         $barang = DB::select("SELECT users.nama, c.*, products.nama_produk
@@ -671,8 +675,9 @@ class SPOController extends Controller
         return collect($barang);
     }
 
-    public function isCloseSPO() { // cek apakah sales sudah bawa barang
-        if(sizeof($this->getStokUserClose()) > 0) {
+    public function isCloseSPO()
+    { // cek apakah sales sudah bawa barang
+        if (sizeof($this->getStokUserClose()) > 0) {
             return true;
         }
         return false;
@@ -1010,6 +1015,13 @@ class SPOController extends Controller
         });
 
         return new Collection($cleanedData);
+    }
+
+    public function listSpoClose(): View
+    {
+        $tokoClosedSpo = $this->getPenjualanSPO(auth()->user()->id)->where('is_close', 1)->values();
+        // dd($this->getClosedSpo(110));
+        return view('pages.spo.daftarCloseSpo', compact('tokoClosedSpo'));
     }
 
 }

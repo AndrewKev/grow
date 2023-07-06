@@ -52,6 +52,7 @@
                         <a class="nav-link" href="/spo/absensi">Absensi</a>
                         <a class="nav-link" href="/spo/stok_jalan">Stok Jalan</a>
                         <a class="nav-link" href="/spo/penjualan_spo">Penjualan SPO</a>
+                        <a class="nav-link" href="/spo/daftar_spo_close">Daftar SPO Close</a>
                         <a class="nav-link" href="/spo/stor_produk">Stor Produk</a>
                     </nav>
                 </div>
