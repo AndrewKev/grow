@@ -16,7 +16,7 @@ use App\Models\RincianUang;
 use App\Models\GudangKecil;
 use App\Models\AktivasiSPO;
 // use App\Http\Controllers\SalesController;
-use App\Http\Controllers\FormProdukController;
+use App\Http\Controllers\Penjualan\FormProdukController;
 
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -68,13 +68,11 @@ class SPOController extends Controller
         $username = auth()->user()->username;
         $finishStor = $this->isFinishStor(auth()->user()->id, Carbon::now()->format('Y-m-d'));
         $isAbsensi = $this->isAbsensi(auth()->user()->id, Carbon::now()->format('Y-m-d'));
-        $listAbsenUser = DB::select("SELECT u.nama, u.no_telp, a.waktu_masuk, a.waktu_keluar, a.keterangan, a.latitude, a.longitude, a.foto
-                                     FROM absensi as a
-                                     JOIN users as u ON a.id_user = u.id
-                                     WHERE u.username = '$username'
-                                     ORDER BY a.waktu_masuk DESC");
+        $listAbsenUser = app('App\Http\Controllers\SalesController')->listAbsenUser(auth()->user()->id, Carbon::now()->format('Y-m-d'));
+        $listAbsenUserAll = app('App\Http\Controllers\SalesController')->listAbsenUserAll(auth()->user()->username);
 
-        return app('App\Http\Controllers\AbsensiController')->indexSpo($finishStor, $isAbsensi, $listAbsenUser);
+
+        return app('App\Http\Controllers\AbsensiController')->indexSpo($finishStor, $isAbsensi, $listAbsenUser, $listAbsenUserAll);
     }
 
     /**
@@ -125,6 +123,7 @@ class SPOController extends Controller
      */
     protected function isAbsensi($id_user, $tanggal)
     {
+        // $tanggal = Carbon::now()->format('Y-m-d');
         $cek = DB::select("SELECT * FROM `absensi`
             WHERE id_user = '$id_user'
             AND waktu_keluar BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59'");
@@ -369,13 +368,7 @@ class SPOController extends Controller
         //     JOIN foto ON foto.id_foto = p.id_foto
         //     JOIN keterangan ON keterangan.id_keterangan = p.id_keterangan
         //     WHERE p.id_user = '$idUser'");
-        $penjualanSPO = DB::select("SELECT DISTINCT pspo.id_toko, t.nama_toko, pspo.id_distrik, pspo.nomor_spo, pspo.tanggal_masuk, pspo.tanggal_jatuh_tempo, k.keterangan, pspo.emp, f.nama_foto, aspo.aktivasi, aspo.is_close, aspo.is_cash
-        FROM toko_spo t
-        JOIN penjualan_spo pspo ON pspo.id_toko = t.id
-        JOIN keterangan k ON k.id_keterangan = pspo.id_keterangan
-        JOIN foto f ON f.id_foto = pspo.id_foto
-        JOIN aktivasi_spo aspo ON aspo.id_toko = t.id
-        WHERE pspo.id_user = ?", [$idUser]);
+        $penjualanSPO = DB::select("SELECT pspo.id_toko, t.nama_toko, pspo.id_distrik, pspo.nomor_spo, pspo.tanggal_masuk, pspo.tanggal_jatuh_tempo, k.keterangan, pspo.emp, f.nama_foto, MAX(aspo.aktivasi) AS aktivasi, MIN(aspo.is_close) AS is_close, MAX(aspo.is_cash) AS is_cash FROM toko_spo t JOIN penjualan_spo pspo ON pspo.id_toko = t.id JOIN keterangan k ON k.id_keterangan = pspo.id_keterangan JOIN foto f ON f.id_foto = pspo.id_foto JOIN aktivasi_spo aspo ON aspo.id_toko = t.id WHERE pspo.id_user = ? GROUP BY pspo.id_toko, t.nama_toko, pspo.id_distrik, pspo.nomor_spo, pspo.tanggal_masuk, pspo.tanggal_jatuh_tempo, k.keterangan, pspo.emp, f.nama_foto;", [$idUser]);
 
         // menghilangkan simbol +
         // contoh : +"id_toko": 110
@@ -398,6 +391,12 @@ class SPOController extends Controller
         });
 
         return $collection;
+    }
+
+    public function getPenjualanSPOClose($idUser)
+    {
+        $penjualanSPO = DB::select("SELECT DISTINCT pspo.id_toko, t.nama_toko, pspo.id_distrik, pspo.nomor_spo, pspo.tanggal_masuk, pspo.tanggal_jatuh_tempo, k.keterangan, pspo.emp, f.nama_foto, aspo.aktivasi, aspo.is_close, aspo.is_cash FROM toko_spo t JOIN penjualan_spo pspo ON pspo.id_toko = t.id JOIN keterangan k ON k.id_keterangan = pspo.id_keterangan JOIN foto f ON f.id_foto = pspo.id_foto JOIN aktivasi_spo aspo ON aspo.id_toko = t.id WHERE pspo.id_user = ? AND is_close = 1;", [$idUser]);
+        // dd($penjualanSPO);
     }
 
     /**
@@ -1019,7 +1018,7 @@ class SPOController extends Controller
 
     public function listSpoClose(): View
     {
-        $tokoClosedSpo = $this->getPenjualanSPO(auth()->user()->id)->where('is_close', 1)->values();
+        $tokoClosedSpo = $this->getPenjualanSPOClose(auth()->user()->id);
         // dd($this->getClosedSpo(110));
         return view('pages.spo.daftarCloseSpo', compact('tokoClosedSpo'));
     }

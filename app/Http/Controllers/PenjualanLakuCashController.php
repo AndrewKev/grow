@@ -10,14 +10,31 @@ use App\Models\Foto;
 use App\Models\Emp;
 use App\Models\CarryProduk;
 use Carbon\Carbon;
+use App\Http\Controllers\EmpController;
+use App\Http\Controllers\FotoController;
 use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+
+use Illuminate\Contracts\View\View;
+use Illuminate\Routing\Redirector;
 
 class PenjualanLakuCashController extends Controller
 {
+    private $empController;
+    private $fotoController;
+    private $tokoController;
+
+    public function __construct(EmpController $empController, FotoController $fotoController, TokoController $tokoController)
+    {
+        $this->empController = $empController;
+        $this->fotoController = $fotoController;
+        $this->tokoController = $tokoController;
+
+    }
     /**
      * Display a listing of the resource.
      */
@@ -166,167 +183,264 @@ class PenjualanLakuCashController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store($request)
-    {
-        /** TEST COLLECTION */
-        // $collection = collect($request);
-        // $att = collect();
-        // $jumlah = collect($collection->get('produk'));
-        // $idProduk = collect($collection->get('id_produk'));
+    // public function store($request)
+    // {
+    //     /** TEST COLLECTION */
+    //     // $collection = collect($request);
+    //     // $att = collect();
+    //     // $jumlah = collect($collection->get('produk'));
+    //     // $idProduk = collect($collection->get('id_produk'));
 
-        // for ($i=0; $i < $jumlah->count(); $i++) {
-        //     if($jumlah->get($i) != '0') {
-        //         $att->push(['id_produk' => $idProduk->get($i), 'jumlah'=> $jumlah->get($i)]);
-        //     }
-        // }
+    //     // for ($i=0; $i < $jumlah->count(); $i++) {
+    //     //     if($jumlah->get($i) != '0') {
+    //     //         $att->push(['id_produk' => $idProduk->get($i), 'jumlah'=> $jumlah->get($i)]);
+    //     //     }
+    //     // }
 
+    //     // dd($request->all());
+
+    //     $id_user = auth()->user()->id;
+    //     $tanggal = Carbon::now()->format('Y-m-d');
+    //     $emp = "";
+    //     // $jumlahEmp = [];
+    //     // dd($request->jumlahEmp);
+    //     if (!empty($request->emp)) {
+    //         foreach ($request->emp as $index => $e) {
+    //             $em = $request->jumlahEmp[$index];
+    //                 $emp .= $e . '('.$em.')'.'; ';
+    //         // Ambil data 'emp' dari tabel berdasarkan kolom 'jenis'
+    //         $empData = Emp::where('jenis', $e)->first();
+    //         // dd($empData);
+    //         // Lakukan pengurangan pada kolom 'jumlah'
+    //         $updatedJumlah = $empData->jumlah - $em;
+
+    //         // Perbarui (update) nilai kolom 'jumlah' dalam tabel 'emp'
+    //         $empData->update(['jumlah' => $updatedJumlah]);
+    //         }
+    //         // dd($emp);
+    //     }
+    //     // $stokEmp = Emp::where('jenis')
+
+
+
+    //     // UPDATE STOK
+    //     $barang = $this->getStokUser();
+    //     $data = [];
+    //     for ($i = 0; $i < count($request->id_produk); $i++) {
+    //         if ($request->jumlah[$i] > '0') {
+    //             $productId = $request->id_produk[$i];
+    //             $carryValue = (int) $request->jumlah[$i];
+    //             $stokCarry = $this->getStokCarryProduk($productId, $id_user);
+    //             $stokCarryValue = $stokCarry[0]->stok_sekarang;
+    //             // dd($stokCarryValue);
+
+    //             if ($carryValue > $stokCarryValue) {
+    //                 // Stok carry produk yang dibawa kurang, tampilkan pesan kesalahan
+    //                 return redirect()->back()->with('error', 'Stok carry produk ' . $productId . ' kurang.');
+    //             }
+
+    //             $data[$productId] = [
+    //                 'produk' => $productId,
+    //                 'carry' => $carryValue
+    //             ];
+    //         }
+    //     }
+
+    //     // Mengurangi stok berdasarkan carry yang diinputkan
+    //     foreach ($data as $productId => $item) {
+    //         $carryValue = $item['carry'];
+
+    //         foreach ($barang as $produk) {
+    //             if ($produk->id_produk === $productId) {
+    //                 $produk->stok_sekarang -= $carryValue;
+    //                 break;
+    //             }
+    //         }
+    //         // Lakukan update pada tabel CarryProduk
+    //         DB::update("UPDATE carry_produk
+    //                     SET stok_sekarang = $produk->stok_sekarang
+    //                     WHERE id_produk = '$productId'
+    //                     AND id_user = $id_user
+    //                     AND tanggal_carry BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59'");
+    //         // CarryProduk::where('id_produk', $productId)->update(['stok_sekarang' => $produk->stok_sekarang]);
+    //     }
+
+    //     // FOTO
+    //     $tanggal = Carbon::now()->format('Y-m-d');
+    //     $validatedData = $request->validate([
+    //         'foto' => 'image'
+    //     ]);
+    //     // dd($validatedData);
+    //     $fotoPath = $request->file('foto')->store('public/fotoToko'); // Simpan file gambar ke direktori penyimpanan
+    //     Foto::create([
+    //         'nama_foto' => $fotoPath,
+    //         'id_user' =>auth()->user()->id,
+    //         'tanggal' =>$tanggal
+    //     ]);
+    //     $id_user = auth()->user()->id;
+    //     $foto = DB::select("SELECT * FROM `foto`
+    //                    WHERE id_user = '$id_user'
+    //                    AND tanggal = '$tanggal'
+    //                    ORDER BY created_at DESC");
+    //     // dd($foto);
+    //     // KETERANGAN
+    //     if($request->get('keterangan') != null) {
+    //         $this->createKeterangan($request->get('keterangan'));
+    //     }
+
+    //     // $id_user = auth()->user()->id;
+    //     // $tanggal = Carbon::now()->format('Y-m-d');
+    //     $keterangan = DB::select("SELECT * FROM `keterangan`
+    //                    WHERE id_user = '$id_user'
+    //                    AND tanggal = '$tanggal'
+    //                    ORDER BY created_at DESC");
+
+    //     if($request->jenis_kunjungan == 'IO') {
+    //         $this->createToko($request);
+
+    //         $toko = $this->getTokoIO($request);
+    //     } else {
+    //         $toko = $this->getToko($request);
+    //     }
+
+    //     $id_toko = $toko[0]->id_toko;
+    //     for ($i = 0; $i < count($request->id_produk); $i++) {
+    //         if ($request->jumlah[$i] >= '0') {
+    //             if($request->get('keterangan') != null) {
+    //                 Penjualan::create(
+    //                     [
+    //                         'id_user' => auth()->user()->id,
+    //                         'id_distrik' => $request->id_distrik,
+    //                         'id_routing' => $request->routing,
+    //                         'id_toko' => $id_toko,
+    //                         'id_kunjungan' => $request->jenis_kunjungan,
+    //                         'id_produk' => $request->id_produk[$i],
+    //                         'jumlah_produk' => (int) $request->jumlah[$i],
+    //                         'mapping'=>$request->toko_mapping,
+    //                         'id_keterangan' => $keterangan[0]->id_keterangan,
+    //                         'emp' => $emp,
+    //                         'latitude' => $request->latitude,
+    //                         'longitude' => $request->longitude,
+    //                         'id_foto' => $foto[0]->id_foto,
+
+    //                     ]
+    //                 );
+    //             }
+    //         }
+    //     }
+    //     // dd($request->id_produk);
+    //     return redirect('/user/penjualan_laku_cash');
+    // }
+
+    public function store($request){
+        // $this->updateEmpData($request);
+        $this->createPenjualan($request);
+        $this->updateStokCarry($request);
+        return redirect('/user/penjualan_laku_cash');
+    }
+
+    public function updateEmpData($request){
         // dd($request->all());
+        $requestToCollection = collect($request);
+        // dd($requestToCollection);
+        $emp = (!empty($requestToCollection->has('emp'))) ? $this->empController->proccessEmp($request) : "";
+        // dd($emp);
+        return($emp);
+    }
 
+    public function uploadFoto($request){
+        $requestToCollection = collect($request);
+        // dd($requestToCollection);
+        $uploadFoto = (!empty($requestToCollection->has('foto'))) ? $this->fotoController->collectFoto($request) : "";
+        // dd($uploadFoto);
+        return($uploadFoto);
+        // dd($requestToCollection);
+    }
+
+    public function updateStokCarry($request){
         $id_user = auth()->user()->id;
         $tanggal = Carbon::now()->format('Y-m-d');
-        $emp = "";
-        // $jumlahEmp = [];
-        // dd($request->jumlahEmp);
-        if (!empty($request->emp)) {
-            foreach ($request->emp as $index => $e) {
-                $em = $request->jumlahEmp[$index];
-                    $emp .= $e . '('.$em.')'.'; ';
-            // Ambil data 'emp' dari tabel berdasarkan kolom 'jenis'
-            $empData = Emp::where('jenis', $e)->first();
-            // dd($empData);
-            // Lakukan pengurangan pada kolom 'jumlah'
-            $updatedJumlah = $empData->jumlah - $em;
-
-            // Perbarui (update) nilai kolom 'jumlah' dalam tabel 'emp'
-            $empData->update(['jumlah' => $updatedJumlah]);
-            }
-            // dd($emp);
-        }
-        // $stokEmp = Emp::where('jenis')
-
-
-
-        // UPDATE STOK
         $barang = $this->getStokUser();
         $data = [];
-        for ($i = 0; $i < count($request->id_produk); $i++) {
-            if ($request->jumlah[$i] != '0') {
+
+        for($i=0; $i < count($request->id_produk); $i++){
+            if($request->jumlah[$i] > '0'){
                 $productId = $request->id_produk[$i];
                 $carryValue = (int) $request->jumlah[$i];
                 $stokCarry = $this->getStokCarryProduk($productId, $id_user);
                 $stokCarryValue = $stokCarry[0]->stok_sekarang;
-                // dd($stokCarryValue);
+                // dd($productId);
 
-                if ($carryValue > $stokCarryValue) {
-                    // Stok carry produk yang dibawa kurang, tampilkan pesan kesalahan
-                    return redirect()->back()->with('error', 'Stok carry produk ' . $productId . ' kurang.');
+                if($carryValue > $stokCarryValue){
+                    return redirect()->back()->with('error', 'Stok carry produk '.$productId . ' kurang.');
                 }
 
-                $data[$productId] = [
-                    'produk' => $productId,
-                    'carry' => $carryValue
+                $data[$productId]=[
+                    'produk'=>$productId,
+                    'carry'=>$carryValue
                 ];
+                // dd($data);
             }
         }
-
-        // Mengurangi stok berdasarkan carry yang diinputkan
-        foreach ($data as $productId => $item) {
+        
+        foreach($data as $productId => $item){
             $carryValue = $item['carry'];
 
-            foreach ($barang as $produk) {
-                if ($produk->id_produk === $productId) {
+            foreach($barang as $produk){
+                if($produk->id_produk === $productId){
                     $produk->stok_sekarang -= $carryValue;
                     break;
                 }
             }
-            // Lakukan update pada tabel CarryProduk
+
             DB::update("UPDATE carry_produk
-                        SET stok_sekarang = $produk->stok_sekarang
+                        SET stok_sekarang  = $produk->stok_sekarang
                         WHERE id_produk = '$productId'
                         AND id_user = $id_user
-                        AND tanggal_carry BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59'");
-            // CarryProduk::where('id_produk', $productId)->update(['stok_sekarang' => $produk->stok_sekarang]);
+                        AND tanggal_carry BETWEEN '$tanggal 00:00:00' AND '$tanggal 23:59:59'"); 
         }
+        $barang = $this->getStokUser();
 
-        // FOTO
-        $tanggal = Carbon::now()->format('Y-m-d');
-        $validatedData = $request->validate([
-            'foto' => 'image'
-        ]);
-        // dd($validatedData);
-        $fotoPath = $request->file('foto')->store('public/fotoToko'); // Simpan file gambar ke direktori penyimpanan
-        Foto::create([
-            'nama_foto' => $fotoPath,
-            'id_user' =>auth()->user()->id,
-            'tanggal' =>$tanggal
-        ]);
-        $id_user = auth()->user()->id;
-        $foto = DB::select("SELECT * FROM `foto`
-                       WHERE id_user = '$id_user'
-                       AND tanggal = '$tanggal'
-                       ORDER BY created_at DESC");
-        // dd($foto);
-        // KETERANGAN
-        if($request->get('keterangan') != null) {
-            $this->createKeterangan($request->get('keterangan'));
-        }
+        foreach($data as $productId => $item){
+            $carryValue = $item['carry'];
 
-        // $id_user = auth()->user()->id;
-        // $tanggal = Carbon::now()->format('Y-m-d');
-        $keterangan = DB::select("SELECT * FROM `keterangan`
-                       WHERE id_user = '$id_user'
-                       AND tanggal = '$tanggal'
-                       ORDER BY created_at DESC");
-
-        if($request->jenis_kunjungan == 'IO') {
-            $this->createToko($request);
-
-            $toko = $this->getTokoIO($request);
-        } else {
-            $toko = $this->getToko($request);
-        }
-
-        $id_toko = $toko[0]->id_toko;
-        for ($i = 0; $i < count($request->id_produk); $i++) {
-            if ($request->jumlah[$i] != '0') {
-                if($request->get('keterangan') != null) {
-                    Penjualan::create(
-                        [
-                            'id_user' => auth()->user()->id,
-                            'id_distrik' => $request->id_distrik,
-                            'id_routing' => $request->routing,
-                            'id_toko' => $id_toko,
-                            'id_kunjungan' => $request->jenis_kunjungan,
-                            'id_produk' => $request->id_produk[$i],
-                            'jumlah_produk' => (int) $request->jumlah[$i],
-                            'mapping'=>$request->toko_mapping,
-                            'id_keterangan' => $keterangan[0]->id_keterangan,
-                            'emp' => $emp,
-                            'latitude' => $request->latitude,
-                            'longitude' => $request->longitude,
-                            'id_foto' => $foto[0]->id_foto,
-
-                        ]
-                    );
+            foreach($barang as $produk){
+                if($produk->id_produk === $productId){
+                    $produk->stok_sekarang -= $carryValue;
+                    break;
                 }
             }
         }
-        // dd($request->id_produk);
-        return redirect('/user/penjualan_laku_cash');
+
+        DB::update("UPDATE carry_produk
+                    SET stok_sekarang = $produk->stok_sekarang
+                    WHERE id_produk = '$productId'
+                    AND id_user = $id_user
+                    AND tanggal_carry BETWEEN '$tanggal 00:00:00' AND '$tanggal 00:00:00'");
     }
 
-    // public function createFoto($foto){
-    //     dd($foto);
-    //     $validatedData = $foto->validate([
-    //         'foto' => 'image'
-    //     ]);
+    // public function updateStokBarang($request){
+    //     dd($request->all());
+    //     $barang = $this->getStokUser();
 
-    //     $fotoPath = $foto->file('foto')->store('public/fotoToko'); // Simpan file gambar ke direktori penyimpanan
-    //     Foto::create([
-    //         'nama_foto' => $fotoPath,
-    //         'id_user' =>auth()->user()->id,
-    //     ]);
+    //     foreach($data as $productId => $item){
+    //         $carryValue = $item['carry'];
+
+    //         foreach($barang as $produk){
+    //             if($produk->id_produk === $productId){
+    //                 $produk->stok_sekarang -= $carryValue;
+    //                 break;
+    //             }
+    //         }
+    //     }
+
+    //     DB::update("UPDATE carry_produk
+    //                 SET stok_sekarang = $produk->stok_sekarang
+    //                 WHERE id_produk = '$productId'
+    //                 AND id_user = $id_user
+    //                 AND tanggal_carry BETWEEN '$tanggal 00:00:00' AND '$tanggal 00:00:00'");
     // }
+
 
     public function createKeterangan($keterangan) {
         Keterangan::create(
@@ -336,46 +450,96 @@ class PenjualanLakuCashController extends Controller
                 'tanggal' =>Carbon::now()->format('Y-m-d')
             ]
         );
+        $id_user = auth()->user()->id;
+        $tanggal = Carbon::now()->format('Y-m-d');
+        $keterangan = DB::select("SELECT * FROM `keterangan`
+                        WHERE id_user = '$id_user'
+                        AND tanggal = '$tanggal'
+                        ORDER BY created_at DESC");
+        // dd($keterangan);
+        return $keterangan[0]->id_keterangan;
     }
 
-    public function createToko($req) {
-        $id_routing = $req->routing;
-        // dd($id_routing);
-        $lastMapping = Toko::where('id_routing', $id_routing)->max('mapping');
-        // dd($lastMapping);
-        $mapping = $lastMapping ? $lastMapping + 1 : 1;
-        // dd($mapping);
-         // dd($req->all());
-        Toko::create(
-            [
-                'id_routing' => $req->routing,
-                'id_kunjungan' => $req->jenis_kunjungan,
-                'nama_toko' => $req->namaToko,
-                'latitude' =>$req->latitude,
-                'longitude' =>$req->longitude,
-                'mapping' =>$mapping
-            ]
-        );
+    public function getToko($request){
+        $requestToCollection = collect($request);
+        // dd($requestToCollection);
+        if ($requestToCollection->get('jenis_kunjungan') == 'IO') {
+            // dd("coba awal");
+            $this->tokoController->createToko($request);
+            // dd("coba");
+            $getToko = $this->tokoController->getTokoIO($request);
+            // dd($getToko);
+        } else {
+            $getToko = (!empty($requestToCollection->has('toko'))) ? $this->tokoController->getToko($request) : "";
+            // dd($getToko);
+        }
+        // $getToko = (!empty($requestToCollection->has('toko'))) ? $this->tokoController->getTokoAll($request) : "";
+        // $getToko = $this->tokoController->getTokoAll($request);
+        // dd($getToko);
+        return($getToko);
+        // dd($requestToCollection);
     }
 
-    public function getToko($req) {
-        $toko = DB::select("SELECT * FROM `toko`
-                            WHERE id_toko = $req->toko
-                            LIMIT 1");
-        // $toko = DB::select("SELECT * FROm toko WHERE id_toko = ", [1])
-
-        return $toko;
+    private function createPenjualan($request){
+        $emp = $this->updateEmpData($request);
+        $id_foto = $this->uploadFoto($request)->first();
+        $keterangan = $this->createKeterangan($request->get('keterangan'));
+        $id_toko = $this->getToko($request);
+        for ($i = 0; $i < count($request->id_produk); $i++) {
+            if ($request->jumlah[$i] >= '0') {
+                if ($request->get('keterangan') != null) {
+                    Penjualan::create([
+                        'id_user' => auth()->user()->id,
+                        'id_distrik' => $request->id_distrik,
+                        'id_routing' => $request->routing,
+                        'id_toko' => $id_toko,
+                        'id_kunjungan' => $request->jenis_kunjungan,
+                        'id_produk' => $request->id_produk[$i],
+                        'jumlah_produk' => (int) $request->jumlah[$i],
+                        'mapping' => $request->toko_mapping,
+                        'id_foto' => $id_foto,
+                        'id_keterangan' => $keterangan,
+                        'emp' => $emp,
+                        'latitude' => $request->latitude,
+                        'longitude' => $request->longitude,
+                        'created_at'=>Carbon::now(),
+                        'updated_at'=>Carbon::now()
+                        
+                    ]);
+                }
+            }
+        }
     }
 
-    public function getTokoIO($req) {
-        $toko = DB::select("SELECT * FROM `toko`
-                            WHERE id_routing = $req->routing
-                            AND id_kunjungan = 'IO'
-                            ORDER BY created_at DESC
-                            LIMIT 1");
+    // public function createToko($req) {
+    //     $id_routing = $req->routing;
+    //     // dd($id_routing);
+    //     $lastMapping = Toko::where('id_routing', $id_routing)->max('mapping');
+    //     // dd($lastMapping);
+    //     $mapping = $lastMapping ? $lastMapping + 1 : 1;
+    //     // dd($mapping);
+    //      // dd($req->all());
+    //     Toko::create(
+    //         [
+    //             'id_routing' => $req->routing,
+    //             'id_kunjungan' => $req->jenis_kunjungan,
+    //             'nama_toko' => $req->namaToko,
+    //             'latitude' =>$req->latitude,
+    //             'longitude' =>$req->longitude,
+    //             'mapping' =>$mapping
+    //         ]
+    //     );
+    // }
 
-        return $toko;
-    }
+    // public function getTokoIO($req) {
+    //     $toko = DB::select("SELECT * FROM `toko`
+    //                         WHERE id_routing = $req->routing
+    //                         AND id_kunjungan = 'IO'
+    //                         ORDER BY created_at DESC
+    //                         LIMIT 1");
+
+    //     return $toko;
+    // }
 
     /**
      * Display the specified resource.

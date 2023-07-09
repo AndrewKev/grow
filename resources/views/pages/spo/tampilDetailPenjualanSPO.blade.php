@@ -80,7 +80,7 @@
                                 <th>Tanggal SPO Close</th>
                                 <th>Kode Barang</th>
                                 <th>Nama Barang</th>
-                                <th>Stok Kembali</th>
+                                <th>Stok Terjual</th>
                             </tr>
                         </thead>
                         <tbody>

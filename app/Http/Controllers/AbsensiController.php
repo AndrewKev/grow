@@ -23,9 +23,9 @@ class AbsensiController extends Controller
     /**
      * Absensi SPO.
      */
-    public function indexSpo($finishStor, $isAbsensi, $listAbsenUser)
+    public function indexSpo($finishStor, $isAbsensi, $listAbsenUser, $listAbsenUserAll)
     {
-        return view('pages.spo.absensi', compact('finishStor', 'isAbsensi', 'listAbsenUser'));
+        return view('pages.spo.absensi', compact('finishStor', 'isAbsensi', 'listAbsenUser', 'listAbsenUserAll'));
     }
 
     /**
